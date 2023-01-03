@@ -1,7 +1,6 @@
 package at.cpo.tests;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
@@ -17,9 +16,7 @@ import org.junit.runners.Parameterized.Parameter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.Status;
-import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 
 import at.cpo.selenium.common.pageobjects.SeleniumLoginPage;
 import at.cpo.utils.ExcelHelper;
@@ -29,11 +26,6 @@ import at.cpo.utils.ExcelHelper;
  */
 @RunWith(Parameterized.class)
 public class SmoketestSelenium extends SeleniumHelper {
-
-	/**
-	 * The Constant LOGGER.
-	 */
-//	private static final Logger LOGGER = Logger.getLogger(SmoketestSelenium.class.getSimpleName());
 
 	/**
 	 * The Email.
@@ -73,10 +65,6 @@ public class SmoketestSelenium extends SeleniumHelper {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() {
-		ExtentSparkReporter r = new ExtentSparkReporter(Paths.get("").toAbsolutePath().toString() + "\\RunResults\\runresults.html");
-		report = new ExtentReports();
-		report.attachReporter(r);
-
 	}
 
 	/**
@@ -85,7 +73,7 @@ public class SmoketestSelenium extends SeleniumHelper {
 	 */
 	@AfterClass
 	public static void tearDownAfterClass() {
-		report.flush();
+		tearDownExtent();
 	}
 
 	/**

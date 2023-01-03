@@ -41,6 +41,8 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.model.Media;
 
+import at.cpo.utils.ExtentHelper;
+
 /**
  * The Class SeleniumHelper.
  */
@@ -62,15 +64,6 @@ public class SeleniumHelper {
 	/** The value. */
 	protected String value = "";
 
-	/** The test. */
-	protected static ExtentTest test;
-	
-	/** The node. */
-	protected static ExtentTest node;
-
-	/** The report. */
-	protected static ExtentReports report;
-
 	/** The driver. */
 	protected static RemoteWebDriver driver;
 
@@ -81,7 +74,20 @@ public class SeleniumHelper {
 	protected WebElement webEl;
 
 	/** The log buffer. */
-	protected ArrayList<String> logBuffer = new ArrayList<String>();
+	protected static ArrayList<String> logBuffer = new ArrayList<String>();
+	
+	/** The test. */
+	protected static ExtentTest test;
+	
+	/** The node. */
+	protected static ExtentTest node;
+
+	/** The report. */
+	protected static ExtentReports report;
+
+	{
+		report = ExtentHelper.prepareExtentReport();
+	}
 
 //	{
 //		afterWithFailedInformation = RuleChain.outerRule(new ExternalResource() {
@@ -103,10 +109,16 @@ public class SeleniumHelper {
 //		});
 //	}
 
+	
+	protected static void tearDownExtent() {
+		report.flush();
+	}
+
+	
 	/**
- * Setup driver.
- */
-protected static void setupDriver() {
+	 * Setup driver.
+	 */
+	protected static void setupDriver() {
 		browser = System.getProperty("browser");
 		if (browser == null || browser.isEmpty()) {
 			browser = "firefox";
@@ -225,7 +237,7 @@ protected static void setupDriver() {
 	/**
 	 * Close browser.
 	 */
-	protected void closeBrowser() {
+	protected static void closeBrowser() {
 		try {
 			driver.quit();
 		} catch (Exception e) {
@@ -572,7 +584,7 @@ protected static void setupDriver() {
 	 *
 	 * @param msg the msg
 	 */
-	protected void logInfo(String msg) {
+	protected static void logInfo(String msg) {
 		logBuffer.add("INFO#" + msg);
 	}
 
@@ -644,10 +656,15 @@ protected static void setupDriver() {
 	/**
 	 * Log all.
 	 */
-	protected void logAll() {
+	protected static void logAll() {
 		clearConsole();
 
-		Logger LOGGER = LogManager.getLogger(getClass());
+		Logger LOGGER = null;
+		try {
+			LOGGER = LogManager.getLogger(Class.forName("SeleniumHelper"));
+		} catch (ClassNotFoundException e) {
+			return;		
+		}
 		LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
 //		org.apache.logging.log4j.Logger LOGGER = org.apache.logging.log4j.LogManager.getLogger(getClass());
 //		org.apache.commons.logging.LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
