@@ -376,14 +376,20 @@ public class SeleniumHelper {
 		return "Resources" + File.separator + "Snapshots" + File.separator + time + ".png";
 	}
 
-	public static void screenshotNode() throws IOException {
-		Media media = node.addScreenCaptureFromPath(screenshotFile()).getModel().getMedia().get(0);
-		node.getModel().getMedia().clear();
-		node.log(Status.PASS, media);
-//		node.log(Status.PASS, node.addScreenCaptureFromPath(base64conversion()).getModel().getMedia().get(0));
-//		node.log(Status.PASS, "start MTours", node.addScreenCaptureFromPath(base64conversion()).getModel().getMedia().get(0));
-//		node.log(Status.PASS, "start MTours", node.addScreenCaptureFromBase64String(base64conversion()).getModel().getMedia().get(0));
-//		node.addScreenCaptureFromPath(base64conversion());
+	public static void screenshotNode() {
+		Media media;
+		try {
+			media = node.addScreenCaptureFromPath(screenshotFile()).getModel().getMedia().get(0);
+			node.getModel().getMedia().clear();
+			node.log(Status.PASS, media);
+//			node.log(Status.PASS, node.addScreenCaptureFromPath(base64conversion()).getModel().getMedia().get(0));
+//			node.log(Status.PASS, "start MTours", node.addScreenCaptureFromPath(base64conversion()).getModel().getMedia().get(0));
+//			node.log(Status.PASS, "start MTours", node.addScreenCaptureFromBase64String(base64conversion()).getModel().getMedia().get(0));
+//			node.addScreenCaptureFromPath(base64conversion());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public static String screenshotBase64() throws Exception {

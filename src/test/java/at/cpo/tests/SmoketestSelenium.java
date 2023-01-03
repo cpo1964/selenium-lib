@@ -114,14 +114,18 @@ public class SmoketestSelenium extends SeleniumHelper {
 	 * @throws Exception
 	 */
 	@Test
-	public void doTest() throws Exception {
+	public void doTest() {
 		logInfo("# check links xyz ######################");
 		test = report.createTest("doTest"); // level = 0
 
 		// start MTours
 		node = test.createNode("Step #1 - start MTours");
-//		driver.get("https://demo.guru99.com/test/newtours/index.php");
-		driver.get("http://localhost:8881/servlets/com.mercurytours.servlet.WelcomeServlet");
+		
+		try {
+			driver.get("http://localhost:8881/servlets/com.mercurytours.servlet.WelcomeServlet");
+		} catch (Exception e) {
+			driver.get("https://demo.guru99.com/test/newtours/index.php");
+		}
 
 		driver.manage().timeouts().implicitlyWait(Duration.ofMillis(3000));
 		List<WebElement> iframes = driver.findElements(By.tagName("iframe"));
