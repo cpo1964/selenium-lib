@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class ResourceUtils.
  */
@@ -64,8 +65,8 @@ public class ResourceUtils {
 	/**
 	 * Gets the resource property value by key.
 	 *
-	 * @param key
-	 *            the key
+	 * @param propHolder the prop holder
+	 * @param key            the key
 	 * @return the resource property value by key
 	 */
 	public static String getResourcePropertyValueByKey(final Class<?> propHolder, String key) {

@@ -20,18 +20,47 @@ import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ExcelHelper.
+ */
 public class ExcelHelper {
+    
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = Logger.getLogger(ExcelHelper.class.getSimpleName());
+    
+    /** The data. */
     private LinkedList<Object[]> data = null;
 
+    /**
+     * Instantiates a new excel helper.
+     *
+     * @param file the file
+     * @param sheetName the sheet name
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public ExcelHelper(File file, String sheetName) throws IOException {
         this.data = this.doloadFromSpreadsheet(file.getPath(), sheetName, true);
     }
 
+    /**
+     * Gets the data.
+     *
+     * @return the data
+     */
     public List<Object[]> getData() {
         return this.data;
     }
 
+    /**
+     * Doload from spreadsheet.
+     *
+     * @param pFilePath the file path
+     * @param pSheetName the sheet name
+     * @param skipFirstRow the skip first row
+     * @return the linked list
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     private LinkedList<Object[]> doloadFromSpreadsheet(String pFilePath, String pSheetName, boolean skipFirstRow) throws IOException {
         LinkedList<Object[]> rows = null;
         HSSFWorkbook workbook = null;
@@ -95,6 +124,12 @@ public class ExcelHelper {
         return rows;
     }
 
+    /**
+     * Gets the sheet name.
+     *
+     * @param clazz the clazz
+     * @return the sheet name
+     */
     public static String getSheetName(Class<?> clazz) {
         String sheetName = clazz.getSimpleName();
         String[] sheetNameArr = sheetName.split("_");
@@ -105,16 +140,34 @@ public class ExcelHelper {
         return sheetName;
     }
 
+    /**
+     * Checks if is empty.
+     *
+     * @param row the row
+     * @return true, if is empty
+     */
     private boolean isEmpty(Row row) {
         Cell firstCell = row.getCell(0);
         return firstCell == null || firstCell.getCellTypeEnum().equals(CellType.BLANK);
     }
 
+    /**
+     * Count non empty columns.
+     *
+     * @param sheet the sheet
+     * @return the int
+     */
     private int countNonEmptyColumns(HSSFSheet sheet) {
         Row firstRow = sheet.getRow(0);
         return this.firstEmptyCellPosition(firstRow);
     }
 
+    /**
+     * First empty cell position.
+     *
+     * @param cells the cells
+     * @return the int
+     */
     private int firstEmptyCellPosition(Row cells) {
         int columnCount = 0;
 
@@ -128,6 +181,13 @@ public class ExcelHelper {
         return columnCount;
     }
 
+    /**
+     * String value from cell.
+     *
+     * @param workbook the workbook
+     * @param cell the cell
+     * @return the string
+     */
     private String stringValueFromCell(HSSFWorkbook workbook, Cell cell) {
         String cellValue = null;
         if (cell == null) {
@@ -147,6 +207,12 @@ public class ExcelHelper {
         }
     }
 
+    /**
+     * Gets the numeric cell value.
+     *
+     * @param cell the cell
+     * @return the numeric cell value
+     */
     private Object getNumericCellValue(Cell cell) {
         Object cellValue;
         if (DateUtil.isCellDateFormatted(cell)) {
@@ -158,6 +224,13 @@ public class ExcelHelper {
         return cellValue;
     }
 
+    /**
+     * Evaluate cell formula.
+     *
+     * @param workbook the workbook
+     * @param cell the cell
+     * @return the object
+     */
     private Object evaluateCellFormula(HSSFWorkbook workbook, Cell cell) {
         FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
         CellValue cellValue = evaluator.evaluate(cell);

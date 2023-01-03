@@ -6,6 +6,7 @@ package at.cpo.utils;
 import java.sql.*;
 import java.util.HashMap;
 
+// TODO: Auto-generated Javadoc
 /**
  * The type Jdbc helper.
  */
@@ -43,6 +44,9 @@ public class JdbcHelper {
      */
     private static Connection con;
 
+    /**
+     * Instantiates a new jdbc helper.
+     */
     private JdbcHelper() {
     }
 
@@ -104,6 +108,15 @@ public class JdbcHelper {
         return getFirstColumnValues(sql, columns)[0];
     }
 
+    /**
+     * Gets the first column values.
+     *
+     * @param sql the sql
+     * @param columns the columns
+     * @return the first column values
+     * @throws SQLException the SQL exception
+     * @throws ClassNotFoundException the class not found exception
+     */
     static String[] getFirstColumnValues(String sql, String[] columns) throws SQLException, ClassNotFoundException {
         String[] res = new String[columns.length];
         ResultSet rs = execute(sql);

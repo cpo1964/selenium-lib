@@ -2,8 +2,12 @@ package at.cpo.selenium.common.pageobjects;
 
 import at.cpo.tests.SeleniumHelper;
 
+/**
+ * The Class SeleniumLoginPage.
+ */
 public class SeleniumLoginPage extends SeleniumHelper {
 
+    /** The page. */
     protected static String PAGE = "SeleniumLoginPage.";
 
     /**

@@ -41,29 +41,46 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.model.Media;
 
+/**
+ * The Class SeleniumHelper.
+ */
 public class SeleniumHelper {
 
+	/** The after with failed information. */
 	@Rule
 	public TestRule afterWithFailedInformation;
 
+	/** The name. */
 	protected String name = "";
+	
+	/** The failed. */
 	protected boolean failed;
 
+	/** The ok. */
 	public boolean ok = false;
 
+	/** The value. */
 	protected String value = "";
 
+	/** The test. */
 	protected static ExtentTest test;
+	
+	/** The node. */
 	protected static ExtentTest node;
 
+	/** The report. */
 	protected static ExtentReports report;
 
+	/** The driver. */
 	protected static RemoteWebDriver driver;
 
+	/** The browser. */
 	protected static String browser;
 
+	/** The web el. */
 	protected WebElement webEl;
 
+	/** The log buffer. */
 	protected ArrayList<String> logBuffer = new ArrayList<String>();
 
 //	{
@@ -86,7 +103,10 @@ public class SeleniumHelper {
 //		});
 //	}
 
-	protected static void setupDriver() {
+	/**
+ * Setup driver.
+ */
+protected static void setupDriver() {
 		browser = System.getProperty("browser");
 		if (browser == null || browser.isEmpty()) {
 			browser = "firefox";
@@ -107,6 +127,9 @@ public class SeleniumHelper {
 		driver.setLogLevel(java.util.logging.Level.SEVERE);
 	}
 
+	/**
+	 * Setup chrome driver.
+	 */
 	private static void setupChromeDriver() {
 		System.setProperty("webdriver.chrome.silentLogging", "true");
         System.setProperty("webdriver.chrome.verboseLogging", "false");
@@ -129,6 +152,9 @@ public class SeleniumHelper {
 //		driver = new ChromeDriver(chromeDriverService, chromeOptions);
 	}
 
+	/**
+	 * Setup firefox driver.
+	 */
 	@SuppressWarnings("deprecation")
 	protected static void setupFirefoxDriver() {
 //      System.setProperty("webdriver.gecko.driver", "/usr/local/bin/geckodriver");
@@ -196,6 +222,9 @@ public class SeleniumHelper {
 
 	}
 
+	/**
+	 * Close browser.
+	 */
 	protected void closeBrowser() {
 		try {
 			driver.quit();
@@ -204,10 +233,23 @@ public class SeleniumHelper {
 		}
 	}
 
+	/**
+	 * Exists.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return true, if successful
+	 */
 	public boolean exists(String locatorDelegate) {
 		return exists(locatorDelegate, false);
 	}
 
+	/**
+	 * Exists.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param secret the secret
+	 * @return true, if successful
+	 */
 	public boolean exists(String locatorDelegate, boolean secret) {
 		String xpath = getLocator(locatorDelegate);
 		logInfo("exists (" + xpath + ", " + secret + ")");
@@ -220,6 +262,11 @@ public class SeleniumHelper {
 		return webEl.isDisplayed();
 	}
 
+	/**
+	 * Click.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 */
 	public void click(String locatorDelegate) {
 		String xpath = getLocator(locatorDelegate);
 		logInfo("click (" + xpath + ")");
@@ -237,11 +284,23 @@ public class SeleniumHelper {
 		}
 	}
 
+	/**
+	 * Input.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param value the value
+	 */
 	public void input(String locatorDelegate, String value) {
 		input(locatorDelegate, value, false);
 //        webEl.submit();
 	}
 
+	/**
+	 * Output.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the string
+	 */
 	public String output(String locatorDelegate) {
 		String xpath = getLocator(locatorDelegate);
 		logInfo("output (" + xpath + ")");
@@ -250,6 +309,13 @@ public class SeleniumHelper {
 		return webEl.getAttribute("textContent");
 	}
 
+	/**
+	 * Input.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param value the value
+	 * @param secret the secret
+	 */
 	public void input(String locatorDelegate, String value, boolean secret) {
 		String desc = getLocator(locatorDelegate);
 		String xpathDescription = "";
@@ -317,12 +383,20 @@ public class SeleniumHelper {
 	 * @param desc   the desc
 	 * @param value  the value
 	 * @param secret the secret
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private void logSecret(String desc, String value, boolean secret) throws IOException {
 		String text = getSecretString(value, secret);
 		logDebug("INPUT to " + desc + " value=" + text);
 	}
 
+	/**
+	 * Gets the secret string.
+	 *
+	 * @param value the value
+	 * @param secret the secret
+	 * @return the secret string
+	 */
 	public String getSecretString(String value, boolean secret) {
 		String text = "";
 		if (secret) {
@@ -335,17 +409,33 @@ public class SeleniumHelper {
 		}
 	}
 
+	/**
+	 * Wait until fully loaded.
+	 *
+	 * @param timeoutSeconds the timeout seconds
+	 */
 	public static void waitUntilFullyLoaded(int timeoutSeconds) {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
 		wait.until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState")
 				.equals("complete"));
 	}
 
+	/**
+	 * Wait until webelement is clickable.
+	 *
+	 * @param timeoutSeconds the timeout seconds
+	 * @param webEl the web el
+	 */
 	public static void waitUntilWebelementIsClickable(int timeoutSeconds, WebElement webEl) {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
 		wait.until(ExpectedConditions.elementToBeClickable(webEl));
 	}
 
+	/**
+	 * Wait.
+	 *
+	 * @param milliseconds the milliseconds
+	 */
 	public void wait(int milliseconds) {
 		try {
 			Thread.sleep(milliseconds);
@@ -358,12 +448,19 @@ public class SeleniumHelper {
 	 * Gibt das jeweilige Testdaten Excel zurück.
 	 *
 	 * @return Das Testdaten Excel als File.
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	protected static File getTestDataFile() throws IOException {
 		return new File(Paths.get("").toAbsolutePath().toString() + File.separator + "src" + File.separator + "test"
 				+ File.separator + "data" + File.separator + "Testdata.xls");
 	}
 
+	/**
+	 * Screenshot file.
+	 *
+	 * @return the string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static String screenshotFile() throws IOException {
 		long time = new Date().getTime();
 		File source = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE); // clears old console output
@@ -376,12 +473,17 @@ public class SeleniumHelper {
 		return "Resources" + File.separator + "Snapshots" + File.separator + time + ".png";
 	}
 
-	public static void screenshotNode() {
+	/**
+	 * Screenshot node.
+	 *
+	 * @param s the s
+	 */
+	public static void screenshotNode(Status s) {
 		Media media;
 		try {
 			media = node.addScreenCaptureFromPath(screenshotFile()).getModel().getMedia().get(0);
 			node.getModel().getMedia().clear();
-			node.log(Status.PASS, media);
+			node.log(s, media);
 //			node.log(Status.PASS, node.addScreenCaptureFromPath(base64conversion()).getModel().getMedia().get(0));
 //			node.log(Status.PASS, "start MTours", node.addScreenCaptureFromPath(base64conversion()).getModel().getMedia().get(0));
 //			node.log(Status.PASS, "start MTours", node.addScreenCaptureFromBase64String(base64conversion()).getModel().getMedia().get(0));
@@ -392,6 +494,12 @@ public class SeleniumHelper {
 		}
 	}
 
+	/**
+	 * Screenshot base 64.
+	 *
+	 * @return the string
+	 * @throws Exception the exception
+	 */
 	public static String screenshotBase64() throws Exception {
 		TakesScreenshot newScreen = (TakesScreenshot) driver;
 		String scnShot = newScreen.getScreenshotAs(OutputType.BASE64);
@@ -399,6 +507,12 @@ public class SeleniumHelper {
 
 	}
 
+	/**
+	 * Gets the locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the locator
+	 */
 	public String getLocator(String locatorDelegate) {
 		String cn = locatorDelegate.split("\\.")[0];
 		String key = locatorDelegate.replace(cn + ".", "");
@@ -414,6 +528,7 @@ public class SeleniumHelper {
 	/**
 	 * Gets the resource property value by key.
 	 *
+	 * @param propHolder the prop holder
 	 * @param key the key
 	 * @return the resource property value by key
 	 */
@@ -452,23 +567,47 @@ public class SeleniumHelper {
 		return value;
 	}
 
+	/**
+	 * Log info.
+	 *
+	 * @param msg the msg
+	 */
 	protected void logInfo(String msg) {
 		logBuffer.add("INFO#" + msg);
 	}
 
+	/**
+	 * Log debug.
+	 *
+	 * @param msg the msg
+	 */
 	protected void logDebug(String msg) {
 		logBuffer.add("DEBUG#" + msg);
 	}
 
+	/**
+	 * Log error.
+	 *
+	 * @param msg the msg
+	 */
 	protected void logError(String msg) {
 		logBuffer.add("ERROR#" + msg);
 	}
 
+	/**
+	 * Log node.
+	 *
+	 * @param st the st
+	 * @param msg the msg
+	 */
 	protected void logNode(Status st, String msg) {
 		logBuffer.add("INFO#" + msg);
 		node.log(st, msg);
 	}
 
+	/**
+	 * Clear console.
+	 */
 	public final static void clearConsole() {
 		for (int i = 0; i < 50; ++i) System.out.println("");
 
@@ -502,6 +641,9 @@ public class SeleniumHelper {
 //		}
 	}
 
+	/**
+	 * Log all.
+	 */
 	protected void logAll() {
 		clearConsole();
 

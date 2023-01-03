@@ -25,7 +25,7 @@ import at.cpo.selenium.common.pageobjects.SeleniumLoginPage;
 import at.cpo.utils.ExcelHelper;
 
 /**
- * Test Login by Selenium
+ * Test Login by Selenium.
  */
 @RunWith(Parameterized.class)
 public class SmoketestSelenium extends SeleniumHelper {
@@ -60,6 +60,7 @@ public class SmoketestSelenium extends SeleniumHelper {
 	 * Gets the data.
 	 *
 	 * @return the data
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@Parameterized.Parameters // (name = "{index}: {0}")
 	public static Collection<?> getData() throws IOException {
@@ -87,6 +88,11 @@ public class SmoketestSelenium extends SeleniumHelper {
 		report.flush();
 	}
 
+	/**
+	 * Sets the up.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Before
 	public void setUp() throws IOException {
 		logInfo("# setUp ######################");
@@ -97,6 +103,9 @@ public class SmoketestSelenium extends SeleniumHelper {
 		wait(1);
 	}
 
+	/**
+	 * Tear down.
+	 */
 	@After
 	public void tearDown() {
 		logInfo("# tearDown ######################");
@@ -110,8 +119,6 @@ public class SmoketestSelenium extends SeleniumHelper {
 
 	/**
 	 * Smoke test.
-	 * 
-	 * @throws Exception
 	 */
 	@Test
 	public void doTest() {
@@ -121,45 +128,66 @@ public class SmoketestSelenium extends SeleniumHelper {
 		// start MTours
 		node = test.createNode("Step #1 - start MTours");
 		
-		try {
-			driver.get("http://localhost:8881/servlets/com.mercurytours.servlet.WelcomeServlet");
-		} catch (Exception e) {
-			driver.get("https://demo.guru99.com/test/newtours/index.php");
-		}
+		if (!navigateToStartPage()) {
+			return;
+		};
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofMillis(3000));
-		List<WebElement> iframes = driver.findElements(By.tagName("iframe"));
-		if (iframes.size() > 0) {
-			driver.switchTo().frame("gdpr-consent-notice");
-			ok = exists(SeleniumLoginPage.NOTICE);
-			if (ok) {
-				click(SeleniumLoginPage.NOTICE);
-				driver.switchTo().defaultContent();
-			}
-		}
-		driver.manage().timeouts().implicitlyWait(Duration.ofMillis(30000));
-
-		screenshotNode();
+		screenshotNode(Status.PASS);
 
 		// login
 		node = test.createNode("Step #2 - login");
 		input(SeleniumLoginPage.USERNAME, username);
 		input(SeleniumLoginPage.PASSWORD, password);
 		click(SeleniumLoginPage.LOGIN);
-		screenshotNode();
+		screenshotNode(Status.PASS);
 
 		// navigate to Home
 		node = test.createNode("Step #3 - navigate to Home").generateLog(Status.PASS, "navigate to Home");
 		click(SeleniumLoginPage.HOME);
 		value = output(SeleniumLoginPage.SIGNININFO);
-		screenshotNode();
+		screenshotNode(Status.PASS);
 
-//		test.addScreenCaptureFromPath(base64conversion());
 		test.log(Status.PASS, "test #1");
 
 		wait(1);
 	}
 
+	/**
+	 * Navigate to start page.
+	 *
+	 * @return true, if successful
+	 */
+	private boolean navigateToStartPage() {
+		try {
+			driver.get("http://localhost:8881/servlets/com.mercurytours.servlet.WelcomeServlet");
+		} catch (Exception e1) {
+			try {
+				driver.get("https://demo.guru99.com/test/newtours/index.php");
+				driver.manage().timeouts().implicitlyWait(Duration.ofMillis(3000));
+				List<WebElement> iframes = driver.findElements(By.tagName("iframe"));
+				if (iframes.size() > 0) {
+					driver.switchTo().frame("gdpr-consent-notice");
+					ok = exists(SeleniumLoginPage.NOTICE);
+					if (ok) {
+						click(SeleniumLoginPage.NOTICE);
+						driver.switchTo().defaultContent();
+					}
+				}
+				driver.manage().timeouts().implicitlyWait(Duration.ofMillis(30000));
+			} catch (Exception e2) {
+				screenshotNode(Status.FAIL);
+				test.log(Status.FAIL, "MTours app is down");
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 	}
 }

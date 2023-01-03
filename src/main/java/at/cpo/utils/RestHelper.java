@@ -27,6 +27,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.logging.Logger;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class RestHelper.
  */
@@ -42,7 +43,10 @@ public class RestHelper {
      */
     public static final String CONTENT = "content";
 
+    /** The httpclient. */
     private static CloseableHttpClient httpclient;
+    
+    /** The http response. */
     private static CloseableHttpResponse httpResponse;
 
     static {
@@ -56,6 +60,9 @@ public class RestHelper {
         }
     }
 
+    /**
+     * Instantiates a new rest helper.
+     */
     private RestHelper() {
         throw new IllegalStateException("Utility class");
     }
@@ -373,6 +380,7 @@ public class RestHelper {
      * @param methodType the method type
      * @param uri        the uri
      * @return the int
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public static int callRestMethod(RestMethod methodType, final String uri) throws IOException {
         int responseCode;
@@ -448,6 +456,12 @@ public class RestHelper {
         return getEntityContent(response.getEntity());
     }
 
+    /**
+     * Gets the entity content.
+     *
+     * @param entity the entity
+     * @return the entity content
+     */
     private static String getEntityContent(HttpEntity entity) {
         StringBuilder content = new StringBuilder();
         if (entity == null) {
