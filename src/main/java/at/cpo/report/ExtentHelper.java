@@ -1,4 +1,4 @@
-package at.cpo.tests;
+package at.cpo.report;
 
 import java.io.File;
 import java.io.IOException;
@@ -133,7 +133,8 @@ public class ExtentHelper implements ReportInterface {
 	}
 
 	/**
-	 * Screenshot file.
+	 * Screenshot file to "RunResults" + File.separator
+				+ "Resources" + File.separator + "Snapshots"
 	 *
 	 * @param driver the driver
 	 * @return the string

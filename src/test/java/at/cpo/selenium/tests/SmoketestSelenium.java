@@ -1,4 +1,4 @@
-package at.cpo.tests;
+package at.cpo.selenium.tests;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 
+import at.cpo.platform.EnvironmentHelper;
 import at.cpo.selenium.common.pageobjects.SeleniumLoginPage;
 import at.cpo.utils.ExcelHelper;
 

@@ -1,4 +1,4 @@
-package at.cpo.tests;
+package at.cpo.selenium;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +27,9 @@ import org.openqa.selenium.remote.service.DriverService;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import at.cpo.platform.EnvironmentInterface;
+import at.cpo.report.ExtentHelper;
 
 /**
  * The Class SeleniumHelper.
@@ -262,13 +265,12 @@ public class SeleniumHelper extends ExtentHelper implements EnvironmentInterface
 		String xpath = getLocator(locatorDelegate);
 		webEl = driver.findElement(By.xpath(xpath));
 		if (webEl.isEnabled()) {
-			// close messages popup
 			webEl.click();
 			nodeLogPass("click (" + xpath + ")");
 		} else {
 			try {
 				nodeLogFail(
-						test.addScreenCaptureFromPath(ExtentHelper.screenshotFile(driver)) + "click (" + xpath + ")");
+						test.addScreenCaptureFromPath(screenshotFile(driver)) + "click (" + xpath + ")");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

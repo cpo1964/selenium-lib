@@ -1,6 +1,8 @@
-package at.cpo.tests;
+package at.cpo.platform;
 
 import java.io.File;
+
+import at.cpo.report.ReportInterface;
 
 /**
  * The Interface EnvironmentInterface.

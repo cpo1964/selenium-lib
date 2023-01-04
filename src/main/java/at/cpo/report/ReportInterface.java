@@ -1,4 +1,4 @@
-package at.cpo.tests;
+package at.cpo.report;
 
 /**
  * The Interface EnvironmentInterface.

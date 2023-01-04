@@ -1,6 +1,8 @@
-package at.cpo.tests;
+package at.cpo.platform;
 
 import java.io.File;
+
+import at.cpo.selenium.SeleniumHelper;
 
 /**
  * The Class EnvironmentHelper.
@@ -14,10 +16,10 @@ public class EnvironmentHelper {
 	static EnvironmentInterface environment;
 	
 	/** The value. */
-	static String value;
+	protected static String value;
 
 	/** The ok. */
-	boolean ok;
+	protected boolean ok;
 
 	/**
 	 * Sets the up platform.
