@@ -21,7 +21,7 @@ import com.aventstack.extentreports.Status;
 /**
  * The class tearDownExtent.
  */
-public class ExtentHelper {
+public class ExtentHelper implements ReportInterface {
 	/** The driver. */
 	protected static RemoteWebDriver driver;
 

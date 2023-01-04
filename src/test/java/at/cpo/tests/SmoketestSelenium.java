@@ -50,7 +50,7 @@ public class SmoketestSelenium extends EnvironmentHelper {
 	 */
 	@Parameterized.Parameters // (name = "{index}: {0}")
 	public static Collection<?> getData() throws IOException {
-		setupPlatform("Selenium");
+		setupPlatform(PLATFORM_SELENIUM);
 		return new ExcelHelper(getTestDataFile(), SmoketestSelenium.class.getSimpleName()).getData();
 	}
 

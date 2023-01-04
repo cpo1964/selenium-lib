@@ -8,7 +8,7 @@ import java.io.File;
 public class EnvironmentHelper {
 
 	/** The platform. */
-	static String platform = "Selenium";
+	protected static String PLATFORM_SELENIUM = "Selenium";
 	
 	/** The environment. */
 	static EnvironmentInterface environment;
@@ -25,7 +25,7 @@ public class EnvironmentHelper {
 	 * @param value the new up platform
 	 */
 	protected static void setupPlatform(String value) {
-		if ("Selenium".equalsIgnoreCase(value)) {
+		if (PLATFORM_SELENIUM.equalsIgnoreCase(value)) {
 			environment = new SeleniumHelper();
 		} else {
 			throw new RuntimeException();
