@@ -1,9 +1,7 @@
 package at.cpo.tests;
 
 import java.io.IOException;
-import java.time.Duration;
 import java.util.Collection;
-import java.util.List;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -13,10 +11,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-
-import com.aventstack.extentreports.Status;
 
 import at.cpo.selenium.common.pageobjects.SeleniumLoginPage;
 import at.cpo.utils.ExcelHelper;
@@ -25,7 +19,7 @@ import at.cpo.utils.ExcelHelper;
  * Test Login by Selenium.
  */
 @RunWith(Parameterized.class)
-public class SmoketestSelenium extends SeleniumHelper {
+public class SmoketestSelenium extends EnvironmentHelper {
 
 	/**
 	 * The Email.
@@ -47,7 +41,7 @@ public class SmoketestSelenium extends SeleniumHelper {
 	 */
 	@Parameter(3)
 	public String snapshots;
-
+	
 	/**
 	 * Gets the data.
 	 *
@@ -80,15 +74,15 @@ public class SmoketestSelenium extends SeleniumHelper {
 	 * Sets the up.
 	 *
 	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws InterruptedException 
 	 */
 	@Before
-	public void setUp() throws IOException {
+	public void setUp() throws IOException, InterruptedException {
 		logInfo("# setUp ######################");
 		logInfo("# username: '" + username + "'");
 		logInfo("# password: '" + password + "'");
 
 		setupDriver();
-		wait(1);
 	}
 
 	/**
@@ -101,43 +95,42 @@ public class SmoketestSelenium extends SeleniumHelper {
 			return;
 		}
 
-		closeBrowser();
 		logAll();
+		closeBrowser();
 	}
 
 	/**
 	 * Smoke test.
+	 * @throws InterruptedException 
 	 */
 	@Test
-	public void doTest() {
-		logInfo("# check links xyz ######################");
-		test = report.createTest("doTest"); // level = 0
+	public void doTest() throws InterruptedException {
+		logInfo("# do Test login to MTours ######################");
+		reportCreateTest("doTest"); // level = 0
 
 		// start MTours
-		node = test.createNode("Step #1 - start MTours");
+		testCreateNode("Step #1 - start MTours");
 		
 		if (!navigateToStartPage()) {
 			return;
 		};
 
-		screenshotNode(Status.PASS);
+		screenshotNodePass();
 
 		// login
-		node = test.createNode("Step #2 - login");
+		testCreateNode("Step #2 - login");
 		input(SeleniumLoginPage.USERNAME, username);
 		input(SeleniumLoginPage.PASSWORD, password);
 		click(SeleniumLoginPage.LOGIN);
-		screenshotNode(Status.PASS);
+		screenshotNodePass();
 
 		// navigate to Home
-		node = test.createNode("Step #3 - navigate to Home").generateLog(Status.PASS, "navigate to Home");
+		testCreateNode("Step #3 - navigate to Home");
 		click(SeleniumLoginPage.HOME);
 		value = output(SeleniumLoginPage.SIGNININFO);
-		screenshotNode(Status.PASS);
+		screenshotNodePass();
 
-		test.log(Status.PASS, "test #1");
-
-		wait(1);
+		testLogPass("test #1");
 	}
 
 	/**
@@ -147,24 +140,21 @@ public class SmoketestSelenium extends SeleniumHelper {
 	 */
 	private boolean navigateToStartPage() {
 		try {
-			driver.get("http://localhost:8881/servlets/com.mercurytours.servlet.WelcomeServlet");
+			driverGet("http://localhost:8881/servlets/com.mercurytours.servlet.WelcomeServlet");
 		} catch (Exception e1) {
 			try {
-				driver.get("https://demo.guru99.com/test/newtours/index.php");
-				driver.manage().timeouts().implicitlyWait(Duration.ofMillis(3000));
-				List<WebElement> iframes = driver.findElements(By.tagName("iframe"));
-				if (iframes.size() > 0) {
-					driver.switchTo().frame("gdpr-consent-notice");
-					ok = exists(SeleniumLoginPage.NOTICE);
-					if (ok) {
-						click(SeleniumLoginPage.NOTICE);
-						driver.switchTo().defaultContent();
-					}
+				driverGet("https://demo.guru99.com/test/newtours/index.php");
+				driverImplicitlyWait(3000);
+				ok = driverSwitchToIFrame("gdpr-consent-notice");
+				ok = ok && exists(SeleniumLoginPage.NOTICE);
+				if (ok) {
+					click(SeleniumLoginPage.NOTICE);
+					driverSwitchToDefaultContent();
 				}
-				driver.manage().timeouts().implicitlyWait(Duration.ofMillis(30000));
+				driverImplicitlyWait(30000);
 			} catch (Exception e2) {
-				screenshotNode(Status.FAIL);
-				test.log(Status.FAIL, "MTours app is down");
+				screenshotNodeFail();
+				testLogFail("MTours app is down");
 				return false;
 			}
 		}
