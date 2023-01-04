@@ -43,7 +43,7 @@ import at.cpo.utils.ExcelHelper;
  * Test Login by Selenium.
  */
 @RunWith(Parameterized.class)
-public class SmoketestSelenium extends EnvironmentHelper {
+public class SmoketestSeleniumTest extends EnvironmentHelper {
 
 	/**
 	 * The Email.
@@ -75,7 +75,7 @@ public class SmoketestSelenium extends EnvironmentHelper {
 	@Parameterized.Parameters // (name = "{index}: {0}")
 	public static Collection<?> getData() throws IOException {
 		setupPlatform(PLATFORM_SELENIUM);
-		return new ExcelHelper(getTestDataFile(), SmoketestSelenium.class.getSimpleName()).getData();
+		return new ExcelHelper(getTestDataFile(), SmoketestSeleniumTest.class.getSimpleName()).getData();
 	}
 
 	/**
