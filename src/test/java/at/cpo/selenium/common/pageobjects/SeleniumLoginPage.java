@@ -1,6 +1,6 @@
 package at.cpo.selenium.common.pageobjects;
 
-import at.cpo.selenium.SeleniumHelper;
+import at.cpo.platform.selenium.SeleniumHelper;
 
 /**
  * The Class SeleniumLoginPage.

@@ -1,4 +1,4 @@
-package at.cpo.selenium;
+package at.cpo.platform.selenium;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +29,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import at.cpo.platform.EnvironmentInterface;
-import at.cpo.report.ExtentHelper;
+import at.cpo.report.extent.ExtentHelper;
 
 /**
  * The Class SeleniumHelper.

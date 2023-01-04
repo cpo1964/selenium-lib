@@ -1,4 +1,4 @@
-package at.cpo.report;
+package at.cpo.report.extent;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +17,8 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
+
+import at.cpo.report.ReportInterface;
 
 /**
  * The class tearDownExtent.
@@ -265,11 +267,12 @@ public class ExtentHelper implements ReportInterface {
 
 //		org.apache.log4j.Logger LOGGER = null;
 		Logger LOGGER = null;
-		try {
-			LOGGER = LogManager.getLogger(Class.forName("at.cpo.report.ExtentHelper"));
-		} catch (ClassNotFoundException e) {
-			return;		
-		}
+			LOGGER = LogManager.getLogger(this.getClass().getSimpleName());
+//			try {
+// 				LOGGER = LogManager.getLogger(Class.forName("at.cpo.report.extent.ExtentHelper"));
+//			} catch (ClassNotFoundException e) {
+//				return;		
+//			}
 
 //		clearConsole();
 

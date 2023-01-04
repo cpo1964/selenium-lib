@@ -2,7 +2,7 @@ package at.cpo.platform;
 
 import java.io.File;
 
-import at.cpo.selenium.SeleniumHelper;
+import at.cpo.platform.selenium.SeleniumHelper;
 
 /**
  * The Class EnvironmentHelper.
