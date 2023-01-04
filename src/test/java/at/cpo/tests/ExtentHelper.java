@@ -55,47 +55,87 @@ public class ExtentHelper {
 		return report;
 	}
 	
-	public void tearDownExtent() {
+	/**
+	 * Tear down extent.
+	 */
+	public void reportTearDown() {
 		report.flush();
 	}
 
+	/**
+	 * Report create test.
+	 *
+	 * @param msg the msg
+	 */
 	public void reportCreateTest(String msg) {
 		test = report.createTest(msg);
 	}
 
-	public void testLogFail(String msg) {
+	/**
+	 * Test log fail.
+	 *
+	 * @param msg the msg
+	 */
+	public void reportTestLogFail(String msg) {
 		test.log(Status.FAIL, msg);
 	}
 
-	public void testLogPass(String msg) {
+	/**
+	 * Test log pass.
+	 *
+	 * @param msg the msg
+	 */
+	public void reportTestLogPass(String msg) {
 		test.log(Status.PASS, msg);
 	}
 
-	public void testCreateNode(String msg) {
+	/**
+	 * Test create node.
+	 *
+	 * @param msg the msg
+	 */
+	public void reportCreateStep(String msg) {
 		node = test.createNode(msg);
 	}
 
+	/**
+	 * Node log fail.
+	 *
+	 * @param msg the msg
+	 */
 	public void nodeLogFail(String msg) {
 		logBuffer.add("ERROR#" + msg);
 		node.log(Status.FAIL, msg);
 	}
 
+	/**
+	 * Node log pass.
+	 *
+	 * @param msg the msg
+	 */
 	public void nodeLogPass(String msg) {
 		logBuffer.add("INFO#" + msg);
 		node.log(Status.PASS, msg);
 	}
 
-	public void screenshotNodeFail() {
+	/**
+	 * Screenshot node fail.
+	 */
+	public void reportScreenshotStepFail() {
 		screenshotNode(driver, node, Status.FAIL);
 	}
 	
-	public void screenshotNodePass() {
+	/**
+	 * Screenshot node pass.
+	 */
+	public void reportScreenshotStepPass() {
 		screenshotNode(driver, node, Status.PASS);
 	}
 
 	/**
 	 * Screenshot file.
 	 *
+	 * @param driver the driver
 	 * @return the string
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
@@ -114,6 +154,8 @@ public class ExtentHelper {
 	/**
 	 * Screenshot node.
 	 *
+	 * @param driver the driver
+	 * @param node the node
 	 * @param s the s
 	 */
 	public void screenshotNode(TakesScreenshot driver, ExtentTest node, Status s) {
@@ -139,6 +181,7 @@ public class ExtentHelper {
 	/**
 	 * Screenshot base 64.
 	 *
+	 * @param driver the driver
 	 * @return the string
 	 * @throws Exception the exception
 	 */

@@ -10,8 +10,8 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Properties;
 
-import org.junit.Rule;
-import org.junit.rules.TestRule;
+//import org.junit.Rule;
+//import org.junit.rules.TestRule;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NotFoundException;
@@ -34,8 +34,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class SeleniumHelper extends ExtentHelper implements EnvironmentInterface {
 
 	/** The after with failed information. */
-	@Rule
-	public TestRule afterWithFailedInformation;
+//	@Rule
+//	public TestRule afterWithFailedInformation;
 
 	/** The name. */
 	protected String name = "";
@@ -75,11 +75,22 @@ public class SeleniumHelper extends ExtentHelper implements EnvironmentInterface
 //		});
 //	}
 
-	@Override
+	/**
+ * Driver get.
+ *
+ * @param url the url
+ */
+@Override
 	public void driverGet(String url) {
 		driver.get(url);
 	}
 
+	/**
+	 * Driver switch to I frame.
+	 *
+	 * @param name the name
+	 * @return true, if successful
+	 */
 	@Override
 	public boolean driverSwitchToIFrame(String name) {
 		List<WebElement> iframes = driver.findElements(By.tagName("iframe"));
@@ -90,11 +101,19 @@ public class SeleniumHelper extends ExtentHelper implements EnvironmentInterface
 		return false;
 	}
 
+	/**
+	 * Driver switch to default content.
+	 */
 	@Override
 	public void driverSwitchToDefaultContent() {
 		driver.switchTo().defaultContent();
 	}
 	
+	/**
+	 * Driver implicitly wait.
+	 *
+	 * @param value the value
+	 */
 	@Override
 	public void driverImplicitlyWait(long value) {
 		driver.manage().timeouts().implicitlyWait(Duration.ofMillis(value));

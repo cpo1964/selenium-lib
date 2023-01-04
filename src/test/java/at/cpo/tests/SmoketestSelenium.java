@@ -50,6 +50,7 @@ public class SmoketestSelenium extends EnvironmentHelper {
 	 */
 	@Parameterized.Parameters // (name = "{index}: {0}")
 	public static Collection<?> getData() throws IOException {
+		setupPlatform("Selenium");
 		return new ExcelHelper(getTestDataFile(), SmoketestSelenium.class.getSimpleName()).getData();
 	}
 
@@ -67,14 +68,14 @@ public class SmoketestSelenium extends EnvironmentHelper {
 	 */
 	@AfterClass
 	public static void tearDownAfterClass() {
-		tearDownExtent();
+		reportTearDown();
 	}
 
 	/**
 	 * Sets the up.
 	 *
 	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws InterruptedException 
+	 * @throws InterruptedException the interrupted exception
 	 */
 	@Before
 	public void setUp() throws IOException, InterruptedException {
@@ -101,7 +102,8 @@ public class SmoketestSelenium extends EnvironmentHelper {
 
 	/**
 	 * Smoke test.
-	 * @throws InterruptedException 
+	 *
+	 * @throws InterruptedException the interrupted exception
 	 */
 	@Test
 	public void doTest() throws InterruptedException {
@@ -109,28 +111,28 @@ public class SmoketestSelenium extends EnvironmentHelper {
 		reportCreateTest("doTest"); // level = 0
 
 		// start MTours
-		testCreateNode("Step #1 - start MTours");
+		reportCreateStep("Step #1 - start MTours");
 		
 		if (!navigateToStartPage()) {
 			return;
 		};
 
-		screenshotNodePass();
+		reportScreenshotStepPass();
 
 		// login
-		testCreateNode("Step #2 - login");
+		reportCreateStep("Step #2 - login");
 		input(SeleniumLoginPage.USERNAME, username);
 		input(SeleniumLoginPage.PASSWORD, password);
 		click(SeleniumLoginPage.LOGIN);
-		screenshotNodePass();
+		reportScreenshotStepPass();
 
 		// navigate to Home
-		testCreateNode("Step #3 - navigate to Home");
+		reportCreateStep("Step #3 - navigate to Home");
 		click(SeleniumLoginPage.HOME);
 		value = output(SeleniumLoginPage.SIGNININFO);
-		screenshotNodePass();
+		reportScreenshotStepPass();
 
-		testLogPass("test #1");
+		reportTestLogPass("test #1");
 	}
 
 	/**
@@ -153,19 +155,11 @@ public class SmoketestSelenium extends EnvironmentHelper {
 				}
 				driverImplicitlyWait(30000);
 			} catch (Exception e2) {
-				screenshotNodeFail();
-				testLogFail("MTours app is down");
+				reportScreenshotStepFail();
+				reportTestLogFail("MTours app is down");
 				return false;
 			}
 		}
 		return true;
-	}
-
-	/**
-	 * The main method.
-	 *
-	 * @param args the arguments
-	 */
-	public static void main(String[] args) {
 	}
 }
