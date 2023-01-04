@@ -40,6 +40,8 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.model.Media;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 
 import at.cpo.report.ReportInterface;
 
@@ -74,9 +76,9 @@ public class ExtentHelper implements ReportInterface {
 	public static ExtentReports prepareExtentReport() {
 		String runResultsDir = Paths.get("").toAbsolutePath().toString() + "\\RunResults";
 		new File(runResultsDir).delete();
-//		ExtentSparkReporter r = new ExtentSparkReporter(runResultsDir + "\\runresults.html");
+		ExtentSparkReporter r = new ExtentSparkReporter(runResultsDir + "\\runresults.html");
 		ExtentReports report = new ExtentReports();
-//		report.attachReporter(r);
+		report.attachReporter(r);
 		return report;
 	}
 	
@@ -128,7 +130,7 @@ public class ExtentHelper implements ReportInterface {
 	 *
 	 * @param msg the msg
 	 */
-	public void nodeLogFail(String msg) {
+	public void reportStepLogFail(String msg) {
 		logBuffer.add("ERROR#" + msg);
 		node.log(Status.FAIL, msg);
 	}
@@ -138,7 +140,7 @@ public class ExtentHelper implements ReportInterface {
 	 *
 	 * @param msg the msg
 	 */
-	public void nodeLogPass(String msg) {
+	public void reportStepLogPass(String msg) {
 		logBuffer.add("INFO#" + msg);
 		node.log(Status.PASS, msg);
 	}
@@ -186,13 +188,15 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	public void screenshotNode(TakesScreenshot driver, ExtentTest node, Status s) {
 		try {
-			node.addScreenCaptureFromPath(screenshotFile(driver));
-			node.log(s, "");
 
-//			Media media = node.addScreenCaptureFromPath(screenshotFile(driver)).getModel().getMedia().get(0);
-//			node.getModel().getMedia().clear();
-//			node.log(s, media);
+			// ExtentReport 4
+//			node.addScreenCaptureFromPath(screenshotFile(driver));
+//			node.log(s, "");
 
+			// ExtentReport 5
+			Media media = node.addScreenCaptureFromPath(screenshotFile(driver)).getModel().getMedia().get(0);
+			node.getModel().getMedia().clear();
+			node.log(s, media);
 			
 //			node.log(Status.PASS, node.addScreenCaptureFromPath(base64conversion()).getModel().getMedia().get(0));
 //			node.log(Status.PASS, "start MTours", node.addScreenCaptureFromPath(base64conversion()).getModel().getMedia().get(0));

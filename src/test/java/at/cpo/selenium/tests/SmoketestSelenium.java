@@ -154,6 +154,7 @@ public class SmoketestSelenium extends EnvironmentHelper {
 		reportCreateStep("Step #3 - navigate to Home");
 		click(SeleniumLoginPage.HOME);
 		value = output(SeleniumLoginPage.SIGNININFO);
+		reportStepLogPass("output:\n" + value);
 		reportScreenshotStepPass();
 
 		reportTestLogPass("test #1");

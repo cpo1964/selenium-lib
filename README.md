@@ -8,7 +8,7 @@ this is an example of:
   see: https://admhelp.microfocus.com/alm/Mercury_Tours/Install_Mtous_App_Windows.htm<br>
   or from https://demo.guru99.com/test/newtours/index.php
 - usage of junit and Excel test data by Junit 4
-- usage of Selenium 4 / ExtentReport 4
+- usage of Selenium 4 / ExtentReport 5
 - automation by key driven framework
 - storage of web locators in property files -> no compile needed after changes
 
@@ -18,7 +18,7 @@ and the best:
 
 libs in use:
 - Selenium 4
-- ExtentReport 4
+- ExtentReport 5
 - org.apache.poi 3
 - junit 4
 - log4j2

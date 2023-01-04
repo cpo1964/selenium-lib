@@ -146,15 +146,6 @@ public class EnvironmentHelper {
 	}
 
 	/**
-	 * Test log fail.
-	 *
-	 * @param msg the msg
-	 */
-	protected void reportTestLogFail(String msg) {
-		environment.reportTestLogFail(msg);
-	}
-
-	/**
 	 * Screenshot step fail.
 	 */
 	protected void reportScreenshotStepFail() {
@@ -171,6 +162,15 @@ public class EnvironmentHelper {
 	}
 
 	/**
+	 * Test log fail.
+	 *
+	 * @param msg the msg
+	 */
+	protected void reportTestLogFail(String msg) {
+		environment.reportTestLogFail(msg);
+	}
+
+	/**
 	 * Screenshot step pass.
 	 */
 	protected void reportScreenshotStepPass() {
@@ -184,6 +184,24 @@ public class EnvironmentHelper {
 	 */
 	protected void reportCreateStep(String msg) {
 		environment.reportCreateStep(msg);
+	}
+
+	/**
+	 * Step log pass.
+	 *
+	 * @param msg the msg
+	 */
+	protected void reportStepLogPass(String msg) {
+		environment.reportStepLogPass(msg);
+	}
+
+	/**
+	 * Step log fail.
+	 *
+	 * @param msg the msg
+	 */
+	protected void reportStepLogFail(String msg) {
+		environment.reportStepLogFail(msg);
 	}
 
 	/**
