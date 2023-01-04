@@ -111,7 +111,7 @@
                             <transformers>
                                 <transformer
                                     implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>at.cpo.test.ExtentHelper</mainClass>
+                                    <mainClass>at.cpo.report.ExtentHelper</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

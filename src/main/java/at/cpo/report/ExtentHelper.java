@@ -266,7 +266,7 @@ public class ExtentHelper implements ReportInterface {
 //		org.apache.log4j.Logger LOGGER = null;
 		Logger LOGGER = null;
 		try {
-			LOGGER = LogManager.getLogger(Class.forName("at.cpo.tests.ExtentHelper"));
+			LOGGER = LogManager.getLogger(Class.forName("at.cpo.report.ExtentHelper"));
 		} catch (ClassNotFoundException e) {
 			return;		
 		}
