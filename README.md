@@ -24,3 +24,8 @@ libs in use:
 - log4j2
 - maven 3
 
+<b>run all existing junit4 tests:</b>
+
+- open console window (windows command or linux shell)
+- navigate to root directory of this project
+- call: mvn test
