@@ -272,10 +272,10 @@ public class SeleniumHelper extends ExtentHelper implements EnvironmentInterface
 		String xpath = getLocator(locatorDelegate);
 		webEl = driver.findElement(By.xpath(xpath));
 		if (webEl == null) {
-			reportStepLogPass("exists (" + xpath + ", " + secret + ") - false");
+			reportStepPass("exists (" + xpath + ", " + secret + ") - false");
 			return false;
 		}
-		reportStepLogPass("exists (" + xpath + ", " + secret + ") - true");
+		reportStepPass("exists (" + xpath + ", " + secret + ") - true");
 		return webEl.isDisplayed();
 	}
 
@@ -289,10 +289,10 @@ public class SeleniumHelper extends ExtentHelper implements EnvironmentInterface
 		webEl = driver.findElement(By.xpath(xpath));
 		if (webEl.isEnabled()) {
 			webEl.click();
-			reportStepLogPass("click (" + xpath + ")");
+			reportStepPass("click (" + xpath + ")");
 		} else {
 			try {
-				reportStepLogFail(
+				reportStepFail(
 						test.addScreenCaptureFromPath(screenshotFile(driver)) + "click (" + xpath + ")");
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -318,7 +318,7 @@ public class SeleniumHelper extends ExtentHelper implements EnvironmentInterface
 	 */
 	public String output(String locatorDelegate) {
 		String xpath = getLocator(locatorDelegate);
-		reportStepLogPass("output (" + xpath + ")");
+		reportStepPass("output (" + xpath + ")");
 		webEl = driver.findElement(By.xpath(xpath));
 		return webEl.getAttribute("textContent");
 	}
@@ -352,7 +352,7 @@ public class SeleniumHelper extends ExtentHelper implements EnvironmentInterface
 				} catch (IOException e) {
 					try {
 						logError("input (" + xpathDescription + ", '" + getSecretString(value, secret) + ")'");
-						reportStepLogFail(node.addScreenCaptureFromPath(ExtentHelper.screenshotFile(driver)) + "input ("
+						reportStepFail(node.addScreenCaptureFromPath(ExtentHelper.screenshotFile(driver)) + "input ("
 								+ xpathDescription + ", '" + getSecretString(value, secret) + ")'");
 					} catch (IOException e1) {
 						e.printStackTrace();
@@ -373,40 +373,40 @@ public class SeleniumHelper extends ExtentHelper implements EnvironmentInterface
 				wait(100);
 				Select lb = (Select) webEl;
 				lb.selectByValue(value);
-				reportStepLogPass("input (" + xpathDescription + ", '" + value + ")'");
+				reportStepPass("input (" + xpathDescription + ", '" + value + ")'");
 			} else if ("RadioGroup".equalsIgnoreCase(className)) {
 				int option = Integer.valueOf(value);
 				List<WebElement> radios = driver.findElements(By.name("exampleInputRadio"));
 				if (option > 0 && option <= radios.size()) {
 					radios.get(option - 1).click();
-					reportStepLogPass("input (" + xpathDescription + ", '" + value + ")'");
+					reportStepPass("input (" + xpathDescription + ", '" + value + ")'");
 				} else {
 					throw new NotFoundException("option '" + value + "' not found");
 				}
 			} else if ("CheckBox".equalsIgnoreCase(className)) {
 				if (webEl.isSelected() && "OFF".equalsIgnoreCase(value)) {
 					webEl.click();
-					reportStepLogPass("input (" + xpathDescription + ", '" + value + ")'");
+					reportStepPass("input (" + xpathDescription + ", '" + value + ")'");
 				} else if (!webEl.isSelected() && "ON".equalsIgnoreCase(value)) {
 					webEl.click();
-					reportStepLogPass("input (" + xpathDescription + ", '" + value + ")'");
+					reportStepPass("input (" + xpathDescription + ", '" + value + ")'");
 				} else {
 					throw new NotFoundException("option '" + value + "' not found");
 				}
 			} else if ("NumericField".equalsIgnoreCase(className)) {
 				webEl.sendKeys(value);
-				reportStepLogPass("input (" + xpathDescription + ", '" + value + ")'");
+				reportStepPass("input (" + xpathDescription + ", '" + value + ")'");
 			} else if ("FileField".equalsIgnoreCase(className)) {
 				webEl.sendKeys(value);
-				reportStepLogPass("input (" + xpathDescription + ", '" + value + ")'");
+				reportStepPass("input (" + xpathDescription + ", '" + value + ")'");
 			} else if ("Slider".equalsIgnoreCase(className)) {
 				webEl.sendKeys(value);
-				reportStepLogPass("input (" + xpathDescription + ", '" + value + ")'");
+				reportStepPass("input (" + xpathDescription + ", '" + value + ")'");
 			} else {
 				webEl.click();
 				webEl.clear();
 				webEl.sendKeys(value);
-				reportStepLogPass("input (" + xpathDescription + ", '" + getSecretString(value, secret) + ")'");
+				reportStepPass("input (" + xpathDescription + ", '" + getSecretString(value, secret) + ")'");
 				try {
 					logSecret(desc, value, secret);
 				} catch (IOException e) {
@@ -417,7 +417,7 @@ public class SeleniumHelper extends ExtentHelper implements EnvironmentInterface
 			// webelement does not exist or is disabled
 			try {
 				logError("input (" + xpathDescription + ", '" + getSecretString(value, secret) + ")'");
-				reportStepLogFail(node.addScreenCaptureFromPath(ExtentHelper.screenshotFile(driver)) + "input ("
+				reportStepFail(node.addScreenCaptureFromPath(ExtentHelper.screenshotFile(driver)) + "input ("
 						+ xpathDescription + ", '" + getSecretString(value, secret) + ")'");
 			} catch (IOException e1) {
 				e.printStackTrace();

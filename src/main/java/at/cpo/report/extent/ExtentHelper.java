@@ -103,7 +103,7 @@ public class ExtentHelper implements ReportInterface {
 	 *
 	 * @param msg the msg
 	 */
-	public void reportTestLogFail(String msg) {
+	public void reportTestFail(String msg) {
 		test.log(Status.FAIL, msg);
 	}
 
@@ -112,7 +112,7 @@ public class ExtentHelper implements ReportInterface {
 	 *
 	 * @param msg the msg
 	 */
-	public void reportTestLogPass(String msg) {
+	public void reportTestPass(String msg) {
 		test.log(Status.PASS, msg);
 	}
 
@@ -130,7 +130,7 @@ public class ExtentHelper implements ReportInterface {
 	 *
 	 * @param msg the msg
 	 */
-	public void reportStepLogFail(String msg) {
+	public void reportStepFail(String msg) {
 		logBuffer.add("ERROR#" + msg);
 		node.log(Status.FAIL, msg);
 	}
@@ -140,7 +140,7 @@ public class ExtentHelper implements ReportInterface {
 	 *
 	 * @param msg the msg
 	 */
-	public void reportStepLogPass(String msg) {
+	public void reportStepPass(String msg) {
 		logBuffer.add("INFO#" + msg);
 		node.log(Status.PASS, msg);
 	}
@@ -148,14 +148,14 @@ public class ExtentHelper implements ReportInterface {
 	/**
 	 * Screenshot node fail.
 	 */
-	public void reportScreenshotStepFail() {
+	public void reportStepFailScreenshot() {
 		screenshotNode(driver, node, Status.FAIL);
 	}
 	
 	/**
 	 * Screenshot node pass.
 	 */
-	public void reportScreenshotStepPass() {
+	public void reportStepPassScreenshot() {
 		screenshotNode(driver, node, Status.PASS);
 	}
 

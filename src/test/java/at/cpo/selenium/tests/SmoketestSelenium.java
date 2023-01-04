@@ -136,28 +136,26 @@ public class SmoketestSelenium extends EnvironmentHelper {
 
 		// start MTours
 		reportCreateStep("Step #1 - start MTours");
-		
 		if (!navigateToStartPage()) {
 			return;
 		};
-
-		reportScreenshotStepPass();
+		reportStepPassScreenshot();
 
 		// login
 		reportCreateStep("Step #2 - login");
 		input(SeleniumLoginPage.USERNAME, username);
 		input(SeleniumLoginPage.PASSWORD, password);
 		click(SeleniumLoginPage.LOGIN);
-		reportScreenshotStepPass();
+		reportStepPassScreenshot();
 
 		// navigate to Home
 		reportCreateStep("Step #3 - navigate to Home");
 		click(SeleniumLoginPage.HOME);
 		value = output(SeleniumLoginPage.SIGNININFO);
-		reportStepLogPass("output:\n" + value);
-		reportScreenshotStepPass();
+		reportStepPass("output:\n" + value);
+		reportStepPassScreenshot();
 
-		reportTestLogPass("test #1");
+		reportTestPass("test #1");
 	}
 
 	/**
@@ -180,8 +178,8 @@ public class SmoketestSelenium extends EnvironmentHelper {
 				}
 				driverImplicitlyWait(30000);
 			} catch (Exception e2) {
-				reportScreenshotStepFail();
-				reportTestLogFail("MTours app is down");
+				reportStepFailScreenshot();
+				reportTestFail("MTours app is down");
 				return false;
 			}
 		}

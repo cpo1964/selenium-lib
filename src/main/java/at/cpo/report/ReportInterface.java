@@ -40,14 +40,14 @@ public interface ReportInterface {
 	 *
 	 * @param msg the msg
 	 */
-	void reportTestLogPass(String msg);
+	void reportTestPass(String msg);
 
 	/**
 	 * Test log fail.
 	 *
 	 * @param msg the msg
 	 */
-	void reportTestLogFail(String msg);
+	void reportTestFail(String msg);
 
 	/**
 	 * Test create node.
@@ -61,24 +61,24 @@ public interface ReportInterface {
 	 *
 	 * @param msg the msg
 	 */
-	void reportStepLogPass(String msg);
+	void reportStepPass(String msg);
 
 	/**
 	 * Step log fail.
 	 *
 	 * @param msg the msg
 	 */
-	void reportStepLogFail(String msg);
+	void reportStepFail(String msg);
 
 	/**
 	 * Screenshot step pass.
 	 */
-	void reportScreenshotStepPass();
+	void reportStepPassScreenshot();
 
 	/**
 	 * Screenshot step fail.
 	 */
-	void reportScreenshotStepFail();
+	void reportStepFailScreenshot();
 
 	/**
 	 * Tear down extent.

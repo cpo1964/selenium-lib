@@ -57,6 +57,8 @@ public class EnvironmentHelper {
 		}
 	}
 	
+	// web api stuff ==========================================================
+
 	/**
 	 * Setup driver.
 	 */
@@ -144,12 +146,16 @@ public class EnvironmentHelper {
 	protected boolean exists(String locatorDelegate) {
 		return environment.exists(locatorDelegate);	
 	}
+	
+	// report stuff ===========================================================
 
 	/**
-	 * Screenshot step fail.
+	 * Report create test.
+	 *
+	 * @param msg the msg
 	 */
-	protected void reportScreenshotStepFail() {
-		environment.reportScreenshotStepFail();
+	protected void reportCreateTest(String msg) {
+		environment.reportCreateTest(msg);
 	}
 
 	/**
@@ -157,8 +163,8 @@ public class EnvironmentHelper {
 	 *
 	 * @param msg the msg
 	 */
-	protected void reportTestLogPass(String msg) {
-		environment.reportTestLogPass(msg);
+	protected void reportTestPass(String msg) {
+		environment.reportTestPass(msg);
 	}
 
 	/**
@@ -166,15 +172,8 @@ public class EnvironmentHelper {
 	 *
 	 * @param msg the msg
 	 */
-	protected void reportTestLogFail(String msg) {
-		environment.reportTestLogFail(msg);
-	}
-
-	/**
-	 * Screenshot step pass.
-	 */
-	protected void reportScreenshotStepPass() {
-		environment.reportScreenshotStepPass();
+	protected void reportTestFail(String msg) {
+		environment.reportTestFail(msg);
 	}
 
 	/**
@@ -191,8 +190,8 @@ public class EnvironmentHelper {
 	 *
 	 * @param msg the msg
 	 */
-	protected void reportStepLogPass(String msg) {
-		environment.reportStepLogPass(msg);
+	protected void reportStepPass(String msg) {
+		environment.reportStepPass(msg);
 	}
 
 	/**
@@ -200,17 +199,22 @@ public class EnvironmentHelper {
 	 *
 	 * @param msg the msg
 	 */
-	protected void reportStepLogFail(String msg) {
-		environment.reportStepLogFail(msg);
+	protected void reportStepFail(String msg) {
+		environment.reportStepFail(msg);
 	}
 
 	/**
-	 * Report create test.
-	 *
-	 * @param msg the msg
+	 * Screenshot step pass.
 	 */
-	protected void reportCreateTest(String msg) {
-		environment.reportCreateTest(msg);
+	protected void reportStepPassScreenshot() {
+		environment.reportStepPassScreenshot();
+	}
+
+	/**
+	 * Screenshot step fail.
+	 */
+	protected void reportStepFailScreenshot() {
+		environment.reportStepFailScreenshot();
 	}
 
 	/**
@@ -220,14 +224,7 @@ public class EnvironmentHelper {
 		environment.reportTearDown();	
 	}
 
-	/**
-	 * Gets the test data file.
-	 *
-	 * @return the test data file
-	 */
-	protected static File getTestDataFile() {
-		return environment.getTestDataFile();	
-	}
+	// logging stuff ==========================================================
 
 	/**
 	 * Log info.
@@ -243,6 +240,17 @@ public class EnvironmentHelper {
 	 */
 	protected void logAll() {
 		environment.logAll();
+	}
+
+	// other stuff ============================================================
+
+	/**
+	 * Gets the test data file.
+	 *
+	 * @return the test data file
+	 */
+	protected static File getTestDataFile() {
+		return environment.getTestDataFile();	
 	}
 
 }
