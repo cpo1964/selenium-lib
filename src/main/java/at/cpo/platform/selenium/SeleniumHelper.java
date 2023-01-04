@@ -33,6 +33,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.lang3.SystemUtils;
 //import org.junit.Rule;
 //import org.junit.rules.TestRule;
 import org.openqa.selenium.By;
@@ -102,11 +103,11 @@ public class SeleniumHelper extends ExtentHelper implements EnvironmentInterface
 //	}
 
 	/**
- * Driver get.
- *
- * @param url the url
- */
-@Override
+	 * Driver get.
+	 *
+	 * @param url the url
+	 */
+	@Override
 	public void driverGet(String url) {
 		driver.get(url);
 	}
@@ -134,7 +135,7 @@ public class SeleniumHelper extends ExtentHelper implements EnvironmentInterface
 	public void driverSwitchToDefaultContent() {
 		driver.switchTo().defaultContent();
 	}
-	
+
 	/**
 	 * Driver implicitly wait.
 	 *
@@ -183,25 +184,21 @@ public class SeleniumHelper extends ExtentHelper implements EnvironmentInterface
 		chromeOptions.setHeadless(true);
 
 		driver = new ChromeDriver(chromeOptions);
-
-//		DriverService.Builder serviceBuilder = new ChromeDriverService.Builder().withSilent(true);
-//		ChromeDriverService chromeDriverService = (ChromeDriverService) serviceBuilder.build();
-//		chromeDriverService.sendOutputTo(new OutputStream() {
-//			@Override
-//			public void write(int b) {
-//			}
-//		});
-//		driver = new ChromeDriver(chromeDriverService, chromeOptions);
 	}
 
 	/**
 	 * Setup firefox driver.
 	 */
 	protected static void setupFirefoxDriver() {
-//      System.setProperty("webdriver.gecko.driver", "/usr/local/bin/geckodriver");
-//      System.setProperty("webdriver.gecko.driver", "src/test/resources/selenium_standalone_binaries/linux/marionette/64bit/geckodriver");
-		System.setProperty("webdriver.gecko.driver",
-				"src/test/resources/selenium_standalone_binaries/windows/marionette/64bit/geckodriver.exe");
+		if (SystemUtils.IS_OS_LINUX) {
+//			System.setProperty("webdriver.gecko.driver", "/usr/local/bin/geckodriver");
+			System.setProperty("webdriver.gecko.driver",
+					"src/test/resources/selenium_standalone_binaries/linux/marionette/64bit/geckodriver");
+		} else if (SystemUtils.IS_OS_WINDOWS) {
+			System.setProperty("webdriver.gecko.driver",
+					"src/test/resources/selenium_standalone_binaries/windows/marionette/64bit/geckodriver.exe");
+		}
+
 		java.util.logging.Logger.getLogger("org.openqa.selenium.remote.RemoteWebDriver")
 				.setLevel(java.util.logging.Level.SEVERE);
 		System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, "FFLogs.txt");
@@ -213,16 +210,11 @@ public class SeleniumHelper extends ExtentHelper implements EnvironmentInterface
 			}
 		});
 
-//		FirefoxProfile profile = new FirefoxProfile();
-//		profile.setPreference("network.proxy.no_proxies_on", "localhost");
-//		profile.setPreference("javascript.enabled", true);
 		DesiredCapabilities capabilities = new DesiredCapabilities();
 		capabilities.setCapability("marionette", true);
-//		capabilities.setCapability("profile", profile);
 		FirefoxOptions options = new FirefoxOptions();
 		options.merge(capabilities);
-		FirefoxDriverLogLevel x = FirefoxDriverLogLevel.FATAL;
-		options.setLogLevel(x);
+		options.setLogLevel(FirefoxDriverLogLevel.FATAL);
 		options.addPreference("browser.link.open_newwindow", 3);
 		options.addPreference("browser.link.open_newwindow.restriction", 0);
 //      options.setHeadless(Boolean.getBoolean("headless"));
@@ -230,12 +222,14 @@ public class SeleniumHelper extends ExtentHelper implements EnvironmentInterface
 		driver = new FirefoxDriver(options);
 
 		/*
-		 * WebDriverManager.firefoxdriver().setup(); freischaltung fehlt !
+		 * WebDriverManager.firefoxdriver().setup(); 
+		 * -> freischaltung fehlt !
 		 * 
 		 * io.github.bonigarcia.wdm.config.WebDriverManagerException:
-		 * org.apache.hc.client5.http.HttpHostConnectException: Connect to
-		 * https://api.github.com:443 [api.github.com/140.82.121.6] failed: Connection
-		 * timed out: connect
+		 * org.apache.hc.client5.http.HttpHostConnectException: 
+		 * Connect to
+		 * https://api.github.com:443 [api.github.com/140.82.121.6] 
+		 * failed: Connection timed out
 		 */
 
 	}
@@ -292,8 +286,7 @@ public class SeleniumHelper extends ExtentHelper implements EnvironmentInterface
 			reportStepPass("click (" + xpath + ")");
 		} else {
 			try {
-				reportStepFail(
-						test.addScreenCaptureFromPath(screenshotFile(driver)) + "click (" + xpath + ")");
+				reportStepFail(test.addScreenCaptureFromPath(screenshotFile(driver)) + "click (" + xpath + ")");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
