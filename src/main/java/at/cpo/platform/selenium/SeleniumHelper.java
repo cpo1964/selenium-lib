@@ -52,13 +52,13 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import at.cpo.platform.EnvironmentInterface;
+import at.cpo.platform.PlatformInterface;
 import at.cpo.report.extent.ExtentHelper;
 
 /**
  * The Class SeleniumHelper.
  */
-public class SeleniumHelper extends ExtentHelper implements EnvironmentInterface {
+public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 
 	/** The after with failed information. */
 //	@Rule
@@ -81,6 +81,15 @@ public class SeleniumHelper extends ExtentHelper implements EnvironmentInterface
 
 	/** The web el. */
 	protected WebElement webEl;
+
+	/** The test environment. */
+	private String testEnvironment = ""; // eg dev, prod
+
+	/** The mandant. */
+	private String mandant = ""; // eg com, localhost
+
+	/** The produkt. */
+	private String produkt = ""; // eg mtours
 
 //	{
 //		afterWithFailedInformation = RuleChain.outerRule(new ExternalResource() {
@@ -491,8 +500,16 @@ public class SeleniumHelper extends ExtentHelper implements EnvironmentInterface
 	 * @return Das Testdaten Excel als File.
 	 */
 	public File getTestDataFile() {
+		getProdukt();
+		String mandantTestEnvironment = "";
+		if (!getMandant().isEmpty()) {
+			mandantTestEnvironment = File.separator + getMandant();
+			if (!getTestEnvironment().isEmpty()) {
+				mandantTestEnvironment = File.separator + getMandant() + "-" + getTestEnvironment();
+			}
+		}
 		return new File(Paths.get("").toAbsolutePath().toString() + File.separator + "src" + File.separator + "test"
-				+ File.separator + "data" + File.separator + "Testdata.xls");
+				+ File.separator + "data" + mandantTestEnvironment + File.separator + "Testdata.xls");
 	}
 
 	/**
@@ -553,6 +570,39 @@ public class SeleniumHelper extends ExtentHelper implements EnvironmentInterface
 		logDebug("Found value '" + (!key.equals("password") ? value : "*****") + "' by key '" + key + "' from file '"
 				+ propertiesFileDestination + "'");
 		return value;
+	}
+
+	/**
+	 * Gets the mandant.
+	 *
+	 * @return the mandant
+	 */
+	@Override
+	public String getMandant() {
+		mandant = System.getProperty("mandant", "");
+		return mandant;
+	}
+
+	/**
+	 * Gets the test environment.
+	 *
+	 * @return the test environment
+	 */
+	@Override
+	public String getTestEnvironment() {
+		testEnvironment = System.getProperty("testEnvironment", "");
+		return testEnvironment;
+	}
+
+	/**
+	 * Gets the produkt.
+	 *
+	 * @return the produkt
+	 */
+	@Override
+	public String getProdukt() {
+		produkt = System.getProperty("produkt", "");
+		return produkt;
 	}
 
 }

@@ -35,7 +35,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 
-import at.cpo.platform.EnvironmentHelper;
+import at.cpo.platform.PlatformHelper;
 import at.cpo.selenium.common.pageobjects.SeleniumLoginPage;
 import at.cpo.utils.ExcelHelper;
 
@@ -43,7 +43,7 @@ import at.cpo.utils.ExcelHelper;
  * Test Login by Selenium.
  */
 @RunWith(Parameterized.class)
-public class SmoketestSeleniumTest extends EnvironmentHelper {
+public class SmoketestSeleniumTest extends PlatformHelper {
 
 	/**
 	 * The Email.

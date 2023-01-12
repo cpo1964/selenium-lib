@@ -30,13 +30,13 @@ import at.cpo.platform.selenium.SeleniumHelper;
 /**
  * The Class EnvironmentHelper.
  */
-public class EnvironmentHelper {
+public class PlatformHelper {
 
-	/** The platform. */
+	/** The PLATFORM_SELENIUM. */
 	protected static String PLATFORM_SELENIUM = "Selenium";
 	
-	/** The environment. */
-	static EnvironmentInterface environment;
+	/** The platform. */
+	static PlatformInterface platform;
 	
 	/** The value. */
 	protected static String value;
@@ -51,7 +51,7 @@ public class EnvironmentHelper {
 	 */
 	protected static void setupPlatform(String value) {
 		if (PLATFORM_SELENIUM.equalsIgnoreCase(value)) {
-			environment = new SeleniumHelper();
+			platform = new SeleniumHelper();
 		} else {
 			throw new RuntimeException();
 		}
@@ -63,14 +63,14 @@ public class EnvironmentHelper {
 	 * Setup driver.
 	 */
 	protected void setupDriver() {
-		environment.setupDriver();	
+		platform.setupDriver();	
 	}
 	
 	/**
 	 * Driver switch to default content.
 	 */
 	protected void driverSwitchToDefaultContent() {
-		environment.driverSwitchToDefaultContent();
+		platform.driverSwitchToDefaultContent();
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class EnvironmentHelper {
 	 * @param value the value
 	 */
 	public void driverImplicitlyWait(long value) {
-		environment.driverImplicitlyWait(value);
+		platform.driverImplicitlyWait(value);
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class EnvironmentHelper {
 	 * @return true, if successful
 	 */
 	protected boolean driverSwitchToIFrame(String name) {
-		return environment.driverSwitchToIFrame(name);	
+		return platform.driverSwitchToIFrame(name);	
 	}
 
 	/**
@@ -98,14 +98,14 @@ public class EnvironmentHelper {
 	 * @param url the url
 	 */
 	protected void driverGet(String url) {
-		environment.driverGet(url);	
+		platform.driverGet(url);	
 	}
 
 	/**
 	 * Close browser.
 	 */
 	protected void closeBrowser() {
-		environment.closeBrowser();
+		platform.closeBrowser();
 	}
 
 	/**
@@ -114,7 +114,7 @@ public class EnvironmentHelper {
 	 * @param locatorDelegate the locator delegate
 	 */
 	protected void click(String locatorDelegate) {
-		environment.click(locatorDelegate);	
+		platform.click(locatorDelegate);	
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class EnvironmentHelper {
 	 * @param value the value
 	 */
 	protected void input(String locatorDelegate, String value) {
-		environment.input(locatorDelegate, value);
+		platform.input(locatorDelegate, value);
 	}
 
 	/**
@@ -134,7 +134,7 @@ public class EnvironmentHelper {
 	 * @return the string
 	 */
 	protected String output(String locatorDelegate) {
-		return environment.output(locatorDelegate);	
+		return platform.output(locatorDelegate);	
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class EnvironmentHelper {
 	 * @return true, if successful
 	 */
 	protected boolean exists(String locatorDelegate) {
-		return environment.exists(locatorDelegate);	
+		return platform.exists(locatorDelegate);	
 	}
 	
 	// report stuff ===========================================================
@@ -155,7 +155,7 @@ public class EnvironmentHelper {
 	 * @param msg the msg
 	 */
 	protected void reportCreateTest(String msg) {
-		environment.reportCreateTest(msg);
+		platform.reportCreateTest(msg);
 	}
 
 	/**
@@ -164,7 +164,7 @@ public class EnvironmentHelper {
 	 * @param msg the msg
 	 */
 	protected void reportTestPass(String msg) {
-		environment.reportTestPass(msg);
+		platform.reportTestPass(msg);
 	}
 
 	/**
@@ -173,7 +173,7 @@ public class EnvironmentHelper {
 	 * @param msg the msg
 	 */
 	protected void reportTestFail(String msg) {
-		environment.reportTestFail(msg);
+		platform.reportTestFail(msg);
 	}
 
 	/**
@@ -182,7 +182,7 @@ public class EnvironmentHelper {
 	 * @param msg the msg
 	 */
 	protected void reportCreateStep(String msg) {
-		environment.reportCreateStep(msg);
+		platform.reportCreateStep(msg);
 	}
 
 	/**
@@ -191,7 +191,7 @@ public class EnvironmentHelper {
 	 * @param msg the msg
 	 */
 	protected void reportStepPass(String msg) {
-		environment.reportStepPass(msg);
+		platform.reportStepPass(msg);
 	}
 
 	/**
@@ -200,28 +200,28 @@ public class EnvironmentHelper {
 	 * @param msg the msg
 	 */
 	protected void reportStepFail(String msg) {
-		environment.reportStepFail(msg);
+		platform.reportStepFail(msg);
 	}
 
 	/**
 	 * Screenshot step pass.
 	 */
 	protected void reportStepPassScreenshot() {
-		environment.reportStepPassScreenshot();
+		platform.reportStepPassScreenshot();
 	}
 
 	/**
 	 * Screenshot step fail.
 	 */
 	protected void reportStepFailScreenshot() {
-		environment.reportStepFailScreenshot();
+		platform.reportStepFailScreenshot();
 	}
 
 	/**
 	 * Tear down extent.
 	 */
 	protected static void reportTearDown() {
-		environment.reportTearDown();	
+		platform.reportTearDown();	
 	}
 
 	// logging stuff ==========================================================
@@ -232,14 +232,14 @@ public class EnvironmentHelper {
 	 * @param msg the msg
 	 */
 	protected void logInfo(String msg) {
-		environment.logInfo(msg);
+		platform.logInfo(msg);
 	}
 
 	/**
 	 * Log all.
 	 */
 	protected void logAll() {
-		environment.logAll();
+		platform.logAll();
 	}
 
 	// other stuff ============================================================
@@ -250,7 +250,7 @@ public class EnvironmentHelper {
 	 * @return the test data file
 	 */
 	protected static File getTestDataFile() {
-		return environment.getTestDataFile();	
+		return platform.getTestDataFile();	
 	}
 
 }

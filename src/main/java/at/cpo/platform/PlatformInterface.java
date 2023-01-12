@@ -30,7 +30,7 @@ import at.cpo.report.ReportInterface;
 /**
  * The Interface EnvironmentInterface.
  */
-public interface EnvironmentInterface extends ReportInterface {
+public interface PlatformInterface extends ReportInterface {
 	
 	// platform stuff
 	
@@ -104,6 +104,27 @@ public interface EnvironmentInterface extends ReportInterface {
 
 	// other stuff
 
+	/**
+	 * Gets the mandant.
+	 *
+	 * @return the mandant
+	 */
+	String getMandant();
+	
+	/**
+	 * Gets the test environment.
+	 *
+	 * @return the test environment
+	 */
+	String getTestEnvironment();
+
+	/**
+	 * Gets the produkt.
+	 *
+	 * @return the produkt
+	 */
+	String getProdukt();
+	
 	/**
 	 * Gets the test data file.
 	 *
