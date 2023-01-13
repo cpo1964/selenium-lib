@@ -267,17 +267,21 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * Exists.
 	 *
 	 * @param locatorDelegate the locator delegate
-	 * @param secret          the secret
+	 * @param reportFailed    the reportFailed
 	 * @return true, if successful
 	 */
-	public boolean exists(String locatorDelegate, boolean secret) {
+	public boolean exists(String locatorDelegate, boolean reportFailed) {
 		String xpath = getLocator(locatorDelegate);
 		webEl = driver.findElement(By.xpath(xpath));
 		if (webEl == null) {
-			reportStepPass("exists by xpath $(\"" + xpath + "\") - false");
+			if (reportFailed) {
+				reportStepFail("exists by xpath $(\"" + xpath + "\") - false");
+			} else {
+				reportStepPass("exists by xpath $(\"" + xpath + "\") - false");
+			}
 			return false;
 		}
-		reportStepPass("exists by xpath $(\"" + xpath + "\"), " + secret + " - true");
+		reportStepPass("exists by xpath $(\"" + xpath + "\") - true");
 		return webEl.isDisplayed();
 	}
 
