@@ -24,6 +24,7 @@
 package at.cpo.platform;
 
 import java.io.File;
+import java.util.Properties;
 
 import at.cpo.report.ReportInterface;
 
@@ -34,6 +35,24 @@ public interface PlatformInterface extends ReportInterface {
 	
 	// platform stuff
 	
+	/** The after with failed information. */
+	//	@Rule
+	//	public TestRule afterWithFailedInformation;
+	
+	public static final String PRODUKT = "produkt";
+
+	public static final String TEST_ENVIRONMENT = "testEnvironment";
+
+	public static final String MANDANT = "mandant";
+
+	public static final String TEST_PLATFORM_PROPERTIES = "test-platform.properties";
+	
+	public static final String TESTDATA_XLS = "Testdata.xls";
+	
+	public static final String TESTDATADIR = "src" + File.separator + "test" + File.separator + "data";
+
+	public static Properties testPlatformProperties = new Properties();
+
 	/**
 	 * Setup driver.
 	 */
@@ -131,5 +150,10 @@ public interface PlatformInterface extends ReportInterface {
 	 * @return the test data file
 	 */
 	File getTestDataFile();
+	
+	/**
+	 * Common setup.
+	 */
+	void commonSetup();
 
 }

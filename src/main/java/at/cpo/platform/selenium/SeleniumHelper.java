@@ -24,9 +24,12 @@
 package at.cpo.platform.selenium;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -60,10 +63,6 @@ import at.cpo.report.extent.ExtentHelper;
  */
 public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 
-	/** The after with failed information. */
-//	@Rule
-//	public TestRule afterWithFailedInformation;
-
 	/** The name. */
 	protected String name = "";
 
@@ -86,10 +85,12 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	private String testEnvironment = ""; // eg dev, prod
 
 	/** The mandant. */
-	private String mandant = ""; // eg com, localhost
+	private String mandant = ""; // eg dev, prod
 
 	/** The produkt. */
 	private String produkt = ""; // eg mtours
+
+	private String testDataPath;
 
 //	{
 //		afterWithFailedInformation = RuleChain.outerRule(new ExternalResource() {
@@ -231,14 +232,12 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		driver = new FirefoxDriver(options);
 
 		/*
-		 * WebDriverManager.firefoxdriver().setup(); 
-		 * -> freischaltung fehlt !
+		 * WebDriverManager.firefoxdriver().setup(); -> freischaltung fehlt !
 		 * 
 		 * io.github.bonigarcia.wdm.config.WebDriverManagerException:
-		 * org.apache.hc.client5.http.HttpHostConnectException: 
-		 * Connect to
-		 * https://api.github.com:443 [api.github.com/140.82.121.6] 
-		 * failed: Connection timed out
+		 * org.apache.hc.client5.http.HttpHostConnectException: Connect to
+		 * https://api.github.com:443 [api.github.com/140.82.121.6] failed: Connection
+		 * timed out
 		 */
 
 	}
@@ -495,24 +494,6 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	}
 
 	/**
-	 * Gibt das jeweilige Testdaten Excel zurück.
-	 *
-	 * @return Das Testdaten Excel als File.
-	 */
-	public File getTestDataFile() {
-		getProdukt();
-		String mandantTestEnvironment = "";
-		if (!getMandant().isEmpty()) {
-			mandantTestEnvironment = File.separator + getMandant();
-			if (!getTestEnvironment().isEmpty()) {
-				mandantTestEnvironment = File.separator + getMandant() + "-" + getTestEnvironment();
-			}
-		}
-		return new File(Paths.get("").toAbsolutePath().toString() + File.separator + "src" + File.separator + "test"
-				+ File.separator + "data" + mandantTestEnvironment + File.separator + "Testdata.xls");
-	}
-
-	/**
 	 * Gets the locator.
 	 *
 	 * @param locatorDelegate the locator delegate
@@ -573,13 +554,54 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	}
 
 	/**
+	 * Gibt das jeweilige Testdaten Excel zurück.
+	 *
+	 * @return Das Testdaten Excel als File.
+	 */
+	public File getTestDataFile() {
+		return new File(testDataPath + File.separator + TESTDATA_XLS);
+	}
+
+	private void setTestPlatformProperties(String filePath) {
+		Reader inStream;
+		try {
+			inStream = new InputStreamReader(new FileInputStream(new File(filePath)));
+			testPlatformProperties.load(inStream);
+		} catch (IOException e) {
+		}
+
+//		Enumeration<?> e = testPlatforProperties.propertyNames();
+//		while (e.hasMoreElements()) {
+//			String key = (String) e.nextElement();
+//			System.out.println(key + " -- " + testPlatforProperties.getProperty(key));
+//		}
+	}
+
+	/**
+	 * Common setup.
+	 */
+	public void commonSetup() {
+		getProdukt();
+		String mandantTestEnvironment = "";
+		if (!getMandant().isEmpty()) {
+			mandantTestEnvironment = File.separator + getMandant();
+			if (!getTestEnvironment().isEmpty()) {
+				mandantTestEnvironment = File.separator + getMandant() + "-" + getTestEnvironment();
+			}
+		}
+		testDataPath = Paths.get("").toAbsolutePath().toString() + File.separator + TESTDATADIR
+				+ mandantTestEnvironment;
+		setTestPlatformProperties(testDataPath + File.separator + TEST_PLATFORM_PROPERTIES);
+	}
+
+	/**
 	 * Gets the mandant.
 	 *
 	 * @return the mandant
 	 */
 	@Override
 	public String getMandant() {
-		mandant = System.getProperty("mandant", "");
+		mandant = System.getProperty(MANDANT, "");
 		return mandant;
 	}
 
@@ -590,7 +612,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	@Override
 	public String getTestEnvironment() {
-		testEnvironment = System.getProperty("testEnvironment", "");
+		testEnvironment = System.getProperty(TEST_ENVIRONMENT, "");
 		return testEnvironment;
 	}
 
@@ -601,7 +623,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	@Override
 	public String getProdukt() {
-		produkt = System.getProperty("produkt", "");
+		produkt = System.getProperty(PRODUKT, "");
 		return produkt;
 	}
 

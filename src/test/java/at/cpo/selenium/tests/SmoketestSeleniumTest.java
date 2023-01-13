@@ -56,14 +56,24 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 	@Parameter(1)
 	public String password;
 	/**
-	 * The Skip.
+	 * The localhostUrl.
 	 */
 	@Parameter(2)
+	public String localhostUrl;
+	/**
+	 * The remoteUrl.
+	 */
+	@Parameter(3)
+	public String remoteUrl;
+	/**
+	 * The Skip.
+	 */
+	@Parameter(4)
 	public String skip;
 	/**
 	 * The snapshots.
 	 */
-	@Parameter(3)
+	@Parameter(5)
 	public String snapshots;
 	
 	/**
@@ -74,7 +84,8 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 	 */
 	@Parameterized.Parameters // (name = "{index}: {0}")
 	public static Collection<?> getData() throws IOException {
-		setupPlatform(PLATFORM_SELENIUM);
+		// FIRST evaluate the file path THEN call getTestDataFile()
+		commonSetup(PLATFORM_SELENIUM);
 		return new ExcelHelper(getTestDataFile(), SmoketestSeleniumTest.class.getSimpleName()).getData();
 	}
 
@@ -106,6 +117,8 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 		logInfo("# setUp ######################");
 		logInfo("# username: '" + username + "'");
 		logInfo("# password: '" + password + "'");
+		logInfo("# localhostUrl: '" + localhostUrl + "'");
+		logInfo("# remoteUrl: '" + remoteUrl + "'");
 
 		setupDriver();
 	}
@@ -165,10 +178,12 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 	 */
 	private boolean navigateToStartPage() {
 		try {
-			driverGet("http://localhost:8881/servlets/com.mercurytours.servlet.WelcomeServlet");
+			logInfo("localhostUrl: " + testPlatformPropertiesGet(localhostUrl));
+			driverGet(testPlatformPropertiesGet(localhostUrl));
 		} catch (Exception e1) {
 			try {
-				driverGet("https://demo.guru99.com/test/newtours/index.php");
+				logInfo("remoteUrl: " + testPlatformPropertiesGet(remoteUrl));
+				driverGet(testPlatformPropertiesGet(remoteUrl));
 				driverImplicitlyWait(3000);
 				ok = driverSwitchToIFrame("gdpr-consent-notice");
 				ok = ok && exists(SeleniumLoginPage.NOTICE);

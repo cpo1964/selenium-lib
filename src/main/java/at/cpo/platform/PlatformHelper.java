@@ -32,9 +32,6 @@ import at.cpo.platform.selenium.SeleniumHelper;
  */
 public class PlatformHelper {
 
-	/** The PLATFORM_SELENIUM. */
-	protected static String PLATFORM_SELENIUM = "Selenium";
-	
 	/** The platform. */
 	static PlatformInterface platform;
 	
@@ -43,20 +40,28 @@ public class PlatformHelper {
 
 	/** The ok. */
 	protected boolean ok;
+	
+	// START - place to expand platform specific features - eg Selenium:
 
+	/** The PLATFORM_SELENIUM. */
+	protected static String PLATFORM_SELENIUM = "Selenium";
+	
 	/**
 	 * Sets the up platform.
 	 *
 	 * @param value the new up platform
 	 */
-	protected static void setupPlatform(String value) {
+	protected static void commonSetup(String value) {
 		if (PLATFORM_SELENIUM.equalsIgnoreCase(value)) {
 			platform = new SeleniumHelper();
+			platform.commonSetup();
 		} else {
 			throw new RuntimeException();
 		}
 	}
 	
+	// END - place to expand platform specific features
+
 	// web api stuff ==========================================================
 
 	/**
@@ -252,5 +257,10 @@ public class PlatformHelper {
 	protected static File getTestDataFile() {
 		return platform.getTestDataFile();	
 	}
+	
+	protected static String testPlatformPropertiesGet(String key) {
+		return (String) PlatformInterface.testPlatformProperties.get(key);	
+	}
+	
 
 }
