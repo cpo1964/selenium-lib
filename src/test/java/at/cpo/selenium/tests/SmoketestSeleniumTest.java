@@ -165,7 +165,7 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 		reportCreateStep("Step #3 - navigate to Home");
 		click(SeleniumLoginPage.HOME);
 		value = output(SeleniumLoginPage.SIGNININFO);
-		reportStepPass("output:\n" + value);
+		//reportStepPass("output:\n" + value);
 		reportStepPassScreenshot();
 
 		reportTestPass("test #1");

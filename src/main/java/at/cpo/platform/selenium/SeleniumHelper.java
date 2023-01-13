@@ -274,10 +274,10 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		String xpath = getLocator(locatorDelegate);
 		webEl = driver.findElement(By.xpath(xpath));
 		if (webEl == null) {
-			reportStepPass("exists (" + xpath + ", " + secret + ") - false");
+			reportStepPass("exists by xpath $(\"" + xpath + "\") - false");
 			return false;
 		}
-		reportStepPass("exists (" + xpath + ", " + secret + ") - true");
+		reportStepPass("exists by xpath $(\"" + xpath + "\"), " + secret + " - true");
 		return webEl.isDisplayed();
 	}
 
@@ -291,10 +291,10 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		webEl = driver.findElement(By.xpath(xpath));
 		if (webEl.isEnabled()) {
 			webEl.click();
-			reportStepPass("click (" + xpath + ")");
+			reportStepPass("click by xpath $(\"" + xpath + "\")");
 		} else {
 			try {
-				reportStepFail(test.addScreenCaptureFromPath(screenshotFile(driver)) + "click (" + xpath + ")");
+				reportStepFail(test.addScreenCaptureFromPath(screenshotFile(driver)) + "click by xpath $(\"" + xpath + "\")");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -319,9 +319,10 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	public String output(String locatorDelegate) {
 		String xpath = getLocator(locatorDelegate);
-		reportStepPass("output (" + xpath + ")");
 		webEl = driver.findElement(By.xpath(xpath));
-		return webEl.getAttribute("textContent");
+		String output = webEl.getAttribute("textContent");
+		reportStepPass("output by xpath $(\"" + xpath + "\")<br>text: " + output);
+		return output;
 	}
 
 	/**
@@ -332,7 +333,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @param secret          the secret
 	 */
 	public void input(String locatorDelegate, String value, boolean secret) {
-		String xpathDescription = "";
+		String xpath = "";
 		try {
 			String desc = getLocator(locatorDelegate);
 			String className = "";
@@ -345,24 +346,24 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			}
 			if (descParts.length == 2) {
 				className = descParts[0];
-				xpathDescription = "//" + descParts[1];
-				webEl = driver.findElement(By.xpath(xpathDescription));
+				xpath = "//" + descParts[1];
+				webEl = driver.findElement(By.xpath(xpath));
 			} else {
 				try {
 					logSecret(desc + "(unknown) -> not done ", getSecretString(value, secret), secret);
 				} catch (IOException e) {
 					try {
-						logError("input (" + xpathDescription + ", '" + getSecretString(value, secret) + ")'");
+						logError("input by xpath $(\"" + xpath + "\"), value: '" + getSecretString(value, secret) + "'");
 						reportStepFail(node.addScreenCaptureFromPath(ExtentHelper.screenshotFile(driver)) + "input ("
-								+ xpathDescription + ", '" + getSecretString(value, secret) + ")'");
+								+ xpath + ", '" + getSecretString(value, secret) + ")'");
 					} catch (IOException e1) {
 						e.printStackTrace();
 					}
 				}
 				return;
 			}
-			if (xpathDescription.isEmpty()) {
-				xpathDescription = locatorDelegate;
+			if (xpath.isEmpty()) {
+				xpath = locatorDelegate;
 			}
 			waitUntilWebelementIsClickable(30, webEl);
 			wait(100);
@@ -374,40 +375,40 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 				wait(100);
 				Select lb = (Select) webEl;
 				lb.selectByValue(value);
-				reportStepPass("input (" + xpathDescription + ", '" + value + ")'");
+				reportStepPass("input by xpath $(\"" + xpath + "\"), value: '" + value + "'");
 			} else if ("RadioGroup".equalsIgnoreCase(className)) {
 				int option = Integer.valueOf(value);
-				List<WebElement> radios = driver.findElements(By.name("exampleInputRadio"));
+				List<WebElement> radios = driver.findElements(By.xpath(xpath));
 				if (option > 0 && option <= radios.size()) {
 					radios.get(option - 1).click();
-					reportStepPass("input (" + xpathDescription + ", '" + value + ")'");
+					reportStepPass("input by xpath $(\"" + xpath + "\"), value: '" + value + "'");
 				} else {
-					throw new NotFoundException("option '" + value + "' not found");
+					throw new NotFoundException("input by xpath $(\"" + xpath + "\"), value not found: '" + value + "'");
 				}
 			} else if ("CheckBox".equalsIgnoreCase(className)) {
 				if (webEl.isSelected() && "OFF".equalsIgnoreCase(value)) {
 					webEl.click();
-					reportStepPass("input (" + xpathDescription + ", '" + value + ")'");
+					reportStepPass("input by xpath $(\"" + xpath + "\"), value: '" + value + "'");
 				} else if (!webEl.isSelected() && "ON".equalsIgnoreCase(value)) {
 					webEl.click();
-					reportStepPass("input (" + xpathDescription + ", '" + value + ")'");
+					reportStepPass("input by xpath $(\"" + xpath + "\"), value: '" + value + "'");
 				} else {
-					throw new NotFoundException("option '" + value + "' not found");
+					throw new NotFoundException("input by xpath $(\"" + xpath + "\"), value not found: '" + value + "'");
 				}
 			} else if ("NumericField".equalsIgnoreCase(className)) {
 				webEl.sendKeys(value);
-				reportStepPass("input (" + xpathDescription + ", '" + value + ")'");
+				reportStepPass("input by xpath $(\"" + xpath + "\"), value: '" + value + "'");
 			} else if ("FileField".equalsIgnoreCase(className)) {
 				webEl.sendKeys(value);
-				reportStepPass("input (" + xpathDescription + ", '" + value + ")'");
+				reportStepPass("input by xpath $(\"" + xpath + "\"), value: '" + value + "'");
 			} else if ("Slider".equalsIgnoreCase(className)) {
 				webEl.sendKeys(value);
-				reportStepPass("input (" + xpathDescription + ", '" + value + ")'");
+				reportStepPass("input by xpath $(\"" + xpath + "\"), value: '" + value + "'");
 			} else {
 				webEl.click();
 				webEl.clear();
 				webEl.sendKeys(value);
-				reportStepPass("input (" + xpathDescription + ", '" + getSecretString(value, secret) + ")'");
+				reportStepPass("input by xpath $(\"" + xpath + "\"), value: '" + getSecretString(value, secret) + "'");
 				try {
 					logSecret(desc, value, secret);
 				} catch (IOException e) {
@@ -417,9 +418,9 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		} catch (RuntimeException e) {
 			// webelement does not exist or is disabled
 			try {
-				logError("input (" + xpathDescription + ", '" + getSecretString(value, secret) + ")'");
+				logError("input by xpath $(\"" + xpath + "\"), value: '" + getSecretString(value, secret) + "'");
 				reportStepFail(node.addScreenCaptureFromPath(ExtentHelper.screenshotFile(driver)) + "input ("
-						+ xpathDescription + ", '" + getSecretString(value, secret) + ")'");
+						+ xpath + ", '" + getSecretString(value, secret) + ")'");
 			} catch (IOException e1) {
 				e.printStackTrace();
 			}
