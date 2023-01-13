@@ -304,6 +304,9 @@ public class ExtentHelper implements ReportInterface {
 //		clearConsole();
 
 		for (String el : logBuffer) {
+			el = el.replace("<br>", "\n");
+			el = el.replace("<b>", "");
+			el = el.replace("</b>", "");
 			if (el.startsWith("INFO#")) {
 				LOGGER.info(el.substring(5));
 			} else if (el.startsWith("DEBUG#")) {

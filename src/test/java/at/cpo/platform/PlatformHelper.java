@@ -143,6 +143,13 @@ public class PlatformHelper {
 	}
 
 	/**
+	 * Validate.
+	 */
+	protected void validate(boolean condition, String description) {
+		platform.validate(condition, description);	
+	}
+
+	/**
 	 * Exists.
 	 *
 	 * @param locatorDelegate the locator delegate

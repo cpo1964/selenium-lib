@@ -53,6 +53,12 @@ public interface PlatformInterface extends ReportInterface {
 
 	public static Properties testPlatformProperties = new Properties();
 
+	/** The ok. */
+	public static boolean ok = false;
+
+	/** The value. */
+	public static String value = "";
+
 	/**
 	 * Setup driver.
 	 */
@@ -112,6 +118,14 @@ public interface PlatformInterface extends ReportInterface {
 	 * @return the string
 	 */
 	String output(String locatorDelegate);
+	
+	/**
+	 * Validate.
+	 *
+	 * @param description the description
+	 */
+	void validate(boolean condition, String description);
+
 
 	/**
 	 * Exists.

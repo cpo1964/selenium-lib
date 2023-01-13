@@ -165,10 +165,21 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 		reportCreateStep("Step #3 - navigate to Home");
 		click(SeleniumLoginPage.HOME);
 		value = output(SeleniumLoginPage.SIGNININFO);
-		//reportStepPass("output:\n" + value);
+		String expectedText = "RegisteredX users can sign-in here to find the lowest fare on participating airlines.";
+		validate(normalizedValue().contains(expectedText),
+				"value of SignInInfo'<br>" +
+				"expected: '" + expectedText + "'<br>" +
+				"found: '" + value + "'<br>'result");
 		reportStepPassScreenshot();
 
 		reportTestPass("test #1");
+	}
+
+	private String normalizedValue() {
+		while (value.contains("  ")) {
+			value = value.replace("\n","").replaceAll("  "," ");
+		}
+		return value;
 	}
 
 	/**

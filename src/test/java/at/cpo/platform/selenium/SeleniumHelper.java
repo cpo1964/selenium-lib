@@ -23,6 +23,8 @@
  */
 package at.cpo.platform.selenium;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -68,12 +70,6 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 
 	/** The failed. */
 	protected boolean failed;
-
-	/** The ok. */
-	public boolean ok = false;
-
-	/** The value. */
-	protected String value = "";
 
 	/** The browser. */
 	protected static String browser;
@@ -275,13 +271,13 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		webEl = driver.findElement(By.xpath(xpath));
 		if (webEl == null) {
 			if (reportFailed) {
-				reportStepFail("exists by xpath $(\"" + xpath + "\") - false");
+				reportStepFail("<b>exist</b>s by xpath $(\"" + xpath + "\") - false");
 			} else {
-				reportStepPass("exists by xpath $(\"" + xpath + "\") - false");
+				reportStepPass("<b>exist</b>s by xpath $(\"" + xpath + "\") - false");
 			}
 			return false;
 		}
-		reportStepPass("exists by xpath $(\"" + xpath + "\") - true");
+		reportStepPass("<b>exists</b> by xpath $(\"" + xpath + "\") - true");
 		return webEl.isDisplayed();
 	}
 
@@ -295,10 +291,10 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		webEl = driver.findElement(By.xpath(xpath));
 		if (webEl.isEnabled()) {
 			webEl.click();
-			reportStepPass("click by xpath $(\"" + xpath + "\")");
+			reportStepPass("<b>click</b> by xpath $(\"" + xpath + "\")");
 		} else {
 			try {
-				reportStepFail(test.addScreenCaptureFromPath(screenshotFile(driver)) + "click by xpath $(\"" + xpath + "\")");
+				reportStepFail(test.addScreenCaptureFromPath(screenshotFile(driver)) + "<b>click</b> by xpath $(\"" + xpath + "\")");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -313,20 +309,6 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	public void input(String locatorDelegate, String value) {
 		input(locatorDelegate, value, false);
-	}
-
-	/**
-	 * Output.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @return the string
-	 */
-	public String output(String locatorDelegate) {
-		String xpath = getLocator(locatorDelegate);
-		webEl = driver.findElement(By.xpath(xpath));
-		String output = webEl.getAttribute("textContent");
-		reportStepPass("output by xpath $(\"" + xpath + "\")<br>text: " + output);
-		return output;
 	}
 
 	/**
@@ -357,8 +339,8 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 					logSecret(desc + "(unknown) -> not done ", getSecretString(value, secret), secret);
 				} catch (IOException e) {
 					try {
-						logError("input by xpath $(\"" + xpath + "\"), value: '" + getSecretString(value, secret) + "'");
-						reportStepFail(node.addScreenCaptureFromPath(ExtentHelper.screenshotFile(driver)) + "input ("
+						logError("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + getSecretString(value, secret) + "'");
+						reportStepFail(node.addScreenCaptureFromPath(ExtentHelper.screenshotFile(driver)) + "<b>input</b> ("
 								+ xpath + ", '" + getSecretString(value, secret) + ")'");
 					} catch (IOException e1) {
 						e.printStackTrace();
@@ -379,40 +361,40 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 				wait(100);
 				Select lb = (Select) webEl;
 				lb.selectByValue(value);
-				reportStepPass("input by xpath $(\"" + xpath + "\"), value: '" + value + "'");
+				reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
 			} else if ("RadioGroup".equalsIgnoreCase(className)) {
 				int option = Integer.valueOf(value);
 				List<WebElement> radios = driver.findElements(By.xpath(xpath));
 				if (option > 0 && option <= radios.size()) {
 					radios.get(option - 1).click();
-					reportStepPass("input by xpath $(\"" + xpath + "\"), value: '" + value + "'");
+					reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
 				} else {
-					throw new NotFoundException("input by xpath $(\"" + xpath + "\"), value not found: '" + value + "'");
+					throw new NotFoundException("<b>input</b> by xpath $(\"" + xpath + "\"), value not found: '" + value + "'");
 				}
 			} else if ("CheckBox".equalsIgnoreCase(className)) {
 				if (webEl.isSelected() && "OFF".equalsIgnoreCase(value)) {
 					webEl.click();
-					reportStepPass("input by xpath $(\"" + xpath + "\"), value: '" + value + "'");
+					reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
 				} else if (!webEl.isSelected() && "ON".equalsIgnoreCase(value)) {
 					webEl.click();
-					reportStepPass("input by xpath $(\"" + xpath + "\"), value: '" + value + "'");
+					reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
 				} else {
-					throw new NotFoundException("input by xpath $(\"" + xpath + "\"), value not found: '" + value + "'");
+					throw new NotFoundException("<b>input</b> by xpath $(\"" + xpath + "\"), value not found: '" + value + "'");
 				}
 			} else if ("NumericField".equalsIgnoreCase(className)) {
 				webEl.sendKeys(value);
-				reportStepPass("input by xpath $(\"" + xpath + "\"), value: '" + value + "'");
+				reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
 			} else if ("FileField".equalsIgnoreCase(className)) {
 				webEl.sendKeys(value);
-				reportStepPass("input by xpath $(\"" + xpath + "\"), value: '" + value + "'");
+				reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
 			} else if ("Slider".equalsIgnoreCase(className)) {
 				webEl.sendKeys(value);
-				reportStepPass("input by xpath $(\"" + xpath + "\"), value: '" + value + "'");
+				reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
 			} else {
 				webEl.click();
 				webEl.clear();
 				webEl.sendKeys(value);
-				reportStepPass("input by xpath $(\"" + xpath + "\"), value: '" + getSecretString(value, secret) + "'");
+				reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + getSecretString(value, secret) + "'");
 				try {
 					logSecret(desc, value, secret);
 				} catch (IOException e) {
@@ -422,13 +404,38 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		} catch (RuntimeException e) {
 			// webelement does not exist or is disabled
 			try {
-				logError("input by xpath $(\"" + xpath + "\"), value: '" + getSecretString(value, secret) + "'");
-				reportStepFail(node.addScreenCaptureFromPath(ExtentHelper.screenshotFile(driver)) + "input ("
+				logError("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + getSecretString(value, secret) + "'");
+				reportStepFail(node.addScreenCaptureFromPath(ExtentHelper.screenshotFile(driver)) + "<b>input</b> ("
 						+ xpath + ", '" + getSecretString(value, secret) + ")'");
 			} catch (IOException e1) {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	/**
+	 * Output.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the string
+	 */
+	public String output(String locatorDelegate) {
+		String xpath = getLocator(locatorDelegate);
+		webEl = driver.findElement(By.xpath(xpath));
+		String output = webEl.getAttribute("textContent");
+		reportStepPass("<b>output</b> by xpath $(\"" + xpath + "\")<br>text: " + output);
+		return output;
+	}
+
+	@Override
+	public void validate(boolean condition, String description) {
+		if (condition) {
+			reportStepPass("<b>validate</b> '" + description + "' - " + condition);
+		} else {
+			reportStepFail("<b>validate</b> '" + description + "' - " + condition);
+			reportStepFailScreenshot();
+		}
+		assertTrue(condition);
 	}
 
 	/**
@@ -439,9 +446,9 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @param secret the secret
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void logSecret(String desc, String value, boolean secret) throws IOException {
+	private void logSecret(String locatorDelegate, String value, boolean secret) throws IOException {
 		String text = getSecretString(value, secret);
-		logDebug("INPUT to " + desc + " value=" + text);
+		logDebug("<b>input</b> by xpath $(\"" + locatorDelegate + "\"), value=" + text);
 	}
 
 	/**
