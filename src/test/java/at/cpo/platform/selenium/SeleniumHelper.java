@@ -120,6 +120,8 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 
 	/**
 	 * Driver switch to I frame.
+	 * 
+	 * Send future commands to iFrame
 	 *
 	 * @param name the name
 	 * @return true, if successful
@@ -136,6 +138,8 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 
 	/**
 	 * Driver switch to default content.
+	 * 
+	 * Selects either the first frame on the page, or the main document when a page contains iframes.
 	 */
 	@Override
 	public void driverSwitchToDefaultContent() {

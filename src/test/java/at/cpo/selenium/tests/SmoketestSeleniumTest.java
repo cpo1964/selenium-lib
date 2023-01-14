@@ -196,10 +196,12 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 				logInfo("remoteUrl: " + testPlatformPropertiesGet(remoteUrl));
 				driverGet(testPlatformPropertiesGet(remoteUrl));
 				driverImplicitlyWait(3000);
+				// Send future commands to iFrame
 				ok = driverSwitchToIFrame("gdpr-consent-notice");
 				ok = ok && exists(SeleniumLoginPage.NOTICE);
 				if (ok) {
 					click(SeleniumLoginPage.NOTICE);
+					// Send future commands to main document
 					driverSwitchToDefaultContent();
 				}
 				driverImplicitlyWait(30000);

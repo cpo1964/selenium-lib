@@ -87,11 +87,6 @@ public interface PlatformInterface extends ReportInterface {
 	void setupDriver();
 	
 	/**
-	 * Driver switch to default content.
-	 */
-	void driverSwitchToDefaultContent();
-	
-	/**
 	 * Driver implicitly wait.
 	 *
 	 * @param value the value
@@ -99,7 +94,16 @@ public interface PlatformInterface extends ReportInterface {
 	void driverImplicitlyWait(long value);
 
 	/**
+	 * Driver switch to default content.
+	 * 
+	 * Selects either the first frame on the page, or the main document when a page contains iframes.
+	 */
+	void driverSwitchToDefaultContent();
+	
+	/**
 	 * Driver switch to I frame.
+	 * 
+	 * Send future commands to iFrame
 	 *
 	 * @param name the name
 	 * @return true, if successful

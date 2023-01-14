@@ -79,15 +79,6 @@ public class PlatformHelper {
 	}
 
 	/**
-	 * Driver implicitly wait.
-	 *
-	 * @param value the value
-	 */
-	public void driverImplicitlyWait(long value) {
-		platform.driverImplicitlyWait(value);
-	}
-
-	/**
 	 * Driver switch to I frame.
 	 *
 	 * @param name the name
@@ -95,6 +86,15 @@ public class PlatformHelper {
 	 */
 	protected boolean driverSwitchToIFrame(String name) {
 		return platform.driverSwitchToIFrame(name);	
+	}
+
+	/**
+	 * Driver implicitly wait.
+	 *
+	 * @param value the value
+	 */
+	public void driverImplicitlyWait(long value) {
+		platform.driverImplicitlyWait(value);
 	}
 
 	/**
