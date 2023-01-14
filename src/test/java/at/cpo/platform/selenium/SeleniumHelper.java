@@ -321,48 +321,35 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	public void input(String locatorDelegate, String value, boolean secret) {
 		String xpath = "";
 		try {
-			String desc = getLocator(locatorDelegate);
+			xpath = getLocator(locatorDelegate); // expected: a xpath from the property file
 			String className = "";
 			String[] descParts = {};
-			if (desc.contains("://")) {
-				descParts = desc.split("://");
-			}
-			if (desc.contains(":(//")) {
-				descParts = desc.split(":\\(//");
-			}
-			if (descParts.length == 2) {
-				className = descParts[0];
-				xpath = "//" + descParts[1];
+			descParts = locatorDelegate.split("\\.");
+			if (descParts.length == 3) {
+				className = descParts[1];
 				webEl = driver.findElement(By.xpath(xpath));
 			} else {
 				try {
-					logSecret(desc + "(unknown) -> not done ", getSecretString(value, secret), secret);
+					logSecret(xpath + "(unknown) -> not done ", getSecretString(value, secret), secret);
+					reportStepFail(node.addScreenCaptureFromPath(ExtentHelper.screenshotFile(driver)) + "<b>input</b> ("
+							+ xpath + ", '" + getSecretString(value, secret) + ")'");
+					throw new RuntimeException();
 				} catch (IOException e) {
-					try {
-						logError("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + getSecretString(value, secret) + "'");
-						reportStepFail(node.addScreenCaptureFromPath(ExtentHelper.screenshotFile(driver)) + "<b>input</b> ("
-								+ xpath + ", '" + getSecretString(value, secret) + ")'");
-					} catch (IOException e1) {
-						e.printStackTrace();
-					}
+					e.printStackTrace();
 				}
 				return;
-			}
-			if (xpath.isEmpty()) {
-				xpath = locatorDelegate;
 			}
 			waitUntilWebelementIsClickable(30, webEl);
 			wait(100);
 			if (!webEl.isEnabled()) {
 				throw new RuntimeException();
 			}
-			if ("ListBox".equalsIgnoreCase(className) || "RadioGroup".equals(className)) {
-				waitUntilWebelementIsClickable(30, webEl);
+			if (LISTBOX.equalsIgnoreCase(className)) {
 				wait(100);
 				Select lb = (Select) webEl;
 				lb.selectByValue(value);
 				reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
-			} else if ("RadioGroup".equalsIgnoreCase(className)) {
+			} else if (RADIOGROUP.equalsIgnoreCase(className)) {
 				int option = Integer.valueOf(value);
 				List<WebElement> radios = driver.findElements(By.xpath(xpath));
 				if (option > 0 && option <= radios.size()) {
@@ -371,7 +358,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 				} else {
 					throw new NotFoundException("<b>input</b> by xpath $(\"" + xpath + "\"), value not found: '" + value + "'");
 				}
-			} else if ("CheckBox".equalsIgnoreCase(className)) {
+			} else if (CHECKBOX.equalsIgnoreCase(className)) {
 				if (webEl.isSelected() && "OFF".equalsIgnoreCase(value)) {
 					webEl.click();
 					reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
@@ -381,25 +368,27 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 				} else {
 					throw new NotFoundException("<b>input</b> by xpath $(\"" + xpath + "\"), value not found: '" + value + "'");
 				}
-			} else if ("NumericField".equalsIgnoreCase(className)) {
+			} else if (NUMERICFIELD.equalsIgnoreCase(className)) {
 				webEl.sendKeys(value);
 				reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
-			} else if ("FileField".equalsIgnoreCase(className)) {
+			} else if (FILEFIELD.equalsIgnoreCase(className)) {
 				webEl.sendKeys(value);
 				reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
-			} else if ("Slider".equalsIgnoreCase(className)) {
+			} else if (SLIDER.equalsIgnoreCase(className)) {
 				webEl.sendKeys(value);
 				reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
-			} else {
+			} else  if (EDITFIELD.equalsIgnoreCase(className)) {
 				webEl.click();
 				webEl.clear();
 				webEl.sendKeys(value);
 				reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + getSecretString(value, secret) + "'");
 				try {
-					logSecret(desc, value, secret);
+					logSecret(xpath, value, secret);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+			} else {
+				throw new NotFoundException("type of webelement unknown: '" + className + "'");
 			}
 		} catch (RuntimeException e) {
 			// webelement does not exist or is disabled
@@ -512,8 +501,13 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @return the locator
 	 */
 	public String getLocator(String locatorDelegate) {
-		String cn = locatorDelegate.split("\\.")[0];
-		String key = locatorDelegate.replace(cn + ".", "");
+		String[] locatorDelegateSplit = locatorDelegate.split("\\.");
+		if (locatorDelegateSplit.length != 3) {
+			reportStepFail(locatorDelegate);
+			throw new NotFoundException("locatorDelegate must match pattern 'classname.locatortype.locatorDelegate': '" + locatorDelegate + "'");
+		}
+		String cn = locatorDelegateSplit[0];
+		String key = locatorDelegateSplit[2];
 		Class<?> c = null;
 		try {
 			c = Class.forName("at.cpo.selenium.common.pageobjects." + cn);

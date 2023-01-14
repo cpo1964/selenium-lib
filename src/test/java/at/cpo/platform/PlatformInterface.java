@@ -50,7 +50,7 @@ public interface PlatformInterface extends ReportInterface {
 	public static final String TESTDATA_XLS = "Testdata.xls";
 	
 	public static final String TESTDATADIR = "src" + File.separator + "test" + File.separator + "data";
-
+	
 	public static Properties testPlatformProperties = new Properties();
 
 	/** The ok. */
@@ -58,6 +58,28 @@ public interface PlatformInterface extends ReportInterface {
 
 	/** The value. */
 	public static String value = "";
+
+	// definition of standard webelement types
+	
+	public static final String EDITFIELD = "EditField";
+
+	public static final String LISTBOX = "ListBox";
+
+	public static final String RADIOGROUP = "RadioGroup";
+
+	public static final String CHECKBOX = "CheckBox";
+
+	public static final String NUMERICFIELD = "NumericField";
+
+	public static final String FILEFIELD = "FileField";
+
+	public static final String SLIDER = "Slider";
+
+	public static final String BUTTON = "Button";
+
+	public static final String LINK = "Link";
+
+	public static final String TEXT = "Text";
 
 	/**
 	 * Setup driver.

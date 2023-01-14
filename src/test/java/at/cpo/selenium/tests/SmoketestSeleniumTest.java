@@ -165,7 +165,7 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 		reportCreateStep("Step #3 - navigate to Home");
 		click(SeleniumLoginPage.HOME);
 		value = output(SeleniumLoginPage.SIGNININFO);
-		String expectedText = "RegisteredX users can sign-in here to find the lowest fare on participating airlines.";
+		String expectedText = "Registered users can sign-in here to find the lowest fare on participating airlines.";
 		validate(normalizedValue().contains(expectedText),
 				"value of SignInInfo'<br>" +
 				"expected: '" + expectedText + "'<br>" +

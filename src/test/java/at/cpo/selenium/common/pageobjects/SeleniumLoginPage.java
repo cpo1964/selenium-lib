@@ -30,44 +30,37 @@ import at.cpo.platform.selenium.SeleniumHelper;
  */
 public class SeleniumLoginPage extends SeleniumHelper {
 
-    /** The page. */
-    protected static String PAGE = "SeleniumLoginPage.";
+	/** The page. */
+	protected static String PAGE = "SeleniumLoginPage.";
 
-    /**
-     * The constant USERNAME.
-     */
-    public static final String USERNAME = PAGE + "UsernameIN";
+	/**
+	 * The constant USERNAME.
+	 */
+	public static final String USERNAME = PAGE + EDITFIELD + ".UsernameIN";
 
-    /**
-     * The constant PASSWORD.
-     */
-    public static final String PASSWORD = PAGE + "PasswordIN";
-    /**
-     * The constant SMSTAN.
-     */
+	/**
+	 * The constant PASSWORD.
+	 */
+	public static final String PASSWORD = PAGE + EDITFIELD + ".PasswordIN";
 
-    /**
-     * The constant Login.
-     */
-    public static final String LOGIN = PAGE + "LoginBT";
+	/**
+	 * The constant Login.
+	 */
+	public static final String LOGIN = PAGE + BUTTON + ".LoginBT";
 
-    /**
-     * The constant Login.
-     */
-    public static final String NOTICE = PAGE + "NoticeBT";
+	/**
+	 * The constant Login.
+	 */
+	public static final String NOTICE = PAGE + BUTTON + ".NoticeBT";
 
-    /**
-     * The constant HOME.
-     */
-    public static final String HOME = PAGE + "HomeLN";
+	/**
+	 * The constant HOME.
+	 */
+	public static final String HOME = PAGE + LINK + ".HomeLN";
 
-    /**
-     * The constant SIGNININFO.
-     */
-    public static final String SIGNININFO = PAGE + "SigInInfoTXT";
-    
-    {
-        PAGE = "DCBSeleniumLoginPage.";
-    }
+	/**
+	 * The constant SIGNININFO.
+	 */
+	public static final String SIGNININFO = PAGE + TEXT + ".SigInInfoTXT";
 
 }
