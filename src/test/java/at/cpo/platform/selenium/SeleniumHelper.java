@@ -323,8 +323,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		try {
 			xpath = getLocator(locatorDelegate); // expected: a xpath from the property file
 			String className = "";
-			String[] descParts = {};
-			descParts = locatorDelegate.split("\\.");
+			String[] descParts = locatorDelegate.split("\\.");
 			if (descParts.length == 3) {
 				className = descParts[1];
 				webEl = driver.findElement(By.xpath(xpath));
