@@ -317,6 +317,14 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 
 	/**
 	 * Input.
+	 * 
+	 * supported types:
+	 *     <input type="text">
+	 *     <input type="radio">
+	 *     <input type="number">
+	 *     <input type="file">
+	 *     <input type="checkbox">
+	 *     <input type="range"> // vulgo 'slider'
 	 *
 	 * @param locatorDelegate the locator delegate
 	 * @param value           the value
@@ -347,21 +355,24 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			if (!webEl.isEnabled()) {
 				throw new RuntimeException();
 			}
-			if (LISTBOX.equalsIgnoreCase(className)) {
-				wait(100);
-				Select lb = (Select) webEl;
-				lb.selectByValue(value);
-				reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
-			} else if (RADIOGROUP.equalsIgnoreCase(className)) {
-				int option = Integer.valueOf(value);
-				List<WebElement> radios = driver.findElements(By.xpath(xpath));
-				if (option > 0 && option <= radios.size()) {
-					radios.get(option - 1).click();
-					reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
-				} else {
-					throw new NotFoundException("<b>input</b> by xpath $(\"" + xpath + "\"), value not found: '" + value + "'");
+			if (EDITFIELD.equalsIgnoreCase(className)
+					|| NUMERICFIELD.equalsIgnoreCase(className)
+					|| SLIDER.equalsIgnoreCase(className) // type='range'
+					|| FILEFIELD.equalsIgnoreCase(className)) {
+				webEl.click();
+				webEl.clear();
+				webEl.sendKeys(value);
+				reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + getSecretString(value, secret) + "'");
+				try {
+					logSecret(xpath, value, secret);
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-			} else if (CHECKBOX.equalsIgnoreCase(className)) {
+			} else  if (LISTBOX.equalsIgnoreCase(className)) {
+				new Select(webEl).selectByVisibleText(value);
+				reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
+			} else if (CHECKBOX.equalsIgnoreCase(className)
+					|| RADIOBUTTON.equalsIgnoreCase(className)) {
 				if (webEl.isSelected() && "OFF".equalsIgnoreCase(value)) {
 					webEl.click();
 					reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
@@ -371,24 +382,14 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 				} else {
 					throw new NotFoundException("<b>input</b> by xpath $(\"" + xpath + "\"), value not found: '" + value + "'");
 				}
-			} else if (NUMERICFIELD.equalsIgnoreCase(className)) {
-				webEl.sendKeys(value);
-				reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
-			} else if (FILEFIELD.equalsIgnoreCase(className)) {
-				webEl.sendKeys(value);
-				reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
-			} else if (SLIDER.equalsIgnoreCase(className)) {
-				webEl.sendKeys(value);
-				reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
-			} else  if (EDITFIELD.equalsIgnoreCase(className)) {
-				webEl.click();
-				webEl.clear();
-				webEl.sendKeys(value);
-				reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + getSecretString(value, secret) + "'");
-				try {
-					logSecret(xpath, value, secret);
-				} catch (IOException e) {
-					e.printStackTrace();
+			} else if (RADIOGROUP.equalsIgnoreCase(className)) {
+				int option = Integer.valueOf(value);
+				List<WebElement> radios = driver.findElements(By.xpath(xpath));
+				if (option > 0 && option <= radios.size()) {
+					radios.get(option - 1).click();
+					reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
+				} else {
+					throw new NotFoundException("<b>input</b> by xpath $(\"" + xpath + "\"), value not found: '" + value + "'");
 				}
 			} else {
 				throw new NotFoundException("type of webelement unknown: '" + className + "'");
@@ -415,7 +416,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		String xpath = getLocator(locatorDelegate);
 		webEl = driver.findElement(By.xpath(xpath));
 		String output = webEl.getAttribute("textContent");
-		reportStepPass("<b>output</b> by xpath $(\"" + xpath + "\")<br>text: " + output);
+		reportStepPass("<b>output</b> by xpath $(\"" + xpath + "\")<br>text: '" + output + "'");
 		return output;
 	}
 

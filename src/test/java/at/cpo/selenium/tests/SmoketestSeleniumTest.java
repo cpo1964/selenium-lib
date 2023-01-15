@@ -36,6 +36,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 
 import at.cpo.platform.PlatformHelper;
+import at.cpo.selenium.common.pageobjects.SeleniumFlightsPage;
 import at.cpo.selenium.common.pageobjects.SeleniumLoginPage;
 import at.cpo.utils.ExcelHelper;
 
@@ -159,7 +160,18 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 		input(SeleniumLoginPage.USERNAME, username);
 		input(SeleniumLoginPage.PASSWORD, password);
 		click(SeleniumLoginPage.LOGIN);
+//		value = output(SeleniumLoginPage.LOGINOK);
+//		String expectedText = "Login Successfully";
+//		validate(normalizedValue().contains(expectedText),
+//				"value of LoginOk'<br>" +
+//				"expected: '" + expectedText + "'<br>" +
+//				"found: '" + value + "'<br>'result");
 		reportStepPassScreenshot();
+//		click(SeleniumLoginPage.FLIGHTS);
+
+		// flights page
+		input(SeleniumFlightsPage.PASSENGERCOUNT, "2");
+		click(SeleniumFlightsPage.SERVICECLASS_FIRST);
 
 		// navigate to Home
 		reportCreateStep("Step #3 - navigate to Home");

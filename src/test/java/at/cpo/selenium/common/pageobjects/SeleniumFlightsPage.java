@@ -28,49 +28,19 @@ import at.cpo.platform.selenium.SeleniumHelper;
 /**
  * The Class SeleniumLoginPage.
  */
-public class SeleniumLoginPage extends SeleniumHelper {
+public class SeleniumFlightsPage extends SeleniumHelper {
 
 	/** The page. */
-	protected static String PAGE = "SeleniumLoginPage.";
+	protected static String PAGE = "SeleniumFlightsPage.";
 
 	/**
 	 * The constant USERNAME.
 	 */
-	public static final String USERNAME = PAGE + EDITFIELD + ".UsernameIN";
+	public static final String PASSENGERCOUNT = PAGE + LISTBOX + ".PassCountLB";
 
 	/**
 	 * The constant PASSWORD.
 	 */
-	public static final String PASSWORD = PAGE + EDITFIELD + ".PasswordIN";
-
-	/**
-	 * The constant Login.
-	 */
-	public static final String LOGIN = PAGE + BUTTON + ".LoginBT";
-	
-	/**
-	 * The constant LoginOk.
-	 */
-	public static final String LOGINOK = PAGE + TEXT + ".LoginOkTXT";
-
-	/**
-	 * The constant Login.
-	 */
-	public static final String NOTICE = PAGE + BUTTON + ".NoticeBT";
-
-	/**
-	 * The constant HOME.
-	 */
-	public static final String HOME = PAGE + LINK + ".HomeLN";
-
-	/**
-	 * The constant HOME.
-	 */
-	public static final String FLIGHTS = PAGE + LINK + ".FlightsLN";
-
-	/**
-	 * The constant SIGNININFO.
-	 */
-	public static final String SIGNININFO = PAGE + TEXT + ".SigInInfoTXT";
+	public static final String SERVICECLASS_FIRST = PAGE + RADIOGROUP + ".ServClassRB";
 
 }

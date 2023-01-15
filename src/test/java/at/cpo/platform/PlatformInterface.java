@@ -67,6 +67,8 @@ public interface PlatformInterface extends ReportInterface {
 
 	public static final String RADIOGROUP = "RadioGroup";
 
+	public static final String RADIOBUTTON = "RadioButton";
+
 	public static final String CHECKBOX = "CheckBox";
 
 	public static final String NUMERICFIELD = "NumericField";
@@ -116,21 +118,53 @@ public interface PlatformInterface extends ReportInterface {
 	void closeBrowser();
 
 	/**
-	 * Driver get.
+	 * navigate to given url
 	 *
 	 * @param url the url
 	 */
 	void driverGet(String url);
 
 	/**
-	 * Click.
+	 * Click at the webelement referenced by locatorDelegate
+	 * 
+	 * see: https://www.w3schools.com/jsref/event_onclick.asp
+	 * 
+	 * The onclick event occurs when the user clicks on an HTML element.
+	 * onclick is a DOM Level 2 (2001) feature
 	 *
 	 * @param locatorDelegate the locator delegate
 	 */
 	void click(String locatorDelegate);
 
 	/**
-	 * Input.
+	 * Input at the webelement referenced by locatorDelegate
+	 * 
+	 * see: https://www.w3schools.com/html/html_form_input_types.asp
+	 * 
+	 * possible types:
+	 *     <input type="text">
+	 *     <input type="radio">
+	 *     <input type="number">
+	 *     <input type="file">
+	 *     <input type="checkbox">
+	 *     <input type="range"> // vulgo 'slider'
+	 *     
+	 *     <input type="button">
+	 *     <input type="color">
+	 *     <input type="date">
+	 *     <input type="datetime-local">
+	 *     <input type="email">
+	 *     <input type="hidden">
+	 *     <input type="image">
+	 *     <input type="month">
+	 *     <input type="password">
+	 *     <input type="reset">
+	 *     <input type="search">
+	 *     <input type="submit">
+	 *     <input type="tel">
+	 *     <input type="time">
+	 *     <input type="url">
+	 *     <input type="week">
 	 *
 	 * @param locatorDelegate the locator delegate
 	 * @param value the value
@@ -138,7 +172,14 @@ public interface PlatformInterface extends ReportInterface {
 	void input(String locatorDelegate, String value);
 
 	/**
-	 * Output.
+	 * Output from the webelement referenced by locatorDelegate
+	 * 
+	 * see: https://www.w3schools.com/jsref/prop_node_textcontent.asp
+	 * 
+	 * element.textContent is a DOM Level 3 (2004) feature.
+	 * 
+	 * The textContent property sets or returns the text content of the specified node, and all its descendants.
+	 * eg by text = element.textContent;
 	 *
 	 * @param locatorDelegate the locator delegate
 	 * @return the string
@@ -154,7 +195,7 @@ public interface PlatformInterface extends ReportInterface {
 
 
 	/**
-	 * Exists.
+	 * Exists - check if webelement referenced by locatorDelegate exists
 	 *
 	 * @param locatorDelegate the locator delegate
 	 * @return true, if successful
