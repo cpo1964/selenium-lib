@@ -29,3 +29,4 @@ libs in use:
 - open console window (windows command or linux shell)
 - navigate to root directory of this project
 - call: mvn test
+- or call: mvn test -Dbrowser=firefox -Dmandant=ooe -DtestEnvironment=prod
