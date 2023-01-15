@@ -24,6 +24,7 @@
 package at.cpo.selenium.tests;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.junit.After;
@@ -115,6 +116,9 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 	 */
 	@Before
 	public void setUp() throws IOException, InterruptedException {
+		if (isSkipped(skip)) {
+			return;
+		}
 		logInfo("# setUp ######################");
 		logInfo("# username: '" + username + "'");
 		logInfo("# password: '" + password + "'");
@@ -130,7 +134,7 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 	@After
 	public void tearDown() {
 		logInfo("# tearDown ######################");
-		if ("true".equals(skip)) {
+		if (isSkipped(skip)) {
 			return;
 		}
 
@@ -145,12 +149,55 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 	 */
 	@Test
 	public void doTest() throws InterruptedException {
+		if (isSkipped(skip)) {
+			return;
+		}
+		
+		if (localhostUrl.startsWith("mtours")) {
+			doTestMtours();
+		} else if (localhostUrl.startsWith("jpetstore")) {
+			doTestJpetstore();
+		}
+	}
+
+	private void doTestJpetstore() {
+		logInfo("# do Test login to Jpetstore ######################");
+		reportCreateTest("doTest"); // level = 0
+
+		// start Jpetstore
+		reportCreateStep("Step #1 - start Jpetstore");
+		if (!navigateToStartJpetstorePage()) {
+			return;
+		};
+		reportStepPassScreenshot();
+
+		reportTestPass("test #1");
+	}
+
+	private boolean navigateToStartJpetstorePage() {
+		try {
+			logInfo("localhostUrl: " + testPlatformPropertiesGet(localhostUrl));
+			driverGet(testPlatformPropertiesGet(localhostUrl));
+		} catch (Exception e1) {
+			try {
+				logInfo("remoteUrl: " + testPlatformPropertiesGet(remoteUrl));
+				driverGet(testPlatformPropertiesGet(remoteUrl));
+			} catch (Exception e2) {
+				reportStepFailScreenshot();
+				reportTestFail("MTours app is down");
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private void doTestMtours() {
 		logInfo("# do Test login to MTours ######################");
 		reportCreateTest("doTest"); // level = 0
 
 		// start MTours
 		reportCreateStep("Step #1 - start MTours");
-		if (!navigateToStartPage()) {
+		if (!navigateToStartMtoursPage()) {
 			return;
 		};
 		reportStepPassScreenshot();
@@ -199,7 +246,7 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 	 *
 	 * @return true, if successful
 	 */
-	private boolean navigateToStartPage() {
+	private boolean navigateToStartMtoursPage() {
 		try {
 			logInfo("localhostUrl: " + testPlatformPropertiesGet(localhostUrl));
 			driverGet(testPlatformPropertiesGet(localhostUrl));

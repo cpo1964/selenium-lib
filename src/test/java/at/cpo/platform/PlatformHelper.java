@@ -24,6 +24,7 @@
 package at.cpo.platform;
 
 import java.io.File;
+import java.util.Arrays;
 
 import at.cpo.platform.selenium.SeleniumHelper;
 
@@ -269,5 +270,15 @@ public class PlatformHelper {
 		return (String) PlatformInterface.testPlatformProperties.get(key);	
 	}
 	
+	/**
+	 * Checks if is skipped.
+	 *
+	 * @param value the value
+	 * @return true, if value.toLowerCase() is "true" or "ok" or "on"
+	 */
+	protected boolean isSkipped(String value) {
+		String[] skips = {"true", "ok", "on"};
+		return Arrays.stream(skips).anyMatch(value.toLowerCase()::equals);
+	}
 
 }
