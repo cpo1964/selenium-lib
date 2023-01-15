@@ -144,27 +144,38 @@ public interface PlatformInterface extends ReportInterface {
 	 * possible types:
 	 *     <input type="text">
 	 *     <input type="radio">
+	 *     <input type="checkbox">
 	 *     <input type="number">
 	 *     <input type="file">
-	 *     <input type="checkbox">
 	 *     <input type="range"> // vulgo 'slider'
 	 *     
 	 *     <input type="button">
-	 *     <input type="color">
-	 *     <input type="date">
-	 *     <input type="datetime-local">
-	 *     <input type="email">
+	 *     
+	 *     <input type="color"> 
+	 *     		is used for input fields that should contain a color.
+	 *     		Depending on browser support, a color picker can show up in the input field.
+	 *     
 	 *     <input type="hidden">
-	 *     <input type="image">
-	 *     <input type="month">
-	 *     <input type="password">
+	 *     		defines a hidden input field (not visible to a user).
+	 *     
 	 *     <input type="reset">
+	 *     		defines a reset button that will reset all form values to their default values
+	 *     
 	 *     <input type="search">
-	 *     <input type="submit">
-	 *     <input type="tel">
-	 *     <input type="time">
-	 *     <input type="url">
-	 *     <input type="week">
+	 *     		is used for search fields (a search field behaves like a regular text field).
+	 *     
+	 *     <input type="image"> // as submit button
+	 *     <input type="submit"> // as submit button
+	 *     
+	 *     <input type="email"> // text field with email validation
+	 *     <input type="password"> // text field with hidden input
+	 *     <input type="tel"> // text field with tel validation
+	 *     <input type="date"> // text field with date validation
+	 *     <input type="datetime-local"> // text field with datetime-local validation
+	 *     <input type="time"> // text field with time validation
+	 *     <input type="month"> // text field with month validation
+	 *     <input type="week"> // text field with week validation
+	 *     <input type="url"> // text field with url validation
 	 *
 	 * @param locatorDelegate the locator delegate
 	 * @param value the value
