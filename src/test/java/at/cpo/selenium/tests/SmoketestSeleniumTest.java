@@ -171,7 +171,13 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 		if (!navigateToStartJpetstorePage()) {
 			return;
 		}
-		;
+		try {
+			testLogin("cpo1964", "Test");
+			testSignoffTestCase();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		reportStepPassScreenshot();
 
 		reportTestPass("test #1");
@@ -300,17 +306,15 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 		clickByXpath("//div[@id='CenterForm']/form/div/button");
 	}
 
-	@Test
-	public void testLoginTestCase() throws Exception {
+	private void testLogin(String user, String passwort) throws Exception {
 		driverGet("https://jpetstore.aspectran.com/catalog/");
 		clickByXpath("//a[contains(@href, '/account/signonForm')]");
-		inputByXpath("//input[@name='username']", PlatformInterface.EDITFIELD, "cpo1964");
-		inputByXpath("//input[@name='password']", PlatformInterface.EDITFIELD, "Test");
+		inputByXpath("//input[@name='username']", PlatformInterface.EDITFIELD, user);
+		inputByXpath("//input[@name='password']", PlatformInterface.EDITFIELD, passwort);
 		clickByXpath("//div[@id='Signon']/form/div/div/button");
 	}
 
-	@Test
-	public void testSignoffTestCase() throws Exception {
+	private void testSignoffTestCase() throws Exception {
 		driverGet("https://jpetstore.aspectran.com/catalog/");
 		clickByXpath("//a[contains(@href, '/account/signoff')]");
 		for (int second = 0;; second++) {
