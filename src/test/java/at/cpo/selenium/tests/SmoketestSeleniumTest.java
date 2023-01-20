@@ -164,23 +164,24 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 
 	private void doTestJpetstore() {
 		logInfo("# do Test login to Jpetstore ######################");
-		reportCreateTest("doTest"); // level = 0
+		reportCreateTest("login to Jpetstore"); // level = 0
 
 		// start Jpetstore
 		reportCreateStep("Step #1 - start Jpetstore");
 		if (!navigateToStartJpetstorePage()) {
 			return;
 		}
-		try {
-			testLogin("cpo1964", "Test");
-			testSignoffTestCase();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		reportStepPassScreenshot();
 
-		reportTestPass("test #1");
+		reportCreateStep("Step #2 - Login to Jpetstore");
+		testLogin("cpo1964", "Test");
+		reportStepPassScreenshot();
+
+		reportCreateStep("Step #3 - Logout of Jpetstore");
+		testSignoffTestCase();
+		reportStepPassScreenshot();
+
+		reportTestPass("login to Jpetstore");
 	}
 
 	private boolean navigateToStartJpetstorePage() {
@@ -306,7 +307,7 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 		clickByXpath("//div[@id='CenterForm']/form/div/button");
 	}
 
-	private void testLogin(String user, String passwort) throws Exception {
+	private void testLogin(String user, String passwort) {
 		driverGet("https://jpetstore.aspectran.com/catalog/");
 		clickByXpath("//a[contains(@href, '/account/signonForm')]");
 		inputByXpath("//input[@name='username']", PlatformInterface.EDITFIELD, user);
@@ -314,7 +315,7 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 		clickByXpath("//div[@id='Signon']/form/div/div/button");
 	}
 
-	private void testSignoffTestCase() throws Exception {
+	private void testSignoffTestCase() {
 		driverGet("https://jpetstore.aspectran.com/catalog/");
 		clickByXpath("//a[contains(@href, '/account/signoff')]");
 		for (int second = 0;; second++) {
@@ -325,7 +326,10 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 					break;
 			} catch (Exception e) {
 			}
-			Thread.sleep(1000);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+			}
 		}
 
 	}
