@@ -288,9 +288,12 @@ public class PlatformHelper {
 	 * @param value the value
 	 * @return true, if value.toLowerCase() is "true" or "ok" or "on"
 	 */
-	protected boolean isSkipped(String value) {
-		String[] skips = {"true", "ok", "on"};
-		return Arrays.stream(skips).anyMatch(value.toLowerCase()::equals);
+	protected boolean isTrue(String value) {
+		if (value == null || value.isEmpty() || value.isBlank()) {
+			value = "false";
+		}
+		String[] values = {"true", "ok", "on"};
+		return Arrays.stream(values).anyMatch(value.toLowerCase()::equals);
 	}
 
 }
