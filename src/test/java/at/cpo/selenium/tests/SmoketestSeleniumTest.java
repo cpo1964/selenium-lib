@@ -23,8 +23,9 @@
  */
 package at.cpo.selenium.tests;
 
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 
 import org.junit.After;
@@ -37,8 +38,9 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 
 import at.cpo.platform.PlatformHelper;
-import at.cpo.selenium.common.pageobjects.SeleniumFlightsPage;
-import at.cpo.selenium.common.pageobjects.SeleniumLoginPage;
+import at.cpo.platform.PlatformInterface;
+import at.cpo.selenium.common.pageobjects.MToursFlightsPage;
+import at.cpo.selenium.common.pageobjects.MToursLoginPage;
 import at.cpo.utils.ExcelHelper;
 
 /**
@@ -77,7 +79,7 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 	 */
 	@Parameter(5)
 	public String snapshots;
-	
+
 	/**
 	 * Gets the data.
 	 *
@@ -111,7 +113,7 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 	/**
 	 * Sets the up.
 	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException          Signals that an I/O exception has occurred.
 	 * @throws InterruptedException the interrupted exception
 	 */
 	@Before
@@ -152,7 +154,7 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 		if (isSkipped(skip)) {
 			return;
 		}
-		
+
 		if (localhostUrl.startsWith("mtours")) {
 			doTestMtours();
 		} else if (localhostUrl.startsWith("jpetstore")) {
@@ -168,7 +170,8 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 		reportCreateStep("Step #1 - start Jpetstore");
 		if (!navigateToStartJpetstorePage()) {
 			return;
-		};
+		}
+		;
 		reportStepPassScreenshot();
 
 		reportTestPass("test #1");
@@ -199,14 +202,15 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 		reportCreateStep("Step #1 - start MTours");
 		if (!navigateToStartMtoursPage()) {
 			return;
-		};
+		}
+		;
 		reportStepPassScreenshot();
 
 		// login
 		reportCreateStep("Step #2 - login");
-		input(SeleniumLoginPage.USERNAME, username);
-		input(SeleniumLoginPage.PASSWORD, password);
-		click(SeleniumLoginPage.LOGIN);
+		input(MToursLoginPage.USERNAME, username);
+		input(MToursLoginPage.PASSWORD, password);
+		click(MToursLoginPage.LOGIN);
 //		value = output(SeleniumLoginPage.LOGINOK);
 //		String expectedText = "Login Successfully";
 //		validate(normalizedValue().contains(expectedText),
@@ -217,18 +221,16 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 //		click(SeleniumLoginPage.FLIGHTS);
 
 		// flights page
-		input(SeleniumFlightsPage.PASSENGERCOUNT, "2");
-		click(SeleniumFlightsPage.SERVICECLASS_FIRST);
+		input(MToursFlightsPage.PASSENGERCOUNT, "2");
+		click(MToursFlightsPage.SERVICECLASS_FIRST);
 
 		// navigate to Home
 		reportCreateStep("Step #3 - navigate to Home");
-		click(SeleniumLoginPage.HOME);
-		value = output(SeleniumLoginPage.SIGNININFO);
+		click(MToursLoginPage.HOME);
+		value = output(MToursLoginPage.SIGNININFO);
 		String expectedText = "Registered users can sign-in here to find the lowest fare on participating airlines.";
-		validate(normalizedValue().contains(expectedText),
-				"value of SignInInfo'<br>" +
-				"expected: '" + expectedText + "'<br>" +
-				"found: '" + value + "'<br>'result");
+		validate(normalizedValue().contains(expectedText), "value of SignInInfo'<br>" + "expected: '" + expectedText
+				+ "'<br>" + "found: '" + value + "'<br>'result");
 		reportStepPassScreenshot();
 
 		reportTestPass("test #1");
@@ -236,7 +238,7 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 
 	private String normalizedValue() {
 		while (value.contains("  ")) {
-			value = value.replace("\n","").replaceAll("  "," ");
+			value = value.replace("\n", "").replaceAll("  ", " ");
 		}
 		return value;
 	}
@@ -257,9 +259,9 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 				driverImplicitlyWait(3000);
 				// Send future commands to iFrame
 				ok = driverSwitchToIFrame("gdpr-consent-notice");
-				ok = ok && exists(SeleniumLoginPage.NOTICE);
+				ok = ok && exists(MToursLoginPage.NOTICE);
 				if (ok) {
-					click(SeleniumLoginPage.NOTICE);
+					click(MToursLoginPage.NOTICE);
 					// Send future commands to main document
 					driverSwitchToDefaultContent();
 				}
@@ -271,5 +273,56 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 			}
 		}
 		return true;
+	}
+
+//	@Test
+	public void testSigninTestCase() throws Exception {
+		driverGet("https://jpetstore.aspectran.com/catalog/");
+		clickByXpath("//a[contains(@href, '/account/newAccountForm')]");
+		inputByXpath("//input[@name='username']", PlatformInterface.EDITFIELD, "cpo1964");
+		inputByXpath("//input[@name='password']", PlatformInterface.EDITFIELD, "Test");
+		inputByXpath("//input[@name='repeatedPassword']", PlatformInterface.EDITFIELD, "Test");
+		inputByXpath("//input[@name='firstName']", PlatformInterface.EDITFIELD, "Cpo");
+		inputByXpath("//input[@name='lastName']", PlatformInterface.EDITFIELD, "Cpo");
+		inputByXpath("//input[@name='email']", PlatformInterface.EDITFIELD, "cpo1964@aon.at");
+		inputByXpath("//input[@name='phone']", PlatformInterface.EDITFIELD, "12345");
+		inputByXpath("//input[@name='address1']", PlatformInterface.EDITFIELD, "cpo 1");
+		inputByXpath("//input[@name='address2']", PlatformInterface.EDITFIELD, "cpo 2");
+		inputByXpath("//input[@name='city']", PlatformInterface.EDITFIELD, "Cpo");
+		inputByXpath("//input[@name='state']", PlatformInterface.EDITFIELD, "Cpostate");
+		inputByXpath("//input[@name='zip']", PlatformInterface.EDITFIELD, "1111");
+		inputByXpath("//input[@name='country']", PlatformInterface.EDITFIELD, "Cpocountry");
+		clickByXpath("//select[@name='languagePreference']");
+		inputByXpath("//select[@name='languagePreference']", PlatformInterface.LISTBOX, "German");
+		clickByXpath("//option[@value='german']");
+		clickByXpath("//input[@name='listOption']");
+		clickByXpath("//input[@name='bannerOption']");
+		clickByXpath("//div[@id='CenterForm']/form/div/button");
+	}
+
+	@Test
+	public void testLoginTestCase() throws Exception {
+		driverGet("https://jpetstore.aspectran.com/catalog/");
+		clickByXpath("//a[contains(@href, '/account/signonForm')]");
+		inputByXpath("//input[@name='username']", PlatformInterface.EDITFIELD, "cpo1964");
+		inputByXpath("//input[@name='password']", PlatformInterface.EDITFIELD, "Test");
+		clickByXpath("//div[@id='Signon']/form/div/div/button");
+	}
+
+	@Test
+	public void testSignoffTestCase() throws Exception {
+		driverGet("https://jpetstore.aspectran.com/catalog/");
+		clickByXpath("//a[contains(@href, '/account/signoff')]");
+		for (int second = 0;; second++) {
+			if (second >= 60)
+				fail("timeout");
+			try {
+				if (existsByXpath("//a[contains(text(),'Sign Up')]", false))
+					break;
+			} catch (Exception e) {
+			}
+			Thread.sleep(1000);
+		}
+
 	}
 }

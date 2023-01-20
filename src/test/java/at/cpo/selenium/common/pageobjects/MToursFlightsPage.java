@@ -28,10 +28,10 @@ import at.cpo.platform.selenium.SeleniumHelper;
 /**
  * The Class SeleniumLoginPage.
  */
-public class SeleniumFlightsPage extends SeleniumHelper {
+public class MToursFlightsPage extends SeleniumHelper {
 
 	/** The page. */
-	protected static String PAGE = "SeleniumFlightsPage.";
+	protected static String PAGE = "MToursFlightsPage.";
 
 	/**
 	 * The constant USERNAME.

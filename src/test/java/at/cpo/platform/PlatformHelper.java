@@ -123,6 +123,10 @@ public class PlatformHelper {
 		platform.click(locatorDelegate);	
 	}
 
+	protected void clickByXpath(String xpath) {
+		platform.clickByXpath(xpath);	
+	}
+
 	/**
 	 * Input.
 	 *
@@ -131,6 +135,10 @@ public class PlatformHelper {
 	 */
 	protected void input(String locatorDelegate, String value) {
 		platform.input(locatorDelegate, value);
+	}
+
+	protected void inputByXpath(String xpath, String className, String value) {
+		platform.inputByXpath(xpath, className, value);
 	}
 
 	/**
@@ -158,6 +166,10 @@ public class PlatformHelper {
 	 */
 	protected boolean exists(String locatorDelegate) {
 		return platform.exists(locatorDelegate);	
+	}
+	
+	public boolean existsByXpath(String xpath, boolean reportFailed) {
+		return platform.existsByXpath(xpath, reportFailed);	
 	}
 	
 	// report stuff ===========================================================

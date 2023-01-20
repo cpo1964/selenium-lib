@@ -33,6 +33,30 @@ import at.cpo.report.ReportInterface;
  */
 public interface PlatformInterface extends ReportInterface {
 	
+	// definition of standard webelement types
+	
+	public static final String EDITFIELD = "EditField";
+
+	public static final String LISTBOX = "ListBox";
+
+	public static final String RADIOGROUP = "RadioGroup";
+
+	public static final String RADIOBUTTON = "RadioButton";
+
+	public static final String CHECKBOX = "CheckBox";
+
+	public static final String NUMERICFIELD = "NumericField";
+
+	public static final String FILEFIELD = "FileField";
+
+	public static final String SLIDER = "Slider";
+
+	public static final String BUTTON = "Button";
+
+	public static final String LINK = "Link";
+
+	public static final String TEXT = "Text";
+
 	// platform stuff
 	
 	/** The after with failed information. */
@@ -58,30 +82,6 @@ public interface PlatformInterface extends ReportInterface {
 
 	/** The value. */
 	public static String value = "";
-
-	// definition of standard webelement types
-	
-	public static final String EDITFIELD = "EditField";
-
-	public static final String LISTBOX = "ListBox";
-
-	public static final String RADIOGROUP = "RadioGroup";
-
-	public static final String RADIOBUTTON = "RadioButton";
-
-	public static final String CHECKBOX = "CheckBox";
-
-	public static final String NUMERICFIELD = "NumericField";
-
-	public static final String FILEFIELD = "FileField";
-
-	public static final String SLIDER = "Slider";
-
-	public static final String BUTTON = "Button";
-
-	public static final String LINK = "Link";
-
-	public static final String TEXT = "Text";
 
 	/**
 	 * Setup driver.
@@ -136,6 +136,8 @@ public interface PlatformInterface extends ReportInterface {
 	 */
 	void click(String locatorDelegate);
 
+	void clickByXpath(String xpath);
+
 	/**
 	 * Input at the webelement referenced by locatorDelegate
 	 * 
@@ -189,6 +191,8 @@ public interface PlatformInterface extends ReportInterface {
 	 */
 	void input(String locatorDelegate, String value);
 
+	void inputByXpath(String xpath, String className, String value);
+
 	/**
 	 * Output from the webelement referenced by locatorDelegate
 	 * 
@@ -204,14 +208,8 @@ public interface PlatformInterface extends ReportInterface {
 	 */
 	String output(String locatorDelegate);
 	
-	/**
-	 * Validate.
-	 *
-	 * @param description the description
-	 */
-	void validate(boolean condition, String description);
-
-
+	String outputByXpath(String xpath);
+	
 	/**
 	 * Exists - check if webelement referenced by locatorDelegate exists
 	 *
@@ -219,6 +217,15 @@ public interface PlatformInterface extends ReportInterface {
 	 * @return true, if successful
 	 */
 	boolean exists(String locatorDelegate);
+
+	boolean existsByXpath(String xpath);
+
+	/**
+	 * Validate.
+	 *
+	 * @param description the description
+	 */
+	void validate(boolean condition, String description);
 
 	// other stuff
 
@@ -254,5 +261,7 @@ public interface PlatformInterface extends ReportInterface {
 	 * Common setup.
 	 */
 	void commonSetup();
+
+	boolean existsByXpath(String xpath, boolean reportFailed);
 
 }
