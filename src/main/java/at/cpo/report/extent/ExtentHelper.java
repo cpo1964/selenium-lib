@@ -26,9 +26,11 @@ package at.cpo.report.extent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 
 import org.apache.logging.log4j.LogManager;
@@ -54,10 +56,10 @@ public class ExtentHelper implements ReportInterface {
 
 	/** The log buffer. */
 	protected static ArrayList<String> logBuffer = new ArrayList<String>();
-	
+
 	/** The test. */
 	protected static ExtentTest test;
-	
+
 	/** The node. */
 	protected static ExtentTest node;
 
@@ -74,14 +76,46 @@ public class ExtentHelper implements ReportInterface {
 	 * @return the extent reports
 	 */
 	public static ExtentReports prepareExtentReport() {
-		String runResultsDir = Paths.get("").toAbsolutePath().toString() + "\\RunResults";
-		new File(runResultsDir).delete();
-		ExtentSparkReporter r = new ExtentSparkReporter(runResultsDir + "\\runresults.html");
-		ExtentReports report = new ExtentReports();
+		String runResultsDir = Paths.get("").toAbsolutePath().toString() + File.separatorChar + "RunResults";
+		deleteDirectory(runResultsDir);
+		createDirectories(runResultsDir+ File.separatorChar + "Resources"+ File.separatorChar + "Snapshots");
+		ExtentSparkReporter r = new ExtentSparkReporter(runResultsDir + File.separatorChar + "runresults.html");
+		report = new ExtentReports();
 		report.attachReporter(r);
 		return report;
 	}
-	
+
+	private static void createDirectories(String runResultsDir) {
+		try {
+			Files.createDirectories(Paths.get(runResultsDir));
+		} catch (IOException e) {
+		}
+	}
+
+	private static void deleteDirectory(String path) {
+		Path index = Paths.get(path);
+		try {
+			if (!Files.exists(index)) {
+				index = Files.createDirectories(index);
+			} else {
+				// as the file tree is traversed depth-first and that deleted dirs have to be
+				// empty
+				Files.walk(index).sorted(Comparator.reverseOrder()).forEach(t -> {
+					try {
+						Files.delete(t);
+					} catch (IOException e) {
+					}
+				});
+				if (!Files.exists(index)) {
+					index = Files.createDirectories(index);
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * Tear down extent.
 	 */
@@ -96,6 +130,10 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	public void reportCreateTest(String msg) {
 		test = report.createTest(msg);
+	}
+
+	public void reportEndTest() {
+		report.removeTest(test);
 	}
 
 	/**
@@ -151,7 +189,7 @@ public class ExtentHelper implements ReportInterface {
 	public void reportStepFailScreenshot() {
 		screenshotNode(driver, node, Status.FAIL);
 	}
-	
+
 	/**
 	 * Screenshot node pass.
 	 */
@@ -160,8 +198,8 @@ public class ExtentHelper implements ReportInterface {
 	}
 
 	/**
-	 * Screenshot file to "RunResults" + File.separator
-				+ "Resources" + File.separator + "Snapshots"
+	 * Screenshot file to "RunResults" + File.separator + "Resources" +
+	 * File.separator + "Snapshots"
 	 *
 	 * @param driver the driver
 	 * @return the string
@@ -183,8 +221,8 @@ public class ExtentHelper implements ReportInterface {
 	 * Screenshot node.
 	 *
 	 * @param driver the driver
-	 * @param node the node
-	 * @param s the s
+	 * @param node   the node
+	 * @param s      the s
 	 */
 	public void screenshotNode(TakesScreenshot driver, ExtentTest node, Status s) {
 		try {
@@ -197,7 +235,7 @@ public class ExtentHelper implements ReportInterface {
 			Media media = node.addScreenCaptureFromPath(screenshotFile(driver)).getModel().getMedia().get(0);
 			node.getModel().getMedia().clear();
 			node.log(s, media);
-			
+
 //			node.log(Status.PASS, node.addScreenCaptureFromPath(base64conversion()).getModel().getMedia().get(0));
 //			node.log(Status.PASS, "start MTours", node.addScreenCaptureFromPath(base64conversion()).getModel().getMedia().get(0));
 //			node.log(Status.PASS, "start MTours", node.addScreenCaptureFromBase64String(base64conversion()).getModel().getMedia().get(0));
@@ -253,7 +291,8 @@ public class ExtentHelper implements ReportInterface {
 	 * Clear console.
 	 */
 	public final static void clearConsole() {
-		for (int i = 0; i < 50; ++i) System.out.println("");
+		for (int i = 0; i < 50; ++i)
+			System.out.println("");
 
 //		for (int i = 0; i < 50; ++i) System.out.println("\\r\\b");
 //		
@@ -294,7 +333,7 @@ public class ExtentHelper implements ReportInterface {
 
 //		org.apache.log4j.Logger LOGGER = null;
 		Logger LOGGER = null;
-			LOGGER = LogManager.getLogger(this.getClass().getSimpleName());
+		LOGGER = LogManager.getLogger(this.getClass().getSimpleName());
 //			try {
 // 				LOGGER = LogManager.getLogger(Class.forName("at.cpo.report.extent.ExtentHelper"));
 //			} catch (ClassNotFoundException e) {

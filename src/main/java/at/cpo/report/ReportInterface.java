@@ -35,6 +35,8 @@ public interface ReportInterface {
 	 */
 	void reportCreateTest(String msg);
 
+	void reportEndTest();
+
 	/**
 	 * Test log pass.
 	 *

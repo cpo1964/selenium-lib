@@ -23,8 +23,6 @@
  */
 package at.cpo.selenium.tests;
 
-import static org.junit.Assert.fail;
-
 import java.io.IOException;
 import java.util.Collection;
 
@@ -121,7 +119,7 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 		if (isTrue(skip)) {
 			return;
 		}
-		logInfo("# setUp ######################");
+		logInfo("# setUp #");
 		logInfo("# username: '" + username + "'");
 		logInfo("# password: '" + password + "'");
 		logInfo("# localhostUrl: '" + localhostUrl + "'");
@@ -135,7 +133,7 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 	 */
 	@After
 	public void tearDown() {
-		logInfo("# tearDown ######################");
+		logInfo("# tearDown #");
 		if (isTrue(skip)) {
 			return;
 		}
@@ -150,7 +148,7 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 	 * @throws InterruptedException the interrupted exception
 	 */
 	@Test
-	public void doTest() throws InterruptedException {
+	public void doSeleniumTest() throws InterruptedException {
 		if (isTrue(skip)) {
 			return;
 		}
@@ -163,8 +161,8 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 	}
 
 	private void doTestJpetstore() {
-		logInfo("# do Test login to Jpetstore ######################");
-		reportCreateTest("login to Jpetstore"); // level = 0
+		logInfo("# login to Jpetstore ######################");
+		reportCreateTest("login to Jpetstore - runlocal: " + runlocal); // level = 0
 
 		// start Jpetstore
 		reportCreateStep("Step #1 - start Jpetstore");
@@ -182,13 +180,16 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 		reportStepPassScreenshot();
 
 		reportTestPass("login to Jpetstore");
+//		reportEndTest();
 	}
 
 	private boolean navigateToStartJpetstorePage() {
+		String url;
 		if (isTrue(runlocal)) {
 			try {
-				logInfo("localhostUrl: " + testPlatformPropertiesGet(localhostUrl));
-				driverGet(testPlatformPropertiesGet(localhostUrl));
+				url = testPlatformPropertiesGet(localhostUrl);
+				logInfo("localhostUrl: " + url);
+				driverGet(url);
 			} catch (Exception e1) {
 				reportStepFailScreenshot();
 				reportTestFail("JPetstore app is down");
@@ -196,8 +197,9 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 			}
 		} else {
 			try {
-				logInfo("remoteUrl: " + testPlatformPropertiesGet(remoteUrl));
-				driverGet(testPlatformPropertiesGet(remoteUrl));
+				url = testPlatformPropertiesGet(remoteUrl);
+				logInfo("remoteUrl: " + url);
+				driverGet(url);
 			} catch (Exception e2) {
 				reportStepFailScreenshot();
 				reportTestFail("JPetstore app is down");
@@ -208,15 +210,15 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 	}
 
 	private void doTestMtours() {
-		logInfo("# do Test login to MTours ######################");
-		reportCreateTest("login to MTours"); // level = 0
+		logInfo("# login to MTours ######################");
+		reportCreateTest("login to MTours - runlocal: " + runlocal); // level = 0
 
 		// start MTours
 		reportCreateStep("Step #1 - start MTours");
 		if (!navigateToStartMtoursPage()) {
+//			reportEndTest();
 			return;
 		}
-		;
 		reportStepPassScreenshot();
 
 		// login
@@ -247,6 +249,7 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 		reportStepPassScreenshot();
 
 		reportTestPass("test #1");
+//		reportEndTest();
 	}
 
 	private String normalizedValue() {
@@ -320,7 +323,9 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 	}
 
 	private void testLogin(String user, String passwort) {
-		driverGet("https://jpetstore.aspectran.com/catalog/");
+//		driverGet("https://jpetstore.aspectran.com/catalog/");
+		ok = existsByXpath("//a[contains(@href, '/account/signonForm')]", true);
+		validate(ok, "signonForm is visible");
 		clickByXpath("//a[contains(@href, '/account/signonForm')]");
 		inputByXpath("//input[@name='username']", PlatformInterface.EDITFIELD, user);
 		inputByXpath("//input[@name='password']", PlatformInterface.EDITFIELD, passwort);
@@ -329,20 +334,22 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 
 	private void testSignoffTestCase() {
 		driverGet("https://jpetstore.aspectran.com/catalog/");
+		driverImplicitlyWait(3000);
 		clickByXpath("//a[contains(@href, '/account/signoff')]");
-		for (int second = 0;; second++) {
-			if (second >= 60)
-				fail("timeout");
-			try {
-				if (existsByXpath("//a[contains(text(),'Sign Up')]", false))
-					break;
-			} catch (Exception e) {
-			}
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-			}
-		}
-
+		existsByXpath("//a[contains(text(),'Sign Up')]", true);
+//		for (int second = 0;; second++) {
+//			if (second >= 3)
+//				fail("timeout");
+//			try {
+//				if (existsByXpath("//a[contains(text(),'Sign Up')]"))
+//					break;
+//			} catch (Exception e) {
+//			}
+//			try {
+//				Thread.sleep(1000);
+//			} catch (InterruptedException e) {
+//			}
+//		}
+		driverImplicitlyWait(30000);
 	}
 }

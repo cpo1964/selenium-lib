@@ -168,6 +168,10 @@ public class PlatformHelper {
 		return platform.exists(locatorDelegate);	
 	}
 	
+	public boolean existsByXpath(String xpath) {
+		return existsByXpath(xpath, false);	
+	}
+	
 	public boolean existsByXpath(String xpath, boolean reportFailed) {
 		return platform.existsByXpath(xpath, reportFailed);	
 	}
@@ -183,6 +187,9 @@ public class PlatformHelper {
 		platform.reportCreateTest(msg);
 	}
 
+	protected void reportEndTest() {
+		platform.reportEndTest();
+	}
 	/**
 	 * Test log pass.
 	 *

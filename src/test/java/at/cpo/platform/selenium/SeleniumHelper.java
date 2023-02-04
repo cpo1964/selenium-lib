@@ -43,6 +43,7 @@ import org.apache.commons.lang3.SystemUtils;
 //import org.junit.rules.TestRule;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -51,6 +52,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.GeckoDriverService;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.service.DriverService;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -247,10 +249,18 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	public void closeBrowser() {
 		try {
-			driver.quit();
+			if (driver != null) {
+				driver.quit();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public boolean existsByXpath(String xpath) {
+		webEl = driver.findElement(By.xpath(xpath));	
+		return existsByXpath(xpath, false);
 	}
 
 	/**
@@ -275,9 +285,17 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		return existsByXpath(xpath, reportFailed);
 	}
 
+	/**
+	 * Exists.
+	 *
+	 * @param xpath the xpath
+	 * @param reportFailed    the reportFailed
+	 * @return true, if successful
+	 */
 	public boolean existsByXpath(String xpath, boolean reportFailed) {
 		List<WebElement> webElements = driver.findElements(By.xpath(xpath));
-		if (webElements.size() != 1) {
+		boolean exists = webElements.size() > 0 && webElements.get(0).isDisplayed();
+		if (!exists)  {
 			if (reportFailed) {
 				reportStepFail("<b>exist</b>s by xpath $(\"" + xpath + "\") - false");
 			} else {
@@ -286,7 +304,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			return false;
 		}
 		reportStepPass("<b>exists</b> by xpath $(\"" + xpath + "\") - true");
-		return webElements.get(0).isDisplayed();
+		return exists;
 	}
 	
 	/**
@@ -295,15 +313,63 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @param locatorDelegate the locator delegate
 	 */
 	public void click(String locatorDelegate) {
+		click(locatorDelegate, CLICK);
+	}
+
+	@Override
+	public void click(String locatorDelegate, String action) {
 		String xpath = getLocator(locatorDelegate);
-		clickByXpath(xpath);
+		clickByXpath(xpath, action);
 	}
 
 	@Override
 	public void clickByXpath(String xpath) {
+		clickByXpath(xpath, CLICK);
+	}
+
+	@Override
+	public void clickByXpath(String xpath, String value) {
 		webEl = driver.findElement(By.xpath(xpath));
 		if (webEl.isEnabled()) {
-			webEl.click();
+			if (CLICK.equals(value)) {
+				webEl.click();
+			} else {
+				// The user-facing API for emulating complex user gestures. 
+				// Use this class rather than using the Keyboard or Mouse directly
+				Actions action = new Actions(driver);
+				if (RIGHTCLICK.equals(value)) {
+					// context-click at middle of the given element
+					action.contextClick(webEl).perform();
+				} else if (ALTCLICK.equals(value)) {
+					action
+			        .keyDown(Keys.ALT)
+			        .click(webEl)
+			        .keyUp(Keys.ALT)
+			        .perform();
+				} else if (CONTROLCLICK.equals(value)) {
+					action
+			        .keyDown(Keys.CONTROL)
+			        .click(webEl)
+			        .keyUp(Keys.CONTROL)
+			        .perform();
+				} else if (DOUBLECLICK.equals(value)) {
+					action.doubleClick(webEl).perform();
+				} else if (LONGCLICK.equals(value)) {
+					// Clicks (without releasing) in the middle of the given element
+					action.clickAndHold(webEl).perform();
+					wait(2000);
+					// Releases the depressed left mouse button, in the middle of the given element
+					action.release(webEl).perform();
+				} else if (MOUSEOVER.equals(value)) {
+					action.moveToElement(webEl).build().perform();
+				} else if (SHIFTCLICK.equals(value)) {
+					action
+			        .keyDown(Keys.SHIFT)
+			        .click(webEl)
+			        .keyUp(Keys.SHIFT)
+			        .perform();
+				}
+			}
 			reportStepPass("<b>click</b> by xpath $(\"" + xpath + "\")");
 		} else {
 			try {
@@ -359,6 +425,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		try {
 			if (className != null) {
 				webEl = driver.findElement(By.xpath(xpath));
+				webEl = waitUntilClickable(webEl, 30);
 			} 
 			if (webEl == null) {
 				try {
@@ -367,14 +434,8 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 							+ xpath + ", '" + getSecretString(value, secret) + ")'");
 					throw new RuntimeException();
 				} catch (IOException e) {
-					e.printStackTrace();
+					throw new RuntimeException();
 				}
-				return;
-			}
-			waitUntilWebelementIsClickable(30, webEl);
-			wait(100);
-			if (!webEl.isEnabled()) {
-				throw new RuntimeException();
 			}
 			if (EDITFIELD.equalsIgnoreCase(className)
 					|| NUMERICFIELD.equalsIgnoreCase(className)
@@ -427,6 +488,14 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		}
 	}
 
+	@Override
+	public String outputByXpath(String xpath) {
+		webEl = driver.findElement(By.xpath(xpath));
+		String output = webEl.getAttribute("textContent");
+		reportStepPass("<b>output</b> by xpath $(\"" + xpath + "\")<br>text: '" + output + "'");
+		return output;
+	}
+
 	/**
 	 * Output.
 	 *
@@ -435,10 +504,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	public String output(String locatorDelegate) {
 		String xpath = getLocator(locatorDelegate);
-		webEl = driver.findElement(By.xpath(xpath));
-		String output = webEl.getAttribute("textContent");
-		reportStepPass("<b>output</b> by xpath $(\"" + xpath + "\")<br>text: '" + output + "'");
-		return output;
+		return outputByXpath(xpath);
 	}
 
 	@Override
@@ -501,9 +567,9 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @param timeoutSeconds the timeout seconds
 	 * @param webEl          the web el
 	 */
-	public static void waitUntilWebelementIsClickable(int timeoutSeconds, WebElement webEl) {
+	public static WebElement waitUntilClickable(WebElement webEl, int timeoutSeconds) {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
-		wait.until(ExpectedConditions.elementToBeClickable(webEl));
+		return wait.until(ExpectedConditions.elementToBeClickable(webEl));
 	}
 
 	/**
@@ -659,15 +725,21 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	}
 
 	@Override
-	public String outputByXpath(String xpath) {
-		// TODO Auto-generated method stub
-		return null;
+	public void dragAndDrop(String locatorFrom, String locatorTo) {
+		 // expected: xpath from the property file
+		String xpathFrom = getLocator(locatorFrom);
+		String xpathTo = getLocator(locatorTo);
+		dragAndDropByXpath(xpathFrom, xpathTo);
 	}
 
 	@Override
-	public boolean existsByXpath(String xpath) {
-		// TODO Auto-generated method stub
-		return false;
+	public void dragAndDropByXpath(String xpathFrom, String xpathTo) {
+		WebElement webElFrom = driver.findElement(By.xpath(xpathFrom));	
+		WebElement webElTo = driver.findElement(By.xpath(xpathTo));	
+		// see: https://www.selenium.dev/documentation/webdriver/actions_api/mouse/
+		new Actions(driver)
+        .dragAndDrop(webElFrom, webElTo)
+        .perform();	
 	}
 
 }

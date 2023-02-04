@@ -33,7 +33,8 @@ import at.cpo.report.ReportInterface;
  */
 public interface PlatformInterface extends ReportInterface {
 	
-	// definition of standard webelement types
+	// definitions of standard webelement types
+	// use this values for element definitions in page objects
 	
 	public static final String EDITFIELD = "EditField";
 
@@ -56,6 +57,34 @@ public interface PlatformInterface extends ReportInterface {
 	public static final String LINK = "Link";
 
 	public static final String TEXT = "Text";
+	
+	// values for the verify action
+	
+	public static final String EDITABLE = "Editable";
+
+	public static final String ENABLED = "Enabled";
+
+	public static final String EXISTS = "Exists";
+
+	public static final String VISIBLE = "Visible";
+
+	// values for the click action
+
+	public static final String ALTCLICK = "left click while holding the Alt key down";
+
+	public static final String CLICK = "click with the left mouse button";
+
+	public static final String CONTROLCLICK = "left click while holding the Ctrl key down";
+
+	public static final String DOUBLECLICK = "double click with the left mouse button";
+
+	public static final String LONGCLICK = "click with the left mouse button which lasts for two seconds";
+	
+	public static final String MOUSEOVER = "moves the mouse pointer over the control";
+
+	public static final String RIGHTCLICK = "click with the right mouse button";
+
+	public static final String SHIFTCLICK = "left click while holding the Shift key down";
 
 	// platform stuff
 	
@@ -131,12 +160,31 @@ public interface PlatformInterface extends ReportInterface {
 	 * 
 	 * The onclick event occurs when the user clicks on an HTML element.
 	 * onclick is a DOM Level 2 (2001) feature
+	 * 
+	 * same behaviour as click(locatorDelegate, CLICK)
 	 *
-	 * @param locatorDelegate the locator delegate
+	 * @param locatorDelegate the locator defined by a delegate
 	 */
 	void click(String locatorDelegate);
 
+	/**
+	 * Click at the webelement referenced by locatorDelegate
+	 * 
+	 * see: https://www.w3schools.com/jsref/event_onclick.asp
+	 * 
+	 * The onclick event occurs when the user clicks on an HTML element.
+	 * onclick is a DOM Level 2 (2001) feature
+	 *
+	 * see: values for the click action (defined above)
+	 *
+	 * @param locatorDelegate the locator defined by a delegate
+	 * @param value the click action
+	 */
+	void click(String locatorDelegate, String value);
+
 	void clickByXpath(String xpath);
+
+	void clickByXpath(String xpath, String value);
 
 	/**
 	 * Input at the webelement referenced by locatorDelegate
@@ -220,13 +268,20 @@ public interface PlatformInterface extends ReportInterface {
 
 	boolean existsByXpath(String xpath);
 
+	boolean existsByXpath(String xpath, boolean reportFailed);
+
 	/**
 	 * Validate.
 	 *
 	 * @param description the description
 	 */
 	void validate(boolean condition, String description);
+	
+	void dragAndDrop(String locatorFrom, String locatorTo);
 
+	void dragAndDropByXpath(String xpathFrom, String xpathTo);
+
+	
 	// other stuff
 
 	/**
@@ -261,7 +316,5 @@ public interface PlatformInterface extends ReportInterface {
 	 * Common setup.
 	 */
 	void commonSetup();
-
-	boolean existsByXpath(String xpath, boolean reportFailed);
 
 }
