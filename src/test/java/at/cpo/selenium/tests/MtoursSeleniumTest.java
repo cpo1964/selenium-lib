@@ -45,7 +45,7 @@ import at.cpo.utils.ExcelHelper;
  * Test Login by Selenium.
  */
 @RunWith(Parameterized.class)
-public class SmoketestSeleniumTest extends PlatformHelper {
+public class MtoursSeleniumTest extends PlatformHelper {
 
 	/**
 	 * The Email.
@@ -88,7 +88,7 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 	public static Collection<?> getData() throws IOException {
 		// FIRST evaluate the file path THEN call getTestDataFile()
 		commonSetup(PLATFORM_SELENIUM);
-		return new ExcelHelper(getTestDataFile(), SmoketestSeleniumTest.class.getSimpleName()).getData();
+		return new ExcelHelper(getTestDataFile(), MtoursSeleniumTest.class.getSimpleName()).getData();
 	}
 
 	/**
@@ -155,61 +155,10 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 
 		if (localhostUrl.startsWith("mtours")) {
 			doTestMtours();
-		} else if (localhostUrl.startsWith("jpetstore")) {
-			doTestJpetstore();
 		}
 	}
 
-	private void doTestJpetstore() {
-		logInfo("# login to Jpetstore ######################");
-		reportCreateTest("login to Jpetstore - runlocal: " + runlocal); // level = 0
-
-		// start Jpetstore
-		reportCreateStep("Step #1 - start Jpetstore");
-		if (!navigateToStartJpetstorePage()) {
-			return;
-		}
-		reportStepPassScreenshot();
-
-		reportCreateStep("Step #2 - Login to Jpetstore");
-		testLogin("cpo1964", "Test");
-		reportStepPassScreenshot();
-
-		reportCreateStep("Step #3 - Logout of Jpetstore");
-		testSignoffTestCase();
-		reportStepPassScreenshot();
-
-		reportTestPass("login to Jpetstore");
-//		reportEndTest();
-	}
-
-	private boolean navigateToStartJpetstorePage() {
-		String url;
-		if (isTrue(runlocal)) {
-			try {
-				url = testPlatformPropertiesGet(localhostUrl);
-				logInfo("localhostUrl: " + url);
-				driverGet(url);
-			} catch (Exception e1) {
-				reportStepFailScreenshot();
-				reportTestFail("JPetstore app is down");
-				return false;
-			}
-		} else {
-			try {
-				url = testPlatformPropertiesGet(remoteUrl);
-				logInfo("remoteUrl: " + url);
-				driverGet(url);
-			} catch (Exception e2) {
-				reportStepFailScreenshot();
-				reportTestFail("JPetstore app is down");
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private void doTestMtours() {
+		private void doTestMtours() {
 		logInfo("# login to MTours ######################");
 		reportCreateTest("login to MTours - runlocal: " + runlocal); // level = 0
 
@@ -233,7 +182,7 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 //				"expected: '" + expectedText + "'<br>" +
 //				"found: '" + value + "'<br>'result");
 		reportStepPassScreenshot();
-//		click(SeleniumLoginPage.FLIGHTS);
+		click(MToursLoginPage.FLIGHTS);
 
 		// flights page
 		input(MToursFlightsPage.PASSENGERCOUNT, "2");
@@ -250,13 +199,6 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 
 		reportTestPass("test #1");
 //		reportEndTest();
-	}
-
-	private String normalizedValue() {
-		while (value.contains("  ")) {
-			value = value.replace("\n", "").replaceAll("  ", " ");
-		}
-		return value;
 	}
 
 	/**
@@ -297,59 +239,11 @@ public class SmoketestSeleniumTest extends PlatformHelper {
 		return true;
 	}
 
-//	@Test
-	public void testSigninTestCase() throws Exception {
-		driverGet("https://jpetstore.aspectran.com/catalog/");
-		clickByXpath("//a[contains(@href, '/account/newAccountForm')]");
-		inputByXpath("//input[@name='username']", PlatformInterface.EDITFIELD, "cpo1964");
-		inputByXpath("//input[@name='password']", PlatformInterface.EDITFIELD, "Test");
-		inputByXpath("//input[@name='repeatedPassword']", PlatformInterface.EDITFIELD, "Test");
-		inputByXpath("//input[@name='firstName']", PlatformInterface.EDITFIELD, "Cpo");
-		inputByXpath("//input[@name='lastName']", PlatformInterface.EDITFIELD, "Cpo");
-		inputByXpath("//input[@name='email']", PlatformInterface.EDITFIELD, "cpo1964@aon.at");
-		inputByXpath("//input[@name='phone']", PlatformInterface.EDITFIELD, "12345");
-		inputByXpath("//input[@name='address1']", PlatformInterface.EDITFIELD, "cpo 1");
-		inputByXpath("//input[@name='address2']", PlatformInterface.EDITFIELD, "cpo 2");
-		inputByXpath("//input[@name='city']", PlatformInterface.EDITFIELD, "Cpo");
-		inputByXpath("//input[@name='state']", PlatformInterface.EDITFIELD, "Cpostate");
-		inputByXpath("//input[@name='zip']", PlatformInterface.EDITFIELD, "1111");
-		inputByXpath("//input[@name='country']", PlatformInterface.EDITFIELD, "Cpocountry");
-		clickByXpath("//select[@name='languagePreference']");
-		inputByXpath("//select[@name='languagePreference']", PlatformInterface.LISTBOX, "German");
-		clickByXpath("//option[@value='german']");
-		clickByXpath("//input[@name='listOption']");
-		clickByXpath("//input[@name='bannerOption']");
-		clickByXpath("//div[@id='CenterForm']/form/div/button");
+	private String normalizedValue() {
+		while (value.contains("  ")) {
+			value = value.replace("\n", "").replaceAll("  ", " ");
+		}
+		return value;
 	}
 
-	private void testLogin(String user, String passwort) {
-//		driverGet("https://jpetstore.aspectran.com/catalog/");
-		ok = existsByXpath("//a[contains(@href, '/account/signonForm')]", true);
-		validate(ok, "signonForm is visible");
-		clickByXpath("//a[contains(@href, '/account/signonForm')]");
-		inputByXpath("//input[@name='username']", PlatformInterface.EDITFIELD, user);
-		inputByXpath("//input[@name='password']", PlatformInterface.EDITFIELD, passwort);
-		clickByXpath("//div[@id='Signon']/form/div/div/button");
-	}
-
-	private void testSignoffTestCase() {
-		driverGet("https://jpetstore.aspectran.com/catalog/");
-		driverImplicitlyWait(3000);
-		clickByXpath("//a[contains(@href, '/account/signoff')]");
-		existsByXpath("//a[contains(text(),'Sign Up')]", true);
-//		for (int second = 0;; second++) {
-//			if (second >= 3)
-//				fail("timeout");
-//			try {
-//				if (existsByXpath("//a[contains(text(),'Sign Up')]"))
-//					break;
-//			} catch (Exception e) {
-//			}
-//			try {
-//				Thread.sleep(1000);
-//			} catch (InterruptedException e) {
-//			}
-//		}
-		driverImplicitlyWait(30000);
-	}
 }
