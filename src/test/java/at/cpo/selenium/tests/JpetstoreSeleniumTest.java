@@ -155,8 +155,9 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 	}
 
 	private void doTestJpetstore() {
-		logInfo("# login to Jpetstore ######################");
-		reportCreateTest("login to Jpetstore - runlocal: " + runlocal); // level = 0
+		String methodName = new Exception().getStackTrace()[0].getMethodName();
+		logInfo("# " + methodName + " - Starting Jpetstore ######################");
+		reportCreateTest(methodName + " - Starting Jpetstore - runlocal: " + runlocal); // level = 0
 
 		// start Jpetstore
 		reportCreateStep("Step #1 - start Jpetstore");
