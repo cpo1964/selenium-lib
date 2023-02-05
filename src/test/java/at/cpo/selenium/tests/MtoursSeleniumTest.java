@@ -205,10 +205,12 @@ public class MtoursSeleniumTest extends PlatformHelper {
 	 * @return true, if successful
 	 */
 	private boolean navigateToStartMtoursPage() {
+		String url;
 		if (isTrue(runlocal)) {
 			try {
-				logInfo("localhostUrl: " + testPlatformPropertiesGet(localhostUrl));
-				driverGet(testPlatformPropertiesGet(localhostUrl));
+				url = testPlatformPropertiesGet(localhostUrl);
+				logInfo("localhostUrl: " + url);
+				driverGet(url);
 			} catch (Exception e1) {
 				reportStepFailScreenshot();
 				reportTestFail("MTours is down");
@@ -216,8 +218,9 @@ public class MtoursSeleniumTest extends PlatformHelper {
 			}
 		} else {
 			try {
-				logInfo("remoteUrl: " + testPlatformPropertiesGet(remoteUrl));
-				driverGet(testPlatformPropertiesGet(remoteUrl));
+				url = testPlatformPropertiesGet(remoteUrl);
+				logInfo("remoteUrl: " + url);
+				driverGet(url);
 				driverImplicitlyWait(3000);
 				// Send future commands to iFrame
 				ok = driverSwitchToIFrame("gdpr-consent-notice");
