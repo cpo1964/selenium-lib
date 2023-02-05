@@ -36,10 +36,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 
 import at.cpo.platform.PlatformHelper;
-import at.cpo.platform.PlatformInterface;
 import at.cpo.selenium.common.pageobjects.MToursFlightsPage;
 import at.cpo.selenium.common.pageobjects.MToursLoginPage;
-import at.cpo.utils.ExcelHelper;
 
 /**
  * Test Login by Selenium.
@@ -88,7 +86,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 	public static Collection<?> getData() throws IOException {
 		// FIRST evaluate the file path THEN call getTestDataFile()
 		commonSetup(PLATFORM_SELENIUM);
-		return new ExcelHelper(getTestDataFile(), MtoursSeleniumTest.class.getSimpleName()).getData();
+		return getTestdata(MtoursSeleniumTest.class.getSimpleName());
 	}
 
 	/**
@@ -105,7 +103,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 	 */
 	@AfterClass
 	public static void tearDownAfterClass() {
-		reportTearDown();
+		reportTeardown();
 	}
 
 	/**
@@ -160,7 +158,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 
 		private void doTestMtours() {
 		logInfo("# login to MTours ######################");
-		reportCreateTest("login to MTours - runlocal: " + runlocal); // level = 0
+		reportCreateTest("Starting MTours - runlocal: " + runlocal); // level = 0
 
 		// start MTours
 		reportCreateStep("Step #1 - start MTours");
@@ -197,7 +195,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 				+ "'<br>" + "found: '" + value + "'<br>'result");
 		reportStepPassScreenshot();
 
-		reportTestPass("test #1");
+		reportTestPass("Mtours finished");
 //		reportEndTest();
 	}
 
@@ -213,7 +211,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 				driverGet(testPlatformPropertiesGet(localhostUrl));
 			} catch (Exception e1) {
 				reportStepFailScreenshot();
-				reportTestFail("MTours app is down");
+				reportTestFail("MTours is down");
 				return false;
 			}
 		} else {
@@ -232,7 +230,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 				driverImplicitlyWait(30000);
 			} catch (Exception e2) {
 				reportStepFailScreenshot();
-				reportTestFail("MTours app is down");
+				reportTestFail("MTours is down");
 				return false;
 			}
 		}

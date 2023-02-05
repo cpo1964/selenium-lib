@@ -36,10 +36,6 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 
 import at.cpo.platform.PlatformHelper;
-import at.cpo.platform.PlatformInterface;
-import at.cpo.selenium.common.pageobjects.MToursFlightsPage;
-import at.cpo.selenium.common.pageobjects.MToursLoginPage;
-import at.cpo.utils.ExcelHelper;
 
 /**
  * Test Login by Selenium.
@@ -88,7 +84,7 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 	public static Collection<?> getData() throws IOException {
 		// FIRST evaluate the file path THEN call getTestDataFile()
 		commonSetup(PLATFORM_SELENIUM);
-		return new ExcelHelper(getTestDataFile(), JpetstoreSeleniumTest.class.getSimpleName()).getData();
+		return getTestdata(JpetstoreSeleniumTest.class.getSimpleName());
 	}
 
 	/**
@@ -105,7 +101,7 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 	 */
 	@AfterClass
 	public static void tearDownAfterClass() {
-		reportTearDown();
+		reportTeardown();
 	}
 
 	/**
@@ -164,9 +160,7 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 
 		// start Jpetstore
 		reportCreateStep("Step #1 - start Jpetstore");
-		if (!navigateToStartJpetstorePage()) {
-			return;
-		}
+		validate(navigateToStartJpetstorePage(), "Jpetstore started");
 		reportStepPassScreenshot();
 
 		reportCreateStep("Step #2 - Login to Jpetstore");
@@ -177,72 +171,35 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 		testSignoffTestCase();
 		reportStepPassScreenshot();
 
-		reportTestPass("login to Jpetstore");
+		reportTestPass("Jpetstore finished");
 //		reportEndTest();
 	}
 
 	private boolean navigateToStartJpetstorePage() {
-		String url;
-		if (isTrue(runlocal)) {
-			try {
-				url = testPlatformPropertiesGet(localhostUrl);
-				logInfo("localhostUrl: " + url);
-				driverGet(url);
-			} catch (Exception e1) {
-				reportStepFailScreenshot();
-				reportTestFail("JPetstore app is down");
-				return false;
+		try {
+			if (isTrue(runlocal)) {
+				driverGet(testPlatformPropertiesGet(localhostUrl));
+			} else {
+				driverGet(testPlatformPropertiesGet(remoteUrl));
 			}
-		} else {
-			try {
-				url = testPlatformPropertiesGet(remoteUrl);
-				logInfo("remoteUrl: " + url);
-				driverGet(url);
-			} catch (Exception e2) {
-				reportStepFailScreenshot();
-				reportTestFail("JPetstore app is down");
-				return false;
-			}
+			reportTestPass("JPetstore started");
+		} catch (Exception e1) {
+			reportTestFail("JPetstore is down");
+			return false;
 		}
 		return true;
 	}
 
-	public void testSigninTestCase() throws Exception {
-		driverGet("https://jpetstore.aspectran.com/catalog/");
-		clickByXpath("//a[contains(@href, '/account/newAccountForm')]");
-		inputByXpath("//input[@name='username']", PlatformInterface.EDITFIELD, "cpo1964");
-		inputByXpath("//input[@name='password']", PlatformInterface.EDITFIELD, "Test");
-		inputByXpath("//input[@name='repeatedPassword']", PlatformInterface.EDITFIELD, "Test");
-		inputByXpath("//input[@name='firstName']", PlatformInterface.EDITFIELD, "Cpo");
-		inputByXpath("//input[@name='lastName']", PlatformInterface.EDITFIELD, "Cpo");
-		inputByXpath("//input[@name='email']", PlatformInterface.EDITFIELD, "cpo1964@aon.at");
-		inputByXpath("//input[@name='phone']", PlatformInterface.EDITFIELD, "12345");
-		inputByXpath("//input[@name='address1']", PlatformInterface.EDITFIELD, "cpo 1");
-		inputByXpath("//input[@name='address2']", PlatformInterface.EDITFIELD, "cpo 2");
-		inputByXpath("//input[@name='city']", PlatformInterface.EDITFIELD, "Cpo");
-		inputByXpath("//input[@name='state']", PlatformInterface.EDITFIELD, "Cpostate");
-		inputByXpath("//input[@name='zip']", PlatformInterface.EDITFIELD, "1111");
-		inputByXpath("//input[@name='country']", PlatformInterface.EDITFIELD, "Cpocountry");
-		clickByXpath("//select[@name='languagePreference']");
-		inputByXpath("//select[@name='languagePreference']", PlatformInterface.LISTBOX, "German");
-		clickByXpath("//option[@value='german']");
-		clickByXpath("//input[@name='listOption']");
-		clickByXpath("//input[@name='bannerOption']");
-		clickByXpath("//div[@id='CenterForm']/form/div/button");
-	}
-
 	private void testLogin(String user, String passwort) {
-//		driverGet("https://jpetstore.aspectran.com/catalog/");
 		ok = existsByXpath("//a[contains(@href, '/account/signonForm')]", true);
 		validate(ok, "signonForm is visible");
 		clickByXpath("//a[contains(@href, '/account/signonForm')]");
-		inputByXpath("//input[@name='username']", PlatformInterface.EDITFIELD, user);
-		inputByXpath("//input[@name='password']", PlatformInterface.EDITFIELD, passwort);
+		inputByXpath("//input[@name='username']", EDITFIELD, user);
+		inputByXpath("//input[@name='password']", EDITFIELD, passwort);
 		clickByXpath("//div[@id='Signon']/form/div/div/button");
 	}
 
 	private void testSignoffTestCase() {
-		driverGet("https://jpetstore.aspectran.com/catalog/");
 		driverImplicitlyWait(3000);
 		clickByXpath("//a[contains(@href, '/account/signoff')]");
 		existsByXpath("//a[contains(text(),'Sign Up')]", true);
@@ -261,4 +218,28 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 //		}
 		driverImplicitlyWait(30000);
 	}
+
+	public void testSigninTestCase() throws Exception {
+		clickByXpath("//a[contains(@href, '/account/newAccountForm')]");
+		inputByXpath("//input[@name='username']", EDITFIELD, "cpo1964");
+		inputByXpath("//input[@name='password']", EDITFIELD, "Test");
+		inputByXpath("//input[@name='repeatedPassword']", EDITFIELD, "Test");
+		inputByXpath("//input[@name='firstName']", EDITFIELD, "Cpo");
+		inputByXpath("//input[@name='lastName']", EDITFIELD, "Cpo");
+		inputByXpath("//input[@name='email']", EDITFIELD, "cpo1964@aon.at");
+		inputByXpath("//input[@name='phone']", EDITFIELD, "12345");
+		inputByXpath("//input[@name='address1']", EDITFIELD, "cpo 1");
+		inputByXpath("//input[@name='address2']", EDITFIELD, "cpo 2");
+		inputByXpath("//input[@name='city']", EDITFIELD, "Cpo");
+		inputByXpath("//input[@name='state']", EDITFIELD, "Cpostate");
+		inputByXpath("//input[@name='zip']", EDITFIELD, "1111");
+		inputByXpath("//input[@name='country']", EDITFIELD, "Cpocountry");
+		clickByXpath("//select[@name='languagePreference']");
+		inputByXpath("//select[@name='languagePreference']", LISTBOX, "German");
+		clickByXpath("//option[@value='german']");
+		clickByXpath("//input[@name='listOption']");
+		clickByXpath("//input[@name='bannerOption']");
+		clickByXpath("//div[@id='CenterForm']/form/div/button");
+	}
+
 }

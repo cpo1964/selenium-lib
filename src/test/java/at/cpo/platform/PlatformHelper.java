@@ -24,14 +24,17 @@
 package at.cpo.platform;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 
 import at.cpo.platform.selenium.SeleniumHelper;
+import at.cpo.utils.ExcelHelper;
 
 /**
  * The Class EnvironmentHelper.
  */
-public class PlatformHelper {
+public class PlatformHelper implements PlatformInterface {
 
 	/** The platform. */
 	static PlatformInterface platform;
@@ -68,14 +71,14 @@ public class PlatformHelper {
 	/**
 	 * Setup driver.
 	 */
-	protected void setupDriver() {
+	public void setupDriver() {
 		platform.setupDriver();	
 	}
 	
 	/**
 	 * Driver switch to default content.
 	 */
-	protected void driverSwitchToDefaultContent() {
+	public void driverSwitchToDefaultContent() {
 		platform.driverSwitchToDefaultContent();
 	}
 
@@ -85,7 +88,7 @@ public class PlatformHelper {
 	 * @param name the name
 	 * @return true, if successful
 	 */
-	protected boolean driverSwitchToIFrame(String name) {
+	public boolean driverSwitchToIFrame(String name) {
 		return platform.driverSwitchToIFrame(name);	
 	}
 
@@ -103,14 +106,14 @@ public class PlatformHelper {
 	 *
 	 * @param url the url
 	 */
-	protected void driverGet(String url) {
+	public void driverGet(String url) {
 		platform.driverGet(url);	
 	}
 
 	/**
 	 * Close browser.
 	 */
-	protected void closeBrowser() {
+	public void closeBrowser() {
 		platform.closeBrowser();
 	}
 
@@ -119,11 +122,11 @@ public class PlatformHelper {
 	 *
 	 * @param locatorDelegate the locator delegate
 	 */
-	protected void click(String locatorDelegate) {
+	public void click(String locatorDelegate) {
 		platform.click(locatorDelegate);	
 	}
 
-	protected void clickByXpath(String xpath) {
+	public void clickByXpath(String xpath) {
 		platform.clickByXpath(xpath);	
 	}
 
@@ -133,11 +136,11 @@ public class PlatformHelper {
 	 * @param locatorDelegate the locator delegate
 	 * @param value the value
 	 */
-	protected void input(String locatorDelegate, String value) {
+	public void input(String locatorDelegate, String value) {
 		platform.input(locatorDelegate, value);
 	}
 
-	protected void inputByXpath(String xpath, String className, String value) {
+	public void inputByXpath(String xpath, String className, String value) {
 		platform.inputByXpath(xpath, className, value);
 	}
 
@@ -147,14 +150,14 @@ public class PlatformHelper {
 	 * @param locatorDelegate the locator delegate
 	 * @return the string
 	 */
-	protected String output(String locatorDelegate) {
+	public String output(String locatorDelegate) {
 		return platform.output(locatorDelegate);	
 	}
 
 	/**
 	 * Validate.
 	 */
-	protected void validate(boolean condition, String description) {
+	public void validate(boolean condition, String description) {
 		platform.validate(condition, description);	
 	}
 
@@ -164,7 +167,7 @@ public class PlatformHelper {
 	 * @param locatorDelegate the locator delegate
 	 * @return true, if successful
 	 */
-	protected boolean exists(String locatorDelegate) {
+	public boolean exists(String locatorDelegate) {
 		return platform.exists(locatorDelegate);	
 	}
 	
@@ -183,11 +186,11 @@ public class PlatformHelper {
 	 *
 	 * @param msg the msg
 	 */
-	protected void reportCreateTest(String msg) {
+	public void reportCreateTest(String msg) {
 		platform.reportCreateTest(msg);
 	}
 
-	protected void reportEndTest() {
+	public void reportEndTest() {
 		platform.reportEndTest();
 	}
 	/**
@@ -195,7 +198,7 @@ public class PlatformHelper {
 	 *
 	 * @param msg the msg
 	 */
-	protected void reportTestPass(String msg) {
+	public void reportTestPass(String msg) {
 		platform.reportTestPass(msg);
 	}
 
@@ -204,7 +207,7 @@ public class PlatformHelper {
 	 *
 	 * @param msg the msg
 	 */
-	protected void reportTestFail(String msg) {
+	public void reportTestFail(String msg) {
 		platform.reportTestFail(msg);
 	}
 
@@ -213,7 +216,7 @@ public class PlatformHelper {
 	 *
 	 * @param msg the msg
 	 */
-	protected void reportCreateStep(String msg) {
+	public void reportCreateStep(String msg) {
 		platform.reportCreateStep(msg);
 	}
 
@@ -222,7 +225,7 @@ public class PlatformHelper {
 	 *
 	 * @param msg the msg
 	 */
-	protected void reportStepPass(String msg) {
+	public void reportStepPass(String msg) {
 		platform.reportStepPass(msg);
 	}
 
@@ -231,31 +234,34 @@ public class PlatformHelper {
 	 *
 	 * @param msg the msg
 	 */
-	protected void reportStepFail(String msg) {
+	public void reportStepFail(String msg) {
 		platform.reportStepFail(msg);
 	}
 
 	/**
 	 * Screenshot step pass.
 	 */
-	protected void reportStepPassScreenshot() {
+	public void reportStepPassScreenshot() {
 		platform.reportStepPassScreenshot();
 	}
 
 	/**
 	 * Screenshot step fail.
 	 */
-	protected void reportStepFailScreenshot() {
+	public void reportStepFailScreenshot() {
 		platform.reportStepFailScreenshot();
 	}
 
 	/**
 	 * Tear down extent.
 	 */
-	protected static void reportTearDown() {
+	public void reportTearDown() {
 		platform.reportTearDown();	
 	}
 
+	public static void reportTeardown() {
+		new PlatformHelper().reportTearDown();	
+	}
 	// logging stuff ==========================================================
 
 	/**
@@ -263,30 +269,36 @@ public class PlatformHelper {
 	 *
 	 * @param msg the msg
 	 */
-	protected void logInfo(String msg) {
+	public void logInfo(String msg) {
 		platform.logInfo(msg);
 	}
 
 	/**
 	 * Log all.
 	 */
-	protected void logAll() {
+	public void logAll() {
 		platform.logAll();
 	}
 
 	// other stuff ============================================================
+
+	public static Collection<?> getTestdata(String simpleName) throws IOException {
+		return new ExcelHelper(new PlatformHelper().getTestDataFile(), simpleName).getData();
+	}
 
 	/**
 	 * Gets the test data file.
 	 *
 	 * @return the test data file
 	 */
-	protected static File getTestDataFile() {
+	public File getTestDataFile() {
 		return platform.getTestDataFile();	
 	}
 	
 	protected static String testPlatformPropertiesGet(String key) {
-		return (String) PlatformInterface.testPlatformProperties.get(key);	
+		String url = (String) PlatformInterface.testPlatformProperties.get(key);
+		new PlatformHelper().reportTestPass("Starting app: " + url);
+		return url;	
 	}
 	
 	/**
@@ -301,6 +313,72 @@ public class PlatformHelper {
 		}
 		String[] values = {"true", "ok", "on"};
 		return Arrays.stream(values).anyMatch(value.toLowerCase()::equals);
+	}
+
+	@Override
+	public void logDebug(String msg) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void logError(String msg) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void click(String locatorDelegate, String value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void clickByXpath(String xpath, String value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String outputByXpath(String xpath) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void dragAndDrop(String locatorFrom, String locatorTo) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dragAndDropByXpath(String xpathFrom, String xpathTo) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getMandant() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getTestEnvironment() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getProdukt() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void commonSetup() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
