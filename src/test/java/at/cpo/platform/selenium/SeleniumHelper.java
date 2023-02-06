@@ -295,9 +295,11 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	}
 
 	public boolean existsByXpath(String xpath, long timeout) {
-		WebElement firstResult = new WebDriverWait(driver, Duration.ofSeconds(10))
-		        .until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
-		return firstResult != null && firstResult.isDisplayed();
+		WebDriverWait wa = new WebDriverWait(driver, Duration.ofSeconds(timeout));
+		webEl = driver.findElement(By.xpath(xpath));
+		boolean enabled = wa.until(ExpectedConditions.attributeToBe(webEl, "", ""));
+		WebElement firstResult = wa.until(ExpectedConditions.elementToBeClickable(webEl));
+		return enabled && firstResult != null && firstResult.isDisplayed();
 	}
 
 	/**
@@ -312,7 +314,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	}
 	
 	public boolean existsByXpath(String xpath, boolean reportFailed, long timeout) {
-		boolean exists = existsByXpath(xpath, reportFailed, timeout);
+		boolean exists = existsByXpath(xpath, timeout);
 		if (!exists)  {
 			if (reportFailed) {
 				reportStepFail("<b>exist</b>s by xpath $(\"" + xpath + "\") - false");
