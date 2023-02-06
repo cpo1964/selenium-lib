@@ -180,7 +180,8 @@ public class MtoursSeleniumTest extends PlatformHelper {
 //				"expected: '" + expectedText + "'<br>" +
 //				"found: '" + value + "'<br>'result");
 		reportStepPassScreenshot();
-		if ("false".equalsIgnoreCase(runlocal)) {
+		ok = exists(MToursLoginPage.FLIGHTS, 3);
+		if (ok || "false".equalsIgnoreCase(runlocal)) {
 			click(MToursLoginPage.FLIGHTS);
 		}
 
@@ -190,7 +191,8 @@ public class MtoursSeleniumTest extends PlatformHelper {
 
 		// navigate to Home
 		reportCreateStep("Step #3 - navigate to Home");
-		if ("false".equalsIgnoreCase(runlocal)) {
+		ok = exists(MToursLoginPage.HOME, 3);
+		if (ok || "false".equalsIgnoreCase(runlocal)) {
 			click(MToursLoginPage.HOME);
 			value = output(MToursLoginPage.SIGNININFO);
 			String expectedText = "Registered users can sign-in here to find the lowest fare on participating airlines.";
