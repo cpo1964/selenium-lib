@@ -297,7 +297,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	public boolean existsByXpath(String xpath, long timeout) {
 		WebElement firstResult = new WebDriverWait(driver, Duration.ofSeconds(10))
 		        .until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
-		return firstResult.isDisplayed();
+		return firstResult != null && firstResult.isDisplayed();
 	}
 
 	/**
