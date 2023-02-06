@@ -180,9 +180,11 @@ public class MtoursSeleniumTest extends PlatformHelper {
 //				"expected: '" + expectedText + "'<br>" +
 //				"found: '" + value + "'<br>'result");
 		reportStepPassScreenshot();
-		ok = exists(MToursLoginPage.FLIGHTS, 3);
-		if (ok || "false".equalsIgnoreCase(runlocal)) {
-			click(MToursLoginPage.FLIGHTS);
+		if ("false".equalsIgnoreCase(runlocal)) {
+			ok = exists(MToursLoginPage.FLIGHTS, 3);
+			if (ok) {
+				click(MToursLoginPage.FLIGHTS);
+			}
 		}
 
 		// flights page
