@@ -156,10 +156,9 @@ public class MtoursSeleniumTest extends PlatformHelper {
 		}
 	}
 
-	private void doTestMtours() {
-		String methodName = new Exception().getStackTrace()[0].getMethodName();
-		logInfo("# " + methodName + " ######################");
-		reportCreateTest(methodName + " - runlocal: " + runlocal); // level = 0
+		private void doTestMtours() {
+		logInfo("# login to MTours ######################");
+		reportCreateTest("Starting MTours - runlocal: " + runlocal); // level = 0
 
 		// start MTours
 		reportCreateStep("Step #1 - start MTours");
