@@ -257,12 +257,6 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		}
 	}
 
-	@Override
-	public boolean existsByXpath(String xpath) {
-		webEl = driver.findElement(By.xpath(xpath));	
-		return existsByXpath(xpath, false);
-	}
-
 	/**
 	 * Exists.
 	 *
@@ -271,6 +265,10 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	public boolean exists(String locatorDelegate) {
 		return exists(locatorDelegate, false);
+	}
+
+	public boolean exists(String locatorDelegate, int timeout) {
+		return exists(locatorDelegate, false, timeout);
 	}
 
 	/**
@@ -285,6 +283,22 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		return existsByXpath(xpath, reportFailed);
 	}
 
+	public boolean exists(String locatorDelegate, boolean reportFailed, long timeout) {
+		String xpath = getLocator(locatorDelegate);
+		return existsByXpath(xpath, reportFailed, timeout);
+	}
+
+	@Override
+	public boolean existsByXpath(String xpath) {
+		return existsByXpath(xpath, driver.manage().timeouts().getImplicitWaitTimeout().toSeconds());
+	}
+
+	public boolean existsByXpath(String xpath, long timeout) {
+		WebElement firstResult = new WebDriverWait(driver, Duration.ofSeconds(10))
+		        .until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
+		return firstResult.isDisplayed();
+	}
+
 	/**
 	 * Exists.
 	 *
@@ -293,8 +307,11 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @return true, if successful
 	 */
 	public boolean existsByXpath(String xpath, boolean reportFailed) {
-		List<WebElement> webElements = driver.findElements(By.xpath(xpath));
-		boolean exists = webElements.size() > 0 && webElements.get(0).isDisplayed();
+		return existsByXpath(xpath, reportFailed, driver.manage().timeouts().getImplicitWaitTimeout().toSeconds());
+	}
+	
+	public boolean existsByXpath(String xpath, boolean reportFailed, long timeout) {
+		boolean exists = existsByXpath(xpath, reportFailed, timeout);
 		if (!exists)  {
 			if (reportFailed) {
 				reportStepFail("<b>exist</b>s by xpath $(\"" + xpath + "\") - false");
@@ -306,7 +323,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		reportStepPass("<b>exists</b> by xpath $(\"" + xpath + "\") - true");
 		return exists;
 	}
-	
+
 	/**
 	 * Click.
 	 *

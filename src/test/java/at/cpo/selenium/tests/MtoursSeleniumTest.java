@@ -180,7 +180,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 //				"expected: '" + expectedText + "'<br>" +
 //				"found: '" + value + "'<br>'result");
 		reportStepPassScreenshot();
-		ok = exists(MToursLoginPage.FLIGHTS);
+		ok = exists(MToursLoginPage.FLIGHTS, 3);
 		if (ok) {
 			click(MToursLoginPage.FLIGHTS);
 		}
@@ -191,7 +191,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 
 		// navigate to Home
 		reportCreateStep("Step #3 - navigate to Home");
-		ok = exists(MToursLoginPage.HOME);
+		ok = exists(MToursLoginPage.HOME, 3);
 		if (ok) {
 			click(MToursLoginPage.HOME);
 			value = output(MToursLoginPage.SIGNININFO);

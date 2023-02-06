@@ -266,6 +266,8 @@ public interface PlatformInterface extends ReportInterface {
 	 */
 	boolean exists(String locatorDelegate);
 
+	boolean exists(String locatorDelegate, int timeout);
+
 	boolean existsByXpath(String xpath);
 
 	boolean existsByXpath(String xpath, boolean reportFailed);
