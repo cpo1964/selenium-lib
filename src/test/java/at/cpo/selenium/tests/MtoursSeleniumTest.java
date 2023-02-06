@@ -228,13 +228,13 @@ public class MtoursSeleniumTest extends PlatformHelper {
 				driverImplicitlyWait(3000);
 				// Send future commands to iFrame
 				ok = driverSwitchToIFrame("gdpr-consent-notice");
-				ok = ok && exists(MToursLoginPage.NOTICE);
+				ok = ok && exists(MToursLoginPage.NOTICE, 5);
 				if (ok) {
 					click(MToursLoginPage.NOTICE);
 					// Send future commands to main document
 					driverSwitchToDefaultContent();
 				}
-				driverImplicitlyWait(30000);
+//				driverImplicitlyWait(30000);
 			} catch (Exception e2) {
 				reportStepFailScreenshot();
 				reportTestFail("MTours is down");
