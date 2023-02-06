@@ -283,6 +283,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		return existsByXpath(xpath, reportFailed);
 	}
 
+	@Override
 	public boolean exists(String locatorDelegate, boolean reportFailed, long timeout) {
 		String xpath = getLocator(locatorDelegate);
 		return existsByXpath(xpath, reportFailed, timeout);

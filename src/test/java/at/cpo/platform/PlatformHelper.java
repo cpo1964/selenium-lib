@@ -175,6 +175,10 @@ public class PlatformHelper implements PlatformInterface {
 		return platform.exists(locatorDelegate, timeout);	
 	}
 
+	public boolean exists(String locatorDelegate, boolean reportFailed, long timeout) {
+		return platform.exists(locatorDelegate, reportFailed, timeout);	
+	}
+
 	public boolean existsByXpath(String xpath) {
 		return existsByXpath(xpath, false);	
 	}
