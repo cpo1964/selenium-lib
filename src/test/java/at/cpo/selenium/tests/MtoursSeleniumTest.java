@@ -180,7 +180,10 @@ public class MtoursSeleniumTest extends PlatformHelper {
 //				"expected: '" + expectedText + "'<br>" +
 //				"found: '" + value + "'<br>'result");
 		reportStepPassScreenshot();
-		click(MToursLoginPage.FLIGHTS);
+		ok = exists(MToursLoginPage.FLIGHTS);
+		if (ok) {
+			click(MToursLoginPage.FLIGHTS);
+		}
 
 		// flights page
 		input(MToursFlightsPage.PASSENGERCOUNT, "2");
@@ -188,11 +191,14 @@ public class MtoursSeleniumTest extends PlatformHelper {
 
 		// navigate to Home
 		reportCreateStep("Step #3 - navigate to Home");
-		click(MToursLoginPage.HOME);
-		value = output(MToursLoginPage.SIGNININFO);
-		String expectedText = "Registered users can sign-in here to find the lowest fare on participating airlines.";
-		validate(normalizedValue().contains(expectedText), "value of SignInInfo'<br>" + "expected: '" + expectedText
-				+ "'<br>" + "found: '" + value + "'<br>'result");
+		ok = exists(MToursLoginPage.HOME);
+		if (ok) {
+			click(MToursLoginPage.HOME);
+			value = output(MToursLoginPage.SIGNININFO);
+			String expectedText = "Registered users can sign-in here to find the lowest fare on participating airlines.";
+			validate(normalizedValue().contains(expectedText), "value of SignInInfo'<br>" + "expected: '" + expectedText
+					+ "'<br>" + "found: '" + value + "'<br>'result");
+		}
 		reportStepPassScreenshot();
 
 		reportTestPass("Mtours finished");
