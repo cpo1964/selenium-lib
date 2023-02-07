@@ -162,10 +162,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 
 		// start MTours
 		reportCreateStep("Step #1 - start MTours");
-		if (!navigateToStartMtoursPage()) {
-//			reportEndTest();
-			return;
-		}
+		validate(navigateToStartMtoursPage(), "MTours started");
 		reportStepPassScreenshot();
 
 		// login
@@ -220,7 +217,6 @@ public class MtoursSeleniumTest extends PlatformHelper {
 				logInfo("localhostUrl: " + url);
 				driverGet(url);
 			} catch (Exception e1) {
-				reportStepFailScreenshot();
 				reportTestFail("MTours is down");
 				return false;
 			}
