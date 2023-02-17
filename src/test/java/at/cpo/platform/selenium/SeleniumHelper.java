@@ -38,7 +38,9 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.lang3.SystemUtils;
+import org.apache.commons.lang.SystemUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 //import org.junit.Rule;
 //import org.junit.rules.TestRule;
 import org.openqa.selenium.By;
@@ -67,6 +69,8 @@ import at.cpo.report.extent.ExtentHelper;
  */
 public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 
+	Logger LOGGER = LogManager.getLogger(this.getClass().getSimpleName());
+	
 	/** The name. */
 	protected String name = "";
 
@@ -89,6 +93,10 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	private String produkt = ""; // eg mtours
 
 	private String testDataPath;
+	
+	{
+//		java.util.logging.Logger.getLogger("org.openqa.selenium.remote.RemoteWebDriver").setLevel(Level.OFF);
+	}
 
 //	{
 //		afterWithFailedInformation = RuleChain.outerRule(new ExternalResource() {
@@ -175,11 +183,12 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		} else if ("firefox".equalsIgnoreCase(browser)) {
 			setupFirefoxDriver();
 		}
+//		java.util.logging.Logger.getLogger("org.openqua.selenium.remote.RemoteWebDriver").setLevel(Level.OFF);
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
 //		driver.manage().window().maximize();
 //        driver.manage().window().setSize(new Dimension(1900, 1000));
 
-		driver.setLogLevel(java.util.logging.Level.SEVERE);
+//		driver.setLogLevel(java.util.logging.Level.SEVERE);
 	}
 
 	/**
@@ -210,9 +219,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			System.setProperty("webdriver.gecko.driver",
 					"src/test/resources/selenium_standalone_binaries/windows/marionette/64bit/geckodriver.exe");
 		}
-
-		java.util.logging.Logger.getLogger("org.openqa.selenium.remote.RemoteWebDriver")
-				.setLevel(java.util.logging.Level.SEVERE);
+				
 		System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, "FFLogs.txt");
 
 		DriverService serviceBuilder = new GeckoDriverService.Builder().build();
@@ -226,13 +233,14 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		capabilities.setCapability("marionette", true);
 		FirefoxOptions options = new FirefoxOptions();
 		options.merge(capabilities);
-		options.setLogLevel(FirefoxDriverLogLevel.FATAL);
+		options.setLogLevel(FirefoxDriverLogLevel.ERROR);
 		options.addPreference("browser.link.open_newwindow", 3);
 		options.addPreference("browser.link.open_newwindow.restriction", 0);
 //      options.setHeadless(Boolean.getBoolean("headless"));
 
 		driver = new FirefoxDriver(options);
-
+//		driver.setLogLevel(Level.OFF);
+//		java.util.logging.Logger.getLogger("org.openqa.selenium.remote.RemoteWebDriver").setLevel(Level.OFF);
 		/*
 		 * WebDriverManager.firefoxdriver().setup(); -> freischaltung fehlt !
 		 * 
@@ -291,7 +299,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 
 	@Override
 	public boolean existsByXpath(String xpath) {
-		return existsByXpath(xpath, driver.manage().timeouts().getImplicitWaitTimeout().toSeconds());
+		return existsByXpath(xpath, driver.manage().timeouts().getImplicitWaitTimeout().getSeconds());
 	}
 
 	public boolean existsByXpath(String xpath, long timeout) {
@@ -317,7 +325,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @return true, if successful
 	 */
 	public boolean existsByXpath(String xpath, boolean reportFailed) {
-		return existsByXpath(xpath, reportFailed, driver.manage().timeouts().getImplicitWaitTimeout().toSeconds());
+		return existsByXpath(xpath, reportFailed, driver.manage().timeouts().getImplicitWaitTimeout().getSeconds());
 	}
 	
 	public boolean existsByXpath(String xpath, boolean reportFailed, long timeout) {
@@ -555,7 +563,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	private void logSecret(String locatorDelegate, String value, boolean secret) throws IOException {
 		String text = getSecretString(value, secret);
-		logDebug("<b>input</b> by xpath $(\"" + locatorDelegate + "\"), value=" + text);
+		LOGGER.debug("<b>input</b> by xpath $(\"" + locatorDelegate + "\"), value=" + text);
 	}
 
 	/**
@@ -672,7 +680,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			throw new IllegalArgumentException("Property \"" + key + "\" from file " + propertiesFileDestination
 					+ " does not exists or is empty!");
 		}
-		logDebug("Found value '" + (!key.equals("password") ? value : "*****") + "' by key '" + key + "' from file '"
+		LOGGER.debug("Found value '" + (!key.equals("password") ? value : "*****") + "' by key '" + key + "' from file '"
 				+ propertiesFileDestination + "'");
 		return value;
 	}

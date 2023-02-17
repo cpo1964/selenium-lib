@@ -65,8 +65,12 @@ public class ExtentHelper implements ReportInterface {
 
 	/** The report. */
 	protected static ExtentReports report;
+	
+	Logger LOGGER;
 
 	{
+		LOGGER = LogManager.getLogger(this.getClass().getSimpleName());
+
 		report = ExtentHelper.prepareExtentReport();
 	}
 
@@ -114,13 +118,6 @@ public class ExtentHelper implements ReportInterface {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * Tear down extent.
-	 */
-	public void reportTearDown() {
-		report.flush();
 	}
 
 	/**
@@ -198,6 +195,13 @@ public class ExtentHelper implements ReportInterface {
 	}
 
 	/**
+	 * Tear down extent.
+	 */
+	public void reportTearDown() {
+		report.flush();
+	}
+
+	/**
 	 * Screenshot file to "RunResults" + File.separator + "Resources" +
 	 * File.separator + "Snapshots"
 	 *
@@ -260,23 +264,23 @@ public class ExtentHelper implements ReportInterface {
 
 	}
 
-	/**
-	 * Log info.
-	 *
-	 * @param msg the msg
-	 */
-	public void logInfo(String msg) {
-		logBuffer.add("INFO#" + msg);
-	}
-
-	/**
-	 * Log debug.
-	 *
-	 * @param msg the msg
-	 */
-	public void logDebug(String msg) {
-		logBuffer.add("DEBUG#" + msg);
-	}
+//	/**
+//	 * Log info.
+//	 *
+//	 * @param msg the msg
+//	 */
+//	public void logInfo(String msg) {
+//		logBuffer.add("INFO#" + msg);
+//	}
+//
+//	/**
+//	 * Log debug.
+//	 *
+//	 * @param msg the msg
+//	 */
+//	public void logDebug(String msg) {
+//		logBuffer.add("DEBUG#" + msg);
+//	}
 
 	/**
 	 * Log error.
@@ -332,8 +336,6 @@ public class ExtentHelper implements ReportInterface {
 //		LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
 
 //		org.apache.log4j.Logger LOGGER = null;
-		Logger LOGGER = null;
-		LOGGER = LogManager.getLogger(this.getClass().getSimpleName());
 //			try {
 // 				LOGGER = LogManager.getLogger(Class.forName("at.cpo.report.extent.ExtentHelper"));
 //			} catch (ClassNotFoundException e) {

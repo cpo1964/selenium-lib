@@ -28,6 +28,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import at.cpo.platform.selenium.SeleniumHelper;
 import at.cpo.utils.ExcelHelper;
 
@@ -35,6 +38,8 @@ import at.cpo.utils.ExcelHelper;
  * The Class EnvironmentHelper.
  */
 public class PlatformHelper implements PlatformInterface {
+
+	protected Logger LOGGER = LogManager.getLogger(this.getClass().getSimpleName());
 
 	/** The platform. */
 	static PlatformInterface platform;
@@ -272,21 +277,33 @@ public class PlatformHelper implements PlatformInterface {
 	}
 	// logging stuff ==========================================================
 
-	/**
-	 * Log info.
-	 *
-	 * @param msg the msg
-	 */
-	public void logInfo(String msg) {
-		platform.logInfo(msg);
-	}
-
-	/**
-	 * Log all.
-	 */
-	public void logAll() {
-		platform.logAll();
-	}
+//	/**
+//	 * Log info.
+//	 *
+//	 * @param msg the msg
+//	 */
+//	public void logInfo(String msg) {
+//		platform.logInfo(msg);
+//	}
+//
+//	@Override
+//	public void logDebug(String msg) {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	@Override
+//	public void logError(String msg) {
+//		// TODO Auto-generated method stub
+//	}
+//
+//	/**
+//	 * Log all.
+//	 */
+//	public void logAll() {
+//		platform.logAll();
+//	}
+//
 
 	// other stuff ============================================================
 
@@ -316,23 +333,11 @@ public class PlatformHelper implements PlatformInterface {
 	 * @return true, if value.toLowerCase() is "true" or "ok" or "on"
 	 */
 	protected boolean isTrue(String value) {
-		if (value == null || value.isEmpty() || value.isBlank()) {
+		if (value == null || value.isEmpty() || value.isEmpty()) {
 			value = "false";
 		}
 		String[] values = {"true", "ok", "on"};
 		return Arrays.stream(values).anyMatch(value.toLowerCase()::equals);
-	}
-
-	@Override
-	public void logDebug(String msg) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void logError(String msg) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

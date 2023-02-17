@@ -115,11 +115,11 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 		if (isTrue(skip)) {
 			return;
 		}
-		logInfo("# setUp #");
-		logInfo("# username: '" + username + "'");
-		logInfo("# password: '" + password + "'");
-		logInfo("# localhostUrl: '" + localhostUrl + "'");
-		logInfo("# remoteUrl: '" + remoteUrl + "'");
+		LOGGER.info("# setUp #");
+		LOGGER.info("# username: '" + username + "'");
+		LOGGER.info("# password: '" + password + "'");
+		LOGGER.info("# localhostUrl: '" + localhostUrl + "'");
+		LOGGER.info("# remoteUrl: '" + remoteUrl + "'");
 
 		setupDriver();
 	}
@@ -129,12 +129,12 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 	 */
 	@After
 	public void tearDown() {
-		logInfo("# tearDown #");
+		LOGGER.info("# tearDown #");
 		if (isTrue(skip)) {
 			return;
 		}
 
-		logAll();
+//		logAll();
 		closeBrowser();
 	}
 
@@ -155,7 +155,7 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 	}
 
 	private void doTestJpetstore() {
-		logInfo("# login to Jpetstore ######################");
+		LOGGER.info("# login to Jpetstore ######################");
 		reportCreateTest("login to Jpetstore - runlocal: " + runlocal); // level = 0
 
 		// start Jpetstore

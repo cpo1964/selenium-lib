@@ -117,11 +117,11 @@ public class MtoursSeleniumTest extends PlatformHelper {
 		if (isTrue(skip)) {
 			return;
 		}
-		logInfo("# setUp #");
-		logInfo("# username: '" + username + "'");
-		logInfo("# password: '" + password + "'");
-		logInfo("# localhostUrl: '" + localhostUrl + "'");
-		logInfo("# remoteUrl: '" + remoteUrl + "'");
+		LOGGER.info("# setUp #");
+		LOGGER.info("# username: '" + username + "'");
+		LOGGER.info("# password: '" + password + "'");
+		LOGGER.info("# localhostUrl: '" + localhostUrl + "'");
+		LOGGER.info("# remoteUrl: '" + remoteUrl + "'");
 
 		setupDriver();
 	}
@@ -131,12 +131,12 @@ public class MtoursSeleniumTest extends PlatformHelper {
 	 */
 	@After
 	public void tearDown() {
-		logInfo("# tearDown #");
+		LOGGER.info("# tearDown #");
 		if (isTrue(skip)) {
 			return;
 		}
 
-		logAll();
+//		logAll();
 		closeBrowser();
 	}
 
@@ -157,7 +157,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 	}
 
 		private void doTestMtours() {
-		logInfo("# login to MTours ######################");
+		LOGGER.info("# login to MTours ######################");
 		reportCreateTest("Starting MTours - runlocal: " + runlocal); // level = 0
 
 		// start MTours
@@ -214,7 +214,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 		if (isTrue(runlocal)) {
 			try {
 				url = testPlatformPropertiesGet(localhostUrl);
-				logInfo("localhostUrl: " + url);
+				LOGGER.info("localhostUrl: " + url);
 				driverGet(url);
 			} catch (Exception e1) {
 				reportTestFail("MTours is down");
@@ -223,7 +223,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 		} else {
 			try {
 				url = testPlatformPropertiesGet(remoteUrl);
-				logInfo("remoteUrl: " + url);
+				LOGGER.info("remoteUrl: " + url);
 				driverGet(url);
 				driverImplicitlyWait(3000);
 				// Send future commands to iFrame
