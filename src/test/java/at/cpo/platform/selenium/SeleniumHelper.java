@@ -94,10 +94,6 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 
 	private String testDataPath;
 	
-	{
-//		java.util.logging.Logger.getLogger("org.openqa.selenium.remote.RemoteWebDriver").setLevel(Level.OFF);
-	}
-
 //	{
 //		afterWithFailedInformation = RuleChain.outerRule(new ExternalResource() {
 //			@Override
@@ -184,11 +180,12 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			setupFirefoxDriver();
 		}
 //		java.util.logging.Logger.getLogger("org.openqua.selenium.remote.RemoteWebDriver").setLevel(Level.OFF);
+//		driver.setLogLevel(java.util.logging.Level.OFF);
+
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
 //		driver.manage().window().maximize();
 //        driver.manage().window().setSize(new Dimension(1900, 1000));
 
-//		driver.setLogLevel(java.util.logging.Level.SEVERE);
 	}
 
 	/**
@@ -239,8 +236,6 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 //      options.setHeadless(Boolean.getBoolean("headless"));
 
 		driver = new FirefoxDriver(options);
-//		driver.setLogLevel(Level.OFF);
-//		java.util.logging.Logger.getLogger("org.openqa.selenium.remote.RemoteWebDriver").setLevel(Level.OFF);
 		/*
 		 * WebDriverManager.firefoxdriver().setup(); -> freischaltung fehlt !
 		 * 

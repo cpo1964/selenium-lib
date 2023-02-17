@@ -55,10 +55,6 @@ public class ExcelHelper {
     /** The data. */
     private LinkedList<Object[]> data = null;
 
-	{
-//		java.util.logging.Logger.getLogger("org.openqa.selenium.remote.RemoteWebDriver").setLevel(Level.OFF);
-	}
-
 	/**
      * Instantiates a new excel helper.
      *
