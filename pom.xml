@@ -34,13 +34,6 @@
 			<artifactId>extentreports</artifactId>
 			<version>${extentreports.version}</version>
 		</dependency>
-		<!-- 
-		<dependency>
-			<groupId>com.relevantcodes</groupId>
-			<artifactId>extentreports</artifactId>
-			<version>${extentreports.version}</version>
-		</dependency>
-		-->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>

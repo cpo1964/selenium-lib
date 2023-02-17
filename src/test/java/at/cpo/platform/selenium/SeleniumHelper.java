@@ -64,11 +64,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import at.cpo.platform.PlatformInterface;
 import at.cpo.report.extent.ExtentHelper;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class SeleniumHelper.
  */
 public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 
+	/** The logger. */
 	Logger LOGGER = LogManager.getLogger(this.getClass().getSimpleName());
 	
 	/** The name. */
@@ -92,6 +94,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	/** The produkt. */
 	private String produkt = ""; // eg mtours
 
+	/** The test data path. */
 	private String testDataPath;
 	
 //	{
@@ -261,42 +264,12 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	}
 
 	/**
-	 * Exists.
+	 * Exists by xpath.
 	 *
-	 * @param locatorDelegate the locator delegate
+	 * @param xpath the xpath
+	 * @param timeout the timeout
 	 * @return true, if successful
 	 */
-	public boolean exists(String locatorDelegate) {
-		return exists(locatorDelegate, false);
-	}
-
-	public boolean exists(String locatorDelegate, int timeout) {
-		return exists(locatorDelegate, false, timeout);
-	}
-
-	/**
-	 * Exists.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @param reportFailed    the reportFailed
-	 * @return true, if successful
-	 */
-	public boolean exists(String locatorDelegate, boolean reportFailed) {
-		String xpath = getLocator(locatorDelegate);
-		return existsByXpath(xpath, reportFailed);
-	}
-
-	@Override
-	public boolean exists(String locatorDelegate, boolean reportFailed, long timeout) {
-		String xpath = getLocator(locatorDelegate);
-		return existsByXpath(xpath, reportFailed, timeout);
-	}
-
-	@Override
-	public boolean existsByXpath(String xpath) {
-		return existsByXpath(xpath, driver.manage().timeouts().getImplicitWaitTimeout().getSeconds());
-	}
-
 	public boolean existsByXpath(String xpath, long timeout) {
 		webEl = null;
 //		boolean enabled = true;
@@ -313,6 +286,65 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	}
 
 	/**
+	 * Exists by xpath.
+	 *
+	 * @param xpath the xpath
+	 * @return true, if successful
+	 */
+	@Override
+	public boolean existsByXpath(String xpath) {
+		return existsByXpath(xpath, driver.manage().timeouts().getImplicitWaitTimeout().getSeconds());
+	}
+
+	/**
+	 * Exists.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param reportFailed    the reportFailed
+	 * @return true, if successful
+	 */
+	public boolean exists(String locatorDelegate, boolean reportFailed) {
+		String xpath = getLocator(locatorDelegate);
+		return existsByXpath(xpath, reportFailed);
+	}
+
+	/**
+	 * Exists.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return true, if successful
+	 */
+	public boolean exists(String locatorDelegate) {
+		return exists(locatorDelegate, false);
+	}
+
+	/**
+	 * Exists.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param reportFailed the report failed
+	 * @param timeout the timeout
+	 * @return true, if successful
+	 */
+	@Override
+	public boolean exists(String locatorDelegate, boolean reportFailed, long timeout) {
+		String xpath = getLocator(locatorDelegate);
+		return existsByXpath(xpath, reportFailed, timeout);
+	}
+
+	/**
+	 * Exists.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param timeout the timeout
+	 * @return true, if successful
+	 */
+	public boolean exists(String locatorDelegate, int timeout) {
+		return exists(locatorDelegate, false, timeout);
+	}
+
+
+	/**
 	 * Exists.
 	 *
 	 * @param xpath the xpath
@@ -323,6 +355,14 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		return existsByXpath(xpath, reportFailed, driver.manage().timeouts().getImplicitWaitTimeout().getSeconds());
 	}
 	
+	/**
+	 * Exists by xpath.
+	 *
+	 * @param xpath the xpath
+	 * @param reportFailed the report failed
+	 * @param timeout the timeout
+	 * @return true, if successful
+	 */
 	public boolean existsByXpath(String xpath, boolean reportFailed, long timeout) {
 		boolean exists = existsByXpath(xpath, timeout);
 		if (!exists)  {
@@ -338,25 +378,11 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	}
 
 	/**
-	 * Click.
+	 * Click by xpath.
 	 *
-	 * @param locatorDelegate the locator delegate
+	 * @param xpath the xpath
+	 * @param value the value
 	 */
-	public void click(String locatorDelegate) {
-		click(locatorDelegate, CLICK);
-	}
-
-	@Override
-	public void click(String locatorDelegate, String action) {
-		String xpath = getLocator(locatorDelegate);
-		clickByXpath(xpath, action);
-	}
-
-	@Override
-	public void clickByXpath(String xpath) {
-		clickByXpath(xpath, CLICK);
-	}
-
 	@Override
 	public void clickByXpath(String xpath, String value) {
 		webEl = driver.findElement(By.xpath(xpath));
@@ -411,28 +437,34 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	}
 
 	/**
-	 * Input.
+	 * Click by xpath.
 	 *
-	 * @param locatorDelegate the locator delegate
-	 * @param value           the value
+	 * @param xpath the xpath
 	 */
-	public void input(String locatorDelegate, String value) {
-		input(locatorDelegate, value, false);
+	@Override
+	public void clickByXpath(String xpath) {
+		clickByXpath(xpath, CLICK);
 	}
 
-	private void input(String locatorDelegate, String value, boolean b) {
-		String xpath = getLocator(locatorDelegate); // expected: a xpath from the property file
-		String className = "";
-		String[] descParts = locatorDelegate.split("\\.");
-		if (descParts.length == 3) {
-			className = descParts[1];
-		}
-		inputByXpath(xpath, className, value, b);
+	/**
+	 * Click.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param action the action
+	 */
+	@Override
+	public void click(String locatorDelegate, String action) {
+		String xpath = getLocator(locatorDelegate);
+		clickByXpath(xpath, action);
 	}
-	
-	@Override // TODO
-	public void inputByXpath(String xpath, String className, String value) {
-		inputByXpath(xpath, className, value, false);
+
+	/**
+	 * Click.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 */
+	public void click(String locatorDelegate) {
+		click(locatorDelegate, CLICK);
 	}
 
 	/**
@@ -446,7 +478,8 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 *     <input type="checkbox">
 	 *     <input type="range"> // vulgo 'slider'
 	 *
-	 * @param locatorDelegate the locator delegate
+	 * @param xpath the xpath
+	 * @param className the class name
 	 * @param value           the value
 	 * @param secret          the secret
 	 */
@@ -518,6 +551,51 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		}
 	}
 
+	/**
+	 * Input by xpath.
+	 *
+	 * @param xpath the xpath
+	 * @param className the class name
+	 * @param value the value
+	 */
+	@Override // TODO
+	public void inputByXpath(String xpath, String className, String value) {
+		inputByXpath(xpath, className, value, false);
+	}
+
+	/**
+	 * Input.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param value the value
+	 * @param b the b
+	 */
+	private void input(String locatorDelegate, String value, boolean b) {
+		String xpath = getLocator(locatorDelegate); // expected: a xpath from the property file
+		String className = "";
+		String[] descParts = locatorDelegate.split("\\.");
+		if (descParts.length == 3) {
+			className = descParts[1];
+		}
+		inputByXpath(xpath, className, value, b);
+	}
+	
+	/**
+	 * Input.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param value           the value
+	 */
+	public void input(String locatorDelegate, String value) {
+		input(locatorDelegate, value, false);
+	}
+
+	/**
+	 * Output by xpath.
+	 *
+	 * @param xpath the xpath
+	 * @return the string
+	 */
 	@Override
 	public String outputByXpath(String xpath) {
 		webEl = driver.findElement(By.xpath(xpath));
@@ -537,6 +615,12 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		return outputByXpath(xpath);
 	}
 
+	/**
+	 * Validate.
+	 *
+	 * @param condition the condition
+	 * @param description the description
+	 */
 	@Override
 	public void validate(boolean condition, String description) {
 		if (condition) {
@@ -551,12 +635,12 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	/**
 	 * Log secret.
 	 *
-	 * @param desc   the desc
+	 * @param locatorDelegate the locator delegate
 	 * @param value  the value
 	 * @param secret the secret
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void logSecret(String locatorDelegate, String value, boolean secret) throws IOException {
+	protected void logSecret(String locatorDelegate, String value, boolean secret) throws IOException {
 		String text = getSecretString(value, secret);
 		LOGGER.debug("<b>input</b> by xpath $(\"" + locatorDelegate + "\"), value=" + text);
 	}
@@ -594,8 +678,9 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	/**
 	 * Wait until webelement is clickable.
 	 *
-	 * @param timeoutSeconds the timeout seconds
 	 * @param webEl          the web el
+	 * @param timeoutSeconds the timeout seconds
+	 * @return the web element
 	 */
 	public static WebElement waitUntilClickable(WebElement webEl, int timeoutSeconds) {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
@@ -689,6 +774,11 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		return new File(testDataPath + File.separator + TESTDATA_XLS);
 	}
 
+	/**
+	 * Sets the test platform properties.
+	 *
+	 * @param filePath the new test platform properties
+	 */
 	private void setTestPlatformProperties(String filePath) {
 		Reader inStream;
 		try {
@@ -754,6 +844,12 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		return produkt;
 	}
 
+	/**
+	 * Drag and drop.
+	 *
+	 * @param locatorFrom the locator from
+	 * @param locatorTo the locator to
+	 */
 	@Override
 	public void dragAndDrop(String locatorFrom, String locatorTo) {
 		 // expected: xpath from the property file
@@ -762,6 +858,12 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		dragAndDropByXpath(xpathFrom, xpathTo);
 	}
 
+	/**
+	 * Drag and drop by xpath.
+	 *
+	 * @param xpathFrom the xpath from
+	 * @param xpathTo the xpath to
+	 */
 	@Override
 	public void dragAndDropByXpath(String xpathFrom, String xpathTo) {
 		WebElement webElFrom = driver.findElement(By.xpath(xpathFrom));	
