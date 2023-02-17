@@ -37,6 +37,7 @@ import org.junit.runners.Parameterized.Parameter;
 
 import at.cpo.platform.PlatformHelper;
 
+// TODO: Auto-generated Javadoc
 /**
  * Test Login by Selenium.
  */
@@ -154,6 +155,9 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 		}
 	}
 
+	/**
+	 * Do test jpetstore.
+	 */
 	private void doTestJpetstore() {
 		LOGGER.info("# login to Jpetstore ######################");
 		reportCreateTest("login to Jpetstore - runlocal: " + runlocal); // level = 0
@@ -175,6 +179,11 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 //		reportEndTest();
 	}
 
+	/**
+	 * Navigate to start jpetstore page.
+	 *
+	 * @return true, if successful
+	 */
 	private boolean navigateToStartJpetstorePage() {
 		try {
 			if (isTrue(runlocal)) {
@@ -190,6 +199,12 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 		return true;
 	}
 
+	/**
+	 * Test login.
+	 *
+	 * @param user the user
+	 * @param passwort the passwort
+	 */
 	private void testLogin(String user, String passwort) {
 		ok = existsByXpath("//a[contains(@href, '/account/signonForm')]", true);
 		validate(ok, "signonForm is visible");
@@ -199,6 +214,9 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 		clickByXpath("//div[@id='Signon']/form/div/div/button");
 	}
 
+	/**
+	 * Test signoff test case.
+	 */
 	private void testSignoffTestCase() {
 		driverImplicitlyWait(3000);
 		clickByXpath("//a[contains(@href, '/account/signoff')]");
@@ -219,6 +237,11 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 		driverImplicitlyWait(30000);
 	}
 
+	/**
+	 * Test signin test case.
+	 *
+	 * @throws Exception the exception
+	 */
 	public void testSigninTestCase() throws Exception {
 		clickByXpath("//a[contains(@href, '/account/newAccountForm')]");
 		inputByXpath("//input[@name='username']", EDITFIELD, "cpo1964");

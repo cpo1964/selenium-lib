@@ -34,11 +34,13 @@ import org.apache.logging.log4j.Logger;
 import at.cpo.platform.selenium.SeleniumHelper;
 import at.cpo.utils.ExcelHelper;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class EnvironmentHelper.
  */
 public class PlatformHelper implements PlatformInterface {
 
+	/** The logger. */
 	protected Logger LOGGER = LogManager.getLogger(this.getClass().getSimpleName());
 
 	/** The platform. */
@@ -131,6 +133,11 @@ public class PlatformHelper implements PlatformInterface {
 		platform.click(locatorDelegate);	
 	}
 
+	/**
+	 * Click by xpath.
+	 *
+	 * @param xpath the xpath
+	 */
 	public void clickByXpath(String xpath) {
 		platform.clickByXpath(xpath);	
 	}
@@ -145,6 +152,13 @@ public class PlatformHelper implements PlatformInterface {
 		platform.input(locatorDelegate, value);
 	}
 
+	/**
+	 * Input by xpath.
+	 *
+	 * @param xpath the xpath
+	 * @param className the class name
+	 * @param value the value
+	 */
 	public void inputByXpath(String xpath, String className, String value) {
 		platform.inputByXpath(xpath, className, value);
 	}
@@ -161,6 +175,9 @@ public class PlatformHelper implements PlatformInterface {
 
 	/**
 	 * Validate.
+	 *
+	 * @param condition the condition
+	 * @param description the description
 	 */
 	public void validate(boolean condition, String description) {
 		platform.validate(condition, description);	
@@ -176,18 +193,46 @@ public class PlatformHelper implements PlatformInterface {
 		return platform.exists(locatorDelegate);	
 	}
 	
+	/**
+	 * Exists.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param timeout the timeout
+	 * @return true, if successful
+	 */
 	public boolean exists(String locatorDelegate, int timeout) {
 		return platform.exists(locatorDelegate, timeout);	
 	}
 
+	/**
+	 * Exists.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param reportFailed the report failed
+	 * @param timeout the timeout
+	 * @return true, if successful
+	 */
 	public boolean exists(String locatorDelegate, boolean reportFailed, long timeout) {
 		return platform.exists(locatorDelegate, reportFailed, timeout);	
 	}
 
+	/**
+	 * Exists by xpath.
+	 *
+	 * @param xpath the xpath
+	 * @return true, if successful
+	 */
 	public boolean existsByXpath(String xpath) {
 		return existsByXpath(xpath, false);	
 	}
 	
+	/**
+	 * Exists by xpath.
+	 *
+	 * @param xpath the xpath
+	 * @param reportFailed the report failed
+	 * @return true, if successful
+	 */
 	public boolean existsByXpath(String xpath, boolean reportFailed) {
 		return platform.existsByXpath(xpath, reportFailed);	
 	}
@@ -203,6 +248,9 @@ public class PlatformHelper implements PlatformInterface {
 		platform.reportCreateTest(msg);
 	}
 
+	/**
+	 * Report end test.
+	 */
 	public void reportEndTest() {
 		platform.reportEndTest();
 	}
@@ -272,6 +320,9 @@ public class PlatformHelper implements PlatformInterface {
 		platform.reportTearDown();	
 	}
 
+	/**
+	 * Report teardown.
+	 */
 	public static void reportTeardown() {
 		new PlatformHelper().reportTearDown();	
 	}
@@ -307,6 +358,13 @@ public class PlatformHelper implements PlatformInterface {
 
 	// other stuff ============================================================
 
+	/**
+	 * Gets the testdata.
+	 *
+	 * @param simpleName the simple name
+	 * @return the testdata
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static Collection<?> getTestdata(String simpleName) throws IOException {
 		return new ExcelHelper(new PlatformHelper().getTestDataFile(), simpleName).getData();
 	}
@@ -320,6 +378,12 @@ public class PlatformHelper implements PlatformInterface {
 		return platform.getTestDataFile();	
 	}
 	
+	/**
+	 * Test platform properties get.
+	 *
+	 * @param key the key
+	 * @return the string
+	 */
 	protected static String testPlatformPropertiesGet(String key) {
 		String url = (String) PlatformInterface.testPlatformProperties.get(key);
 		new PlatformHelper().reportTestPass("Starting app: " + url);
@@ -340,54 +404,102 @@ public class PlatformHelper implements PlatformInterface {
 		return Arrays.stream(values).anyMatch(value.toLowerCase()::equals);
 	}
 
+	/**
+	 * Click.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param value the value
+	 */
 	@Override
 	public void click(String locatorDelegate, String value) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/**
+	 * Click by xpath.
+	 *
+	 * @param xpath the xpath
+	 * @param value the value
+	 */
 	@Override
 	public void clickByXpath(String xpath, String value) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/**
+	 * Output by xpath.
+	 *
+	 * @param xpath the xpath
+	 * @return the string
+	 */
 	@Override
 	public String outputByXpath(String xpath) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * Drag and drop.
+	 *
+	 * @param locatorFrom the locator from
+	 * @param locatorTo the locator to
+	 */
 	@Override
 	public void dragAndDrop(String locatorFrom, String locatorTo) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/**
+	 * Drag and drop by xpath.
+	 *
+	 * @param xpathFrom the xpath from
+	 * @param xpathTo the xpath to
+	 */
 	@Override
 	public void dragAndDropByXpath(String xpathFrom, String xpathTo) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/**
+	 * Gets the mandant.
+	 *
+	 * @return the mandant
+	 */
 	@Override
 	public String getMandant() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * Gets the test environment.
+	 *
+	 * @return the test environment
+	 */
 	@Override
 	public String getTestEnvironment() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * Gets the produkt.
+	 *
+	 * @return the produkt
+	 */
 	@Override
 	public String getProdukt() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * Common setup.
+	 */
 	@Override
 	public void commonSetup() {
 		// TODO Auto-generated method stub

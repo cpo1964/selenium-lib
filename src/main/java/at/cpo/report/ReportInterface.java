@@ -23,6 +23,7 @@
  */
 package at.cpo.report;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Interface EnvironmentInterface.
  */
@@ -35,6 +36,9 @@ public interface ReportInterface {
 	 */
 	void reportCreateTest(String msg);
 
+	/**
+	 * Report end test.
+	 */
 	void reportEndTest();
 
 	/**

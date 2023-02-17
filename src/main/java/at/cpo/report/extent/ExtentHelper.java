@@ -47,6 +47,7 @@ import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 
 import at.cpo.report.ReportInterface;
 
+// TODO: Auto-generated Javadoc
 /**
  * The class tearDownExtent.
  */
@@ -66,6 +67,7 @@ public class ExtentHelper implements ReportInterface {
 	/** The report. */
 	protected static ExtentReports report;
 	
+	/** The logger. */
 	Logger LOGGER;
 
 	{
@@ -89,6 +91,11 @@ public class ExtentHelper implements ReportInterface {
 		return report;
 	}
 
+	/**
+	 * Creates the directories.
+	 *
+	 * @param runResultsDir the run results dir
+	 */
 	private static void createDirectories(String runResultsDir) {
 		try {
 			Files.createDirectories(Paths.get(runResultsDir));
@@ -96,6 +103,11 @@ public class ExtentHelper implements ReportInterface {
 		}
 	}
 
+	/**
+	 * Delete directory.
+	 *
+	 * @param path the path
+	 */
 	private static void deleteDirectory(String path) {
 		Path index = Paths.get(path);
 		try {
@@ -129,6 +141,9 @@ public class ExtentHelper implements ReportInterface {
 		test = report.createTest(msg);
 	}
 
+	/**
+	 * Report end test.
+	 */
 	public void reportEndTest() {
 		report.removeTest(test);
 	}

@@ -39,6 +39,7 @@ import at.cpo.platform.PlatformHelper;
 import at.cpo.selenium.common.pageobjects.MToursFlightsPage;
 import at.cpo.selenium.common.pageobjects.MToursLoginPage;
 
+// TODO: Auto-generated Javadoc
 /**
  * Test Login by Selenium.
  */
@@ -156,6 +157,9 @@ public class MtoursSeleniumTest extends PlatformHelper {
 		}
 	}
 
+		/**
+		 * Do test mtours.
+		 */
 		private void doTestMtours() {
 		LOGGER.info("# login to MTours ######################");
 		reportCreateTest("Starting MTours - runlocal: " + runlocal); // level = 0
@@ -244,6 +248,11 @@ public class MtoursSeleniumTest extends PlatformHelper {
 		return true;
 	}
 
+	/**
+	 * Normalized value.
+	 *
+	 * @return the string
+	 */
 	private String normalizedValue() {
 		while (value.contains("  ")) {
 			value = value.replace("\n", "").replaceAll("  ", " ");
