@@ -28,15 +28,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.aventstack.extentreports.ExtentReports;
@@ -212,15 +208,15 @@ public class ExtentHelper implements ReportInterface {
 	/**
 	 * Screenshot node fail.
 	 */
-	public void reportStepFailScreenshot() {
-		screenshotNode(driver, node, Status.FAIL);
+	public void reportStepFailScreenshot(String screenShot) {
+		screenshotNode(screenShot, node, Status.FAIL);
 	}
 
 	/**
 	 * Screenshot node pass.
 	 */
-	public void reportStepPassScreenshot() {
-		screenshotNode(driver, node, Status.PASS);
+	public void reportStepPassScreenshot(String screenShot) {
+		screenshotNode(screenShot, node, Status.PASS);
 	}
 
 	/**
@@ -231,66 +227,17 @@ public class ExtentHelper implements ReportInterface {
 	}
 
 	/**
-	 * Screenshot file to "RunResults" + File.separator + "Resources" +
-	 * File.separator + "Snapshots"
-	 *
-	 * @param driver the driver
-	 * @return the string
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	public static String screenshotFile(TakesScreenshot driver) throws IOException {
-		long time = new Date().getTime();
-		File source = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE); // clears old console output
-		String snapshotsDir = Paths.get("").toAbsolutePath().toString() + File.separator + "RunResults" + File.separator
-				+ "Resources" + File.separator + "Snapshots";
-		Files.createDirectories(Paths.get(snapshotsDir));
-		String screenShotPath = snapshotsDir + File.separator + time + ".png";
-		File destination = new File(screenShotPath);
-		Files.copy(source.toPath(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING);
-		return "Resources" + File.separator + "Snapshots" + File.separator + time + ".png";
-	}
-
-	/**
 	 * Screenshot node.
 	 *
 	 * @param driver the driver
 	 * @param node   the node
 	 * @param s      the s
 	 */
-	public void screenshotNode(TakesScreenshot driver, ExtentTest node, Status s) {
-		try {
-
-			// ExtentReport 4
-//			node.addScreenCaptureFromPath(screenshotFile(driver));
-//			node.log(s, "");
-
-			// ExtentReport 5
-			Media media = node.addScreenCaptureFromPath(screenshotFile(driver)).getModel().getMedia().get(0);
-			node.getModel().getMedia().clear();
-			node.log(s, media);
-
-//			node.log(Status.PASS, node.addScreenCaptureFromPath(base64conversion()).getModel().getMedia().get(0));
-//			node.log(Status.PASS, "start MTours", node.addScreenCaptureFromPath(base64conversion()).getModel().getMedia().get(0));
-//			node.log(Status.PASS, "start MTours", node.addScreenCaptureFromBase64String(base64conversion()).getModel().getMedia().get(0));
-//			node.addScreenCaptureFromPath(base64conversion());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Screenshot base 64.
-	 *
-	 * @param driver the driver
-	 * @return the string
-	 * @throws Exception the exception
-	 */
-	public static String screenshotBase64(TakesScreenshot driver) throws Exception {
-		TakesScreenshot newScreen = (TakesScreenshot) driver;
-		String scnShot = newScreen.getScreenshotAs(OutputType.BASE64);
-		return "data:image/jpg;base64, " + scnShot;
-
+	public void screenshotNode(String screenShot, ExtentTest node, Status s) {
+		// ExtentReport 5
+		Media media = node.addScreenCaptureFromPath(screenShot).getModel().getMedia().get(0);
+		node.getModel().getMedia().clear();
+		node.log(s, media);
 	}
 
 //	/**

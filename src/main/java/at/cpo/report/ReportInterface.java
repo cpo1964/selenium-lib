@@ -81,12 +81,12 @@ public interface ReportInterface {
 	/**
 	 * Screenshot step pass.
 	 */
-	void reportStepPassScreenshot();
+	void reportStepPassScreenshot(String screenShot);
 
 	/**
 	 * Screenshot step fail.
 	 */
-	void reportStepFailScreenshot();
+	void reportStepFailScreenshot(String screenShot);
 
 	/**
 	 * Tear down extent.

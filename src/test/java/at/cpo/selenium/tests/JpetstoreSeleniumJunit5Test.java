@@ -50,8 +50,6 @@ import at.cpo.platform.PlatformHelper;
  */
 public class JpetstoreSeleniumJunit5Test extends PlatformHelper {
 
-	private static int iteration = 0;
-
 	@BeforeParam
 	public static void beforeTestsForParameter() {
 	}
@@ -132,10 +130,12 @@ public class JpetstoreSeleniumJunit5Test extends PlatformHelper {
 
 		reportCreateTest("TestCase #" + iteration + " login to Jpetstore - runlocal: " + runlocal);
 		reportTestInfo("Jpetstore started");
-		reportTestInfo("username: '" + username + "'");
-		reportTestInfo("password: '" + password + "'");
-		reportTestInfo("localhostUrl: '" + localhostUrl + "'");
-		reportTestInfo("remotehostUrl: '" + remotehostUrl + "'");
+		reportTestInfo("<br>Testparameter:<br>" +
+				"username: '" + username + "'<br>" + 
+				"password: '" + password + "'<br>" + 
+				"localhostUrl: '" + localhostUrl + "'<br>" +
+				"remotehostUrl: '" + remotehostUrl + "'<br>" +
+				"runlocal: '" + runlocal + "'<br>");
 
 		reportCreateStep("setUp TestCase #" + iteration + " #");
 

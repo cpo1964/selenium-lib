@@ -47,12 +47,16 @@ public class PlatformHelper implements PlatformInterface {
 	/** The platform. */
 	static PlatformInterface platform;
 	
+	static Object driver;
+	
 	/** The value. */
 	protected static String value;
 
 	/** The ok. */
 	protected boolean ok;
 	
+	public static int iteration = 0;
+
 	// START - place to expand platform specific features - eg Selenium:
 
 	/** The PLATFORM_SELENIUM. */
@@ -79,8 +83,9 @@ public class PlatformHelper implements PlatformInterface {
 	/**
 	 * Setup driver.
 	 */
-	public void setupDriver() {
-		platform.setupDriver();	
+	public Object setupDriver() {
+		driver = platform.setupDriver(); 
+		return driver;
 	}
 	
 	/**
@@ -308,14 +313,14 @@ public class PlatformHelper implements PlatformInterface {
 	 * Screenshot step pass.
 	 */
 	public void reportStepPassScreenshot() {
-		platform.reportStepPassScreenshot();
+		platform.reportStepPassScreenshot(platform.screenshotFile(driver));
 	}
 
 	/**
 	 * Screenshot step fail.
 	 */
 	public void reportStepFailScreenshot() {
-		platform.reportStepFailScreenshot();
+		platform.reportStepFailScreenshot(platform.screenshotFile(driver));
 	}
 
 	/**
@@ -508,6 +513,24 @@ public class PlatformHelper implements PlatformInterface {
 	@Override
 	public SeleniumHelper commonSetup() {
 		return null; // TODO
+	}
+
+	@Override
+	public void reportStepPassScreenshot(String screenShot) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void reportStepFailScreenshot(String screenShot) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String screenshotFile(Object driver) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

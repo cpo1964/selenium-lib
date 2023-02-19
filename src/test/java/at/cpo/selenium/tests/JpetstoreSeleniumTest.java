@@ -63,7 +63,7 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 	 * The remoteUrl.
 	 */
 	@Parameter(3)
-	public String remoteUrl;
+	public String remotehostUrl;
 	/**
 	 * The Skip.
 	 */
@@ -122,10 +122,12 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 
 		reportCreateTest("TestCase #" + iteration + " login to Jpetstore - runlocal: " + runlocal);
 		reportTestInfo("Jpetstore started");
-		reportTestInfo("username: '" + username + "'");
-		reportTestInfo("password: '" + password + "'");
-		reportTestInfo("localhostUrl: '" + localhostUrl + "'");
-		reportTestInfo("remoteUrl: '" + remoteUrl + "'");
+		reportTestInfo("<br>Testparameter:<br>" +
+				"username: '" + username + "'<br>" + 
+				"password: '" + password + "'<br>" + 
+				"localhostUrl: '" + localhostUrl + "'<br>" +
+				"remotehostUrl: '" + remotehostUrl + "'<br>" +
+				"runlocal: '" + runlocal + "'<br>");
 
 		reportCreateStep("setUp TestCase #" + iteration + " #");
 
@@ -224,7 +226,7 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 			if (isTrue(runlocal)) {
 				driverGet(testPlatformPropertiesGet(localhostUrl));
 			} else {
-				driverGet(testPlatformPropertiesGet(remoteUrl));
+				driverGet(testPlatformPropertiesGet(remotehostUrl));
 			}
 			reportTestPass("JPetstore started");
 		} catch (Exception e1) {

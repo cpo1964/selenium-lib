@@ -145,7 +145,7 @@ public interface PlatformInterface extends ReportInterface {
 	/**
 	 * Setup driver.
 	 */
-	void setupDriver();
+	Object setupDriver();
 	
 	/**
 	 * Driver implicitly wait.
@@ -381,6 +381,7 @@ public interface PlatformInterface extends ReportInterface {
 	 */
 	void dragAndDropByXpath(String xpathFrom, String xpathTo);
 
+	String screenshotFile(Object driver);
 	
 	// other stuff
 

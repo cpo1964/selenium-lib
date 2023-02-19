@@ -30,8 +30,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.Duration;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -41,6 +44,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NotFoundException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -52,7 +57,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import at.cpo.platform.PlatformInterface;
 import at.cpo.report.extent.ExtentHelper;
-import io.github.bonigarcia.wdm.WebDriverManager;
 
 
 /**
@@ -86,6 +90,8 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 
 	/** The test data path. */
 	private String testDataPath;
+
+	private static boolean driverLoaded = false;
 	
 //	{
 //		afterWithFailedInformation = RuleChain.outerRule(new ExternalResource() {
@@ -158,7 +164,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	/**
 	 * Setup driver.
 	 */
-	public void setupDriver() {
+	public Object setupDriver() {
 		browser = System.getProperty("browser");
 		if (browser == null || browser.isEmpty()) {
 			browser = "firefox";
@@ -169,10 +175,16 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 
 		if ("chrome".equalsIgnoreCase(browser)) {
 			setupChromeDriver();
-			LOGGER.info("using local chromedriver: " + System.getProperty("webdriver.chrome.driver"));
+			if (!driverLoaded) {
+				LOGGER.info("using local chromedriver: " + System.getProperty("webdriver.chrome.driver") + System.lineSeparator());
+				driverLoaded = true;
+			}
 		} else if ("firefox".equalsIgnoreCase(browser)) {
 			setupFirefoxDriver();
-			LOGGER.info("using local geckodriver: " + System.getProperty("webdriver.gecko.driver"));
+			if (!driverLoaded) {
+				LOGGER.info("using local geckodriver: " + System.getProperty("webdriver.gecko.driver") + System.lineSeparator());
+				driverLoaded = true;
+			}
 		}
 //		java.util.logging.Logger.getLogger("org.openqua.selenium.remote.RemoteWebDriver").setLevel(Level.OFF);
 //		driver.setLogLevel(java.util.logging.Level.OFF);
@@ -181,6 +193,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 //		driver.manage().window().maximize();
 //        driver.manage().window().setSize(new Dimension(1900, 1000));
 
+		return driver;
 	}
 
 	/**
@@ -204,7 +217,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	protected static void setupFirefoxDriver() {
 		if (driver == null) {
-			WebDriverManager.firefoxdriver().setup();
+			io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver().setup();
 		}
 //		if (SystemUtils.IS_OS_LINUX) {
 ////			System.setProperty("webdriver.gecko.driver", "/usr/local/bin/geckodriver");
@@ -425,11 +438,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			}
 			reportStepPass("<b>CLICK   </b> by xpath $(\"" + xpath + "\")");
 		} else {
-			try {
-				reportStepFail(test.addScreenCaptureFromPath(screenshotFile(driver)) + "<b>CLICK   </b> by xpath $(\"" + xpath + "\")");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			reportStepFail(test.addScreenCaptureFromPath(screenshotFile(driver)) + "<b>CLICK   </b> by xpath $(\"" + xpath + "\")");
 		}
 	}
 
@@ -490,7 +499,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			if (webEl == null) {
 				try {
 					logSecret(xpath + "(unknown) -> not done ", getSecretString(value, secret), secret);
-					reportStepFail(node.addScreenCaptureFromPath(ExtentHelper.screenshotFile(driver)) + "<b>input</b> ("
+					reportStepFail(node.addScreenCaptureFromPath(screenshotFile(driver)) + "<b>input</b> ("
 							+ xpath + ", '" + getSecretString(value, secret) + ")'");
 					throw new RuntimeException();
 				} catch (IOException e) {
@@ -537,14 +546,9 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 				throw new NotFoundException("type of webelement unknown: '" + className + "'");
 			}
 		} catch (RuntimeException e) {
-			// webelement does not exist or is disabled
-			try {
-				logError("<b>INPUT   </b> by xpath $(\"" + xpath + "\"), value: '" + getSecretString(value, secret) + "'");
-				reportStepFail(node.addScreenCaptureFromPath(ExtentHelper.screenshotFile(driver)) + "<b>INPUT   </b> ("
-						+ xpath + ", '" + getSecretString(value, secret) + ")'");
-			} catch (IOException e1) {
-				e.printStackTrace();
-			}
+			logError("<b>INPUT   </b> by xpath $(\"" + xpath + "\"), value: '" + getSecretString(value, secret) + "'");
+			reportStepFail(node.addScreenCaptureFromPath(screenshotFile(driver)) + "<b>INPUT   </b> ("
+					+ xpath + ", '" + getSecretString(value, secret) + ")'");
 		}
 	}
 
@@ -555,7 +559,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @param className the class name
 	 * @param value the value
 	 */
-	@Override // TODO
+	@Override
 	public void inputByXpath(String xpath, String className, String value) {
 		inputByXpath(xpath, className, value, false);
 	}
@@ -624,7 +628,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			reportStepPass("<b>VALIDATE</b> '" + description + "' - " + condition);
 		} else {
 			reportStepFail("<b>VALIDATE</b> '" + description + "' - " + condition);
-			reportStepFailScreenshot();
+			reportStepFailScreenshot(screenshotFile(driver));
 		}
 	}
 
@@ -866,6 +870,45 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 				+ mandantTestEnvironment;
 		setTestPlatformProperties(testDataPath + File.separator + TEST_PLATFORM_PROPERTIES);
 		return new SeleniumHelper();
+	}
+
+	/**
+	 * Screenshot file to "RunResults" + File.separator + "Resources" +
+	 * File.separator + "Snapshots"
+	 *
+	 * @param driver the driver
+	 * @return the string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public String screenshotFile(Object driver) {
+		long time = new Date().getTime();
+		File source = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		String snapshotsDir = Paths.get("").toAbsolutePath().toString() + File.separator + "RunResults" + File.separator
+				+ "Resources" + File.separator + "Snapshots";
+		try {
+			Files.createDirectories(Paths.get(snapshotsDir));
+			String screenShotPath = snapshotsDir + File.separator + time + ".png";
+			File destination = new File(screenShotPath);
+			Files.copy(source.toPath(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "Resources" + File.separator + "Snapshots" + File.separator + time + ".png";
+	}
+
+	/**
+	 * Screenshot base 64.
+	 *
+	 * @param driver the driver
+	 * @return the string
+	 * @throws Exception the exception
+	 */
+	public static String screenshotBase64(TakesScreenshot driver) throws Exception {
+		TakesScreenshot newScreen = (TakesScreenshot) driver;
+		String scnShot = newScreen.getScreenshotAs(OutputType.BASE64);
+		return "data:image/jpg;base64, " + scnShot;
+
 	}
 
 }
