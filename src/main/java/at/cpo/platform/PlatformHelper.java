@@ -35,7 +35,6 @@ import org.junit.Assert;
 import at.cpo.platform.selenium.SeleniumHelper;
 import at.cpo.utils.ExcelHelper;
 
-
 /**
  * The Class EnvironmentHelper.
  */
@@ -47,6 +46,7 @@ public class PlatformHelper implements PlatformInterface {
 	/** The platform. */
 	static PlatformInterface platform;
 	
+	/** The driver. */
 	static Object driver;
 	
 	/** The value. */
@@ -55,6 +55,7 @@ public class PlatformHelper implements PlatformInterface {
 	/** The ok. */
 	protected boolean ok;
 	
+	/** The iteration. */
 	public static int iteration = 0;
 
 	// START - place to expand platform specific features - eg Selenium:
@@ -82,6 +83,8 @@ public class PlatformHelper implements PlatformInterface {
 
 	/**
 	 * Setup driver.
+	 *
+	 * @return the object
 	 */
 	public Object setupDriver() {
 		driver = platform.setupDriver(); 
@@ -336,35 +339,6 @@ public class PlatformHelper implements PlatformInterface {
 	public static void reportTeardown() {
 		platform.reportTearDown();	
 	}
-	// logging stuff ==========================================================
-
-//	/**
-//	 * Log info.
-//	 *
-//	 * @param msg the msg
-//	 */
-//	public void logInfo(String msg) {
-//		platform.logInfo(msg);
-//	}
-//
-//	@Override
-//	public void logDebug(String msg) {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//
-//	@Override
-//	public void logError(String msg) {
-//		// TODO Auto-generated method stub
-//	}
-//
-//	/**
-//	 * Log all.
-//	 */
-//	public void logAll() {
-//		platform.logAll();
-//	}
-//
 
 	// other stuff ============================================================
 
@@ -422,8 +396,7 @@ public class PlatformHelper implements PlatformInterface {
 	 */
 	@Override
 	public void click(String locatorDelegate, String value) {
-		// TODO Auto-generated method stub
-		
+		platform.click(locatorDelegate, value);
 	}
 
 	/**
@@ -434,8 +407,7 @@ public class PlatformHelper implements PlatformInterface {
 	 */
 	@Override
 	public void clickByXpath(String xpath, String value) {
-		// TODO Auto-generated method stub
-		
+		platform.clickByXpath(xpath, value);
 	}
 
 	/**
@@ -446,8 +418,7 @@ public class PlatformHelper implements PlatformInterface {
 	 */
 	@Override
 	public String outputByXpath(String xpath) {
-		// TODO Auto-generated method stub
-		return null;
+		return platform.outputByXpath(xpath);
 	}
 
 	/**
@@ -458,8 +429,7 @@ public class PlatformHelper implements PlatformInterface {
 	 */
 	@Override
 	public void dragAndDrop(String locatorFrom, String locatorTo) {
-		// TODO Auto-generated method stub
-		
+		platform.dragAndDrop(locatorFrom, locatorTo);
 	}
 
 	/**
@@ -470,8 +440,7 @@ public class PlatformHelper implements PlatformInterface {
 	 */
 	@Override
 	public void dragAndDropByXpath(String xpathFrom, String xpathTo) {
-		// TODO Auto-generated method stub
-		
+		platform.dragAndDropByXpath(xpathFrom, xpathTo);
 	}
 
 	/**
@@ -481,8 +450,7 @@ public class PlatformHelper implements PlatformInterface {
 	 */
 	@Override
 	public String getMandant() {
-		// TODO Auto-generated method stub
-		return null;
+		return platform.getMandant();
 	}
 
 	/**
@@ -492,8 +460,7 @@ public class PlatformHelper implements PlatformInterface {
 	 */
 	@Override
 	public String getTestEnvironment() {
-		// TODO Auto-generated method stub
-		return null;
+		return platform.getTestEnvironment();
 	}
 
 	/**
@@ -503,35 +470,48 @@ public class PlatformHelper implements PlatformInterface {
 	 */
 	@Override
 	public String getProdukt() {
-		// not yet implemeted
-		return null;
+		return platform.getProdukt();
 	}
 
 	/**
 	 * Common setup.
+	 *
+	 * @return the platform interface
 	 */
 	@Override
-	public SeleniumHelper commonSetup() {
-		// not yet implemeted
-		return null;
+	public PlatformInterface commonSetup() {
+		return platform.commonSetup();
 	}
 
+	/**
+	 * Report step pass screenshot.
+	 *
+	 * @param screenShot the screen shot
+	 */
 	@Override
 	public void reportStepPassScreenshot(String screenShot) {
-		// TODO Auto-generated method stub
-		
+		platform.reportStepPassScreenshot(screenShot);
 	}
 
+	/**
+	 * Report step fail screenshot.
+	 *
+	 * @param screenShot the screen shot
+	 */
 	@Override
 	public void reportStepFailScreenshot(String screenShot) {
-		// TODO Auto-generated method stub
-		
+		platform.reportStepFailScreenshot(screenShot);
 	}
 
+	/**
+	 * Screenshot file.
+	 *
+	 * @param driver the driver
+	 * @return the string
+	 */
 	@Override
 	public String screenshotFile(Object driver) {
-		// TODO Auto-generated method stub
-		return null;
+		return platform.screenshotFile(driver);
 	}
 
 }

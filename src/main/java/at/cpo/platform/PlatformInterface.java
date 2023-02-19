@@ -28,7 +28,6 @@ import java.util.Properties;
 
 import at.cpo.report.ReportInterface;
 
-
 /**
  * The Interface EnvironmentInterface.
  */
@@ -144,6 +143,8 @@ public interface PlatformInterface extends ReportInterface {
 
 	/**
 	 * Setup driver.
+	 *
+	 * @return the object
 	 */
 	Object setupDriver();
 	
@@ -361,7 +362,6 @@ public interface PlatformInterface extends ReportInterface {
 	 *
 	 * @param condition the condition
 	 * @param description the description
-	 * @return 
 	 */
 	void validate(boolean condition, String description);
 	
@@ -381,6 +381,12 @@ public interface PlatformInterface extends ReportInterface {
 	 */
 	void dragAndDropByXpath(String xpathFrom, String xpathTo);
 
+	/**
+	 * Screenshot file.
+	 *
+	 * @param driver the driver
+	 * @return the string
+	 */
 	String screenshotFile(Object driver);
 	
 	// other stuff
@@ -415,7 +421,8 @@ public interface PlatformInterface extends ReportInterface {
 	
 	/**
 	 * Common setup.
-	 * @return 
+	 *
+	 * @return the platform interface
 	 */
 	PlatformInterface commonSetup();
 

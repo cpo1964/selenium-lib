@@ -23,7 +23,6 @@
  */
 package at.cpo.report;
 
-
 /**
  * The Interface EnvironmentInterface.
  */
@@ -80,11 +79,15 @@ public interface ReportInterface {
 
 	/**
 	 * Screenshot step pass.
+	 *
+	 * @param screenShot the screen shot
 	 */
 	void reportStepPassScreenshot(String screenShot);
 
 	/**
 	 * Screenshot step fail.
+	 *
+	 * @param screenShot the screen shot
 	 */
 	void reportStepFailScreenshot(String screenShot);
 

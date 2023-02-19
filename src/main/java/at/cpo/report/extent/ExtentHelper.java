@@ -42,7 +42,6 @@ import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 
 import at.cpo.report.ReportInterface;
 
-
 /**
  * The class tearDownExtent.
  */
@@ -200,6 +199,8 @@ public class ExtentHelper implements ReportInterface {
 
 	/**
 	 * Screenshot node fail.
+	 *
+	 * @param screenShot the screen shot
 	 */
 	public void reportStepFailScreenshot(String screenShot) {
 		screenshotNode(screenShot, node, Status.FAIL);
@@ -207,6 +208,8 @@ public class ExtentHelper implements ReportInterface {
 
 	/**
 	 * Screenshot node pass.
+	 *
+	 * @param screenShot the screen shot
 	 */
 	public void reportStepPassScreenshot(String screenShot) {
 		screenshotNode(screenShot, node, Status.PASS);
@@ -222,7 +225,7 @@ public class ExtentHelper implements ReportInterface {
 	/**
 	 * Screenshot node.
 	 *
-	 * @param driver the driver
+	 * @param screenShot the screen shot
 	 * @param node   the node
 	 * @param s      the s
 	 */
@@ -233,6 +236,12 @@ public class ExtentHelper implements ReportInterface {
 		node.log(s, media);
 	}
 
+	/**
+	 * Gets the class by qualified name.
+	 *
+	 * @param cn the cn
+	 * @return the class by qualified name
+	 */
 	public static Class<?> getClassByQualifiedName(String cn) {
 		Class<?> c = null;
 		try {

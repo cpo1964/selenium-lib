@@ -28,7 +28,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 
-
 /**
  * The Enum RestMethod.
  */

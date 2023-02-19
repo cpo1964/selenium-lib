@@ -58,7 +58,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import at.cpo.platform.PlatformInterface;
 import at.cpo.report.extent.ExtentHelper;
 
-
 /**
  * The Class SeleniumHelper.
  */
@@ -91,6 +90,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	/** The test data path. */
 	private String testDataPath;
 
+	/** The driver loaded. */
 	private static boolean driverLoaded = false;
 	
 //	{
@@ -163,6 +163,8 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 
 	/**
 	 * Setup driver.
+	 *
+	 * @return the object
 	 */
 	public Object setupDriver() {
 		browser = System.getProperty("browser");
@@ -853,7 +855,8 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 
 	/**
 	 * Common setup.
-	 * @return 
+	 *
+	 * @return the selenium helper
 	 */
 	public SeleniumHelper commonSetup() {
 		getProdukt();
@@ -876,7 +879,6 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 *
 	 * @param driver the driver
 	 * @return the string
-	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public String screenshotFile(Object driver) {
 		long time = new Date().getTime();
@@ -889,7 +891,6 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			File destination = new File(screenShotPath);
 			Files.copy(source.toPath(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return "Resources" + File.separator + "Snapshots" + File.separator + time + ".png";
