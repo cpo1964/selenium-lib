@@ -434,12 +434,12 @@ public class RestHelper {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public static CloseableHttpResponse callRestMethod(final CloseableHttpClient httpclient, final HttpRequestBase method) throws IOException {
-        log.info("### REQUEST: " + method.getMethod());
+        log.info(() -> "### REQUEST: " + method.getMethod());
         // log request
-        log.info("request content: " + getRequestContent(method));
+        log.info(() -> "request content: " + getRequestContent(method));
         Header[] allHeaders = method.getAllHeaders();
         for (Header header : allHeaders) {
-            log.info("request Header: " + header);
+            log.info(() -> "request Header: " + header);
         }
 
         CloseableHttpResponse response = httpclient.execute(method);
@@ -448,11 +448,11 @@ public class RestHelper {
 
         allHeaders = response.getAllHeaders();
         // log response
-        log.info("### RESPONSE: ");
+        log.info(() -> "### RESPONSE: ");
         for (Header header : allHeaders) {
-            log.info("response Header: " + header);
+            log.info(() -> "response Header: " + header);
         }
-        log.info("response content: " + responseContent);
+        log.info(() -> "response content: " + responseContent);
         return response;
     }
 
@@ -505,7 +505,7 @@ public class RestHelper {
                 content.append(line).append(System.lineSeparator());
             }
         } catch (IOException ex) {
-            log.info("getResponseContent failed with message: " + ex.getMessage());
+            log.info(() -> "getResponseContent failed with message: " + ex.getMessage());
         }
         return content.toString();
     }
@@ -525,7 +525,7 @@ public class RestHelper {
             response = callRestMethod(httpclient, method);
             statusCode = response.getStatusLine().getStatusCode();
         } catch (IOException ex) {
-            log.info("getResponseCode failed with message: " + ex.getMessage());
+            log.info(() -> "getResponseCode failed with message: " + ex.getMessage());
         } finally {
             if (response != null) {
                 response.close();

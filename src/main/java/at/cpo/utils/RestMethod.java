@@ -71,7 +71,7 @@ public enum RestMethod {
      *
      * @param method the new method
      */
-    public void setMethod(HttpRequestBase method) {
+    protected void setMethod(HttpRequestBase method) {
         this.method = method;
     }
 

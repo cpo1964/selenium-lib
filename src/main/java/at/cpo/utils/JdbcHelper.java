@@ -161,8 +161,7 @@ public class JdbcHelper {
         Connection con = getConnection();
         ResultSet rs = null;
         if (con != null) {
-            try {
-                Statement stmt = con.createStatement();
+            try (Statement stmt = con.createStatement()) {
                 rs = stmt.executeQuery(sql);
                 con.commit();
             } catch (SQLException e) {

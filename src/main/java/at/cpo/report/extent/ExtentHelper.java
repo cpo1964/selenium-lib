@@ -29,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
+import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,7 +49,7 @@ import at.cpo.report.ReportInterface;
 public class ExtentHelper implements ReportInterface {
 
 	/** The logger. */
-	Logger LOGGER;
+	Logger log = LogManager.getLogger(this.getClass().getSimpleName());
 
 	/** The driver. */
 	protected static RemoteWebDriver driver;
@@ -60,14 +61,8 @@ public class ExtentHelper implements ReportInterface {
 	protected static ExtentTest node;
 
 	/** The report. */
-	protected static ExtentReports report;
+	protected static ExtentReports report = ExtentHelper.prepareExtentReport();
 	
-	{
-		LOGGER = LogManager.getLogger(this.getClass().getSimpleName());
-
-		report = ExtentHelper.prepareExtentReport();
-	}
-
 	/**
 	 * Prepare extent report.
 	 *
@@ -92,6 +87,7 @@ public class ExtentHelper implements ReportInterface {
 		try {
 			Files.createDirectories(Paths.get(runResultsDir));
 		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -102,20 +98,21 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	private static void deleteDirectory(String path) {
 		Path index = Paths.get(path);
-		try {
+		try (Stream<Path> stream = Files.walk(index);) {
 			if (!Files.exists(index)) {
-				index = Files.createDirectories(index);
+				Files.createDirectories(index);
 			} else {
-				// as the file tree is traversed depth-first and that deleted dirs have to be
-				// empty
-				Files.walk(index).sorted(Comparator.reverseOrder()).forEach(t -> {
+				// as the file tree is traversed depth-first and 
+				// that deleted dirs have to be empty
+				stream.sorted(Comparator.reverseOrder()).forEach(t -> {
 					try {
 						Files.delete(t);
 					} catch (IOException e) {
+						e.printStackTrace();
 					}
 				});
 				if (!Files.exists(index)) {
-					index = Files.createDirectories(index);
+					Files.createDirectories(index);
 				}
 			}
 		} catch (IOException e) {
@@ -129,10 +126,14 @@ public class ExtentHelper implements ReportInterface {
 	 * @param msg the msg
 	 */
 	public void reportCreateTest(String msg) {
+		createTest(msg);
+		log.info("##################");
+		log.info(() -> "## " + msg);
+		log.info("##################");
+	}
+
+	private static void createTest(String msg) {
 		test = report.createTest("<b>" + msg + "</b>");
-		LOGGER.info("##################");
-		LOGGER.info("## " + msg);
-		LOGGER.info("##################");
 	}
 
 	/**
@@ -142,7 +143,7 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	public void reportTestFail(String msg) {
 		test.log(Status.FAIL, msg);
-		LOGGER.error(msg.replace("<br>", System.lineSeparator()));
+		log.error(() -> msg.replace("<br>", System.lineSeparator()));
 	}
 
 	/**
@@ -152,7 +153,7 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	public void reportTestPass(String msg) {
 		test.log(Status.PASS, msg);
-		LOGGER.info(msg.replace("<br>", System.lineSeparator()));
+		log.info(() -> msg.replace("<br>", System.lineSeparator()));
 	}
 
 	/**
@@ -162,7 +163,7 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	public void reportTestInfo(String msg) {
 		test.log(Status.INFO, msg);
-		LOGGER.info(msg.replace("<br>", System.lineSeparator()));
+		log.info(() -> msg.replace("<br>", System.lineSeparator()));
 	}
 
 	/**
@@ -171,8 +172,12 @@ public class ExtentHelper implements ReportInterface {
 	 * @param msg the msg
 	 */
 	public void reportCreateStep(String msg) {
+		createStep(msg);
+		log.info(() -> "### " + msg.replace("<br>", System.lineSeparator()));
+	}
+
+	private static void createStep(String msg) {
 		node = test.createNode("<b>" + msg + "</b>");
-		LOGGER.info("### " + msg.replace("<br>", System.lineSeparator()));
 	}
 
 	/**
@@ -182,8 +187,8 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	public void reportStepFail(String msg) {
 		node.log(Status.FAIL, msg);
-		msg = msg.replace("<b>", "");
-		LOGGER.error(msg.replace("</b>", ""));
+		final String msgRP = msg.replace("<b>", "");
+		log.error(() -> msgRP.replace("</b>", ""));
 	}
 
 	/**
@@ -193,8 +198,8 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	public void reportStepPass(String msg) {
 		node.log(Status.PASS, msg);
-		msg = msg.replace("<b>", "");
-		LOGGER.info(msg.replace("</b>", ""));
+		final String msgRP = msg.replace("<b>", "");
+		log.info(() -> msgRP.replace("</b>", ""));
 	}
 
 	/**
