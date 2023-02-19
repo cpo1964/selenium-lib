@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Comparator;
 
 import org.apache.logging.log4j.LogManager;
@@ -54,9 +53,6 @@ public class ExtentHelper implements ReportInterface {
 
 	/** The driver. */
 	protected static RemoteWebDriver driver;
-
-	/** The log buffer. */
-	protected static ArrayList<String> logBuffer = new ArrayList<String>();
 
 	/** The test. */
 	protected static ExtentTest test;
@@ -124,7 +120,6 @@ public class ExtentHelper implements ReportInterface {
 				}
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -187,7 +182,6 @@ public class ExtentHelper implements ReportInterface {
 	 * @param msg the msg
 	 */
 	public void reportStepFail(String msg) {
-//		logBuffer.add("ERROR#" + msg);
 		node.log(Status.FAIL, msg);
 		msg = msg.replace("<b>", "");
 		LOGGER.error(msg.replace("</b>", ""));
@@ -199,7 +193,6 @@ public class ExtentHelper implements ReportInterface {
 	 * @param msg the msg
 	 */
 	public void reportStepPass(String msg) {
-//		logBuffer.add("INFO#" + msg);
 		node.log(Status.PASS, msg);
 		msg = msg.replace("<b>", "");
 		LOGGER.info(msg.replace("</b>", ""));
@@ -238,101 +231,6 @@ public class ExtentHelper implements ReportInterface {
 		Media media = node.addScreenCaptureFromPath(screenShot).getModel().getMedia().get(0);
 		node.getModel().getMedia().clear();
 		node.log(s, media);
-	}
-
-//	/**
-//	 * Log info.
-//	 *
-//	 * @param msg the msg
-//	 */
-//	public void logInfo(String msg) {
-//		logBuffer.add("INFO#" + msg);
-//	}
-//
-//	/**
-//	 * Log debug.
-//	 *
-//	 * @param msg the msg
-//	 */
-//	public void logDebug(String msg) {
-//		logBuffer.add("DEBUG#" + msg);
-//	}
-
-	/**
-	 * Log error.
-	 *
-	 * @param msg the msg
-	 */
-	public void logError(String msg) {
-		logBuffer.add("ERROR#" + msg);
-	}
-
-	/**
-	 * Clear console.
-	 */
-	public final static void clearConsole() {
-		for (int i = 0; i < 50; ++i)
-			System.out.println("");
-
-//		for (int i = 0; i < 50; ++i) System.out.println("\\r\\b");
-//		
-//		System.out.print("\033[H\033[2J");
-//        System.out.flush();
-//        
-//        try {
-//			new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-//		} catch (InterruptedException | IOException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-//		
-//		System.out.print("\033\143");
-//
-//		String ESC = "\033[";
-//		System.out.print(ESC + "2J");
-//		
-//		try {
-//			final String os = System.getProperty("os.name");
-//
-//			if (os.contains("Windows")) {
-//				Runtime.getRuntime().exec("cls");
-//			} else {
-//				Runtime.getRuntime().exec("clear");
-//			}
-//		} catch (final Exception e) {
-//			// Handle any exceptions.
-//		}
-	}
-
-	/**
-	 * Log all.
-	 */
-	public void logAll() {
-//		LogFactory.getFactory().release();
-//		LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
-
-//		org.apache.log4j.Logger LOGGER = null;
-//			try {
-// 				LOGGER = LogManager.getLogger(Class.forName("at.cpo.report.extent.ExtentHelper"));
-//			} catch (ClassNotFoundException e) {
-//				return;		
-//			}
-
-//		clearConsole();
-
-		for (String el : logBuffer) {
-			el = el.replace("<br>", System.lineSeparator());
-			el = el.replace("<b>", "");
-			el = el.replace("</b>", "");
-			if (el.startsWith("INFO#")) {
-				LOGGER.info(el.substring(5));
-			} else if (el.startsWith("DEBUG#")) {
-				LOGGER.debug(el.substring(5));
-			} else if (el.startsWith("ERROR#")) {
-				LOGGER.error(el.substring(6));
-			}
-		}
-
 	}
 
 	public static Class<?> getClassByQualifiedName(String cn) {

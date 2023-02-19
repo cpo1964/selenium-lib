@@ -160,7 +160,8 @@ public class ProtocolHandshake {
 
   public static class Result {
 
-    private static final Function<Object, Proxy> massageProxy = obj -> {
+    @SuppressWarnings("unchecked")
+	private static final Function<Object, Proxy> massageProxy = obj -> {
       if (obj instanceof Proxy) {
         return (Proxy) obj;
       }
@@ -185,7 +186,8 @@ public class ProtocolHandshake {
     private final Map<String, ?> capabilities;
     private final SessionId sessionId;
 
-    Result(Dialect dialect, String sessionId, Map<String, ?> capabilities) {
+    @SuppressWarnings("unchecked")
+	Result(Dialect dialect, String sessionId, Map<String, ?> capabilities) {
       this.dialect = dialect;
       this.sessionId = new SessionId(Require.nonNull("Session id", sessionId));
       this.capabilities = capabilities;

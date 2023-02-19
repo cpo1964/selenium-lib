@@ -503,7 +503,7 @@ public class PlatformHelper implements PlatformInterface {
 	 */
 	@Override
 	public String getProdukt() {
-		// TODO Auto-generated method stub
+		// not yet implemeted
 		return null;
 	}
 
@@ -512,7 +512,8 @@ public class PlatformHelper implements PlatformInterface {
 	 */
 	@Override
 	public SeleniumHelper commonSetup() {
-		return null; // TODO
+		// not yet implemeted
+		return null;
 	}
 
 	@Override

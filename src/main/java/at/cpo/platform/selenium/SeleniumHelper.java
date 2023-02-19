@@ -546,7 +546,6 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 				throw new NotFoundException("type of webelement unknown: '" + className + "'");
 			}
 		} catch (RuntimeException e) {
-			logError("<b>INPUT   </b> by xpath $(\"" + xpath + "\"), value: '" + getSecretString(value, secret) + "'");
 			reportStepFail(node.addScreenCaptureFromPath(screenshotFile(driver)) + "<b>INPUT   </b> ("
 					+ xpath + ", '" + getSecretString(value, secret) + ")'");
 		}
@@ -782,7 +781,6 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 
 		String value = prop.getProperty(key);
 		if (value == null || value.isEmpty()) {
-			logError("No value found by key '" + key + "' from '" + propertiesFileDestination + "'");
 			throw new IllegalArgumentException("Property \"" + key + "\" from file " + propertiesFileDestination
 					+ " does not exists or is empty!");
 		}
