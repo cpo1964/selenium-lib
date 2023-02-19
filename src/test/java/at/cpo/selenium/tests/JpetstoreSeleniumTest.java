@@ -70,7 +70,7 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 	@Parameter(4)
 	public String skip;
 	/**
-	 * The snapshots.
+	 * The runlocal.
 	 */
 	@Parameter(5)
 	public String runlocal;

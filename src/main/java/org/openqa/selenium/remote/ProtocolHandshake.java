@@ -53,8 +53,8 @@ import static org.openqa.selenium.json.Json.JSON_UTF_8;
 import static org.openqa.selenium.remote.CapabilityType.PROXY;
 import static org.openqa.selenium.remote.http.Contents.string;
 
-public class ProtocolHandshakeNew {
-/*
+public class ProtocolHandshake {
+
 //  private static final Logger LOG = Logger.getLogger(ProtocolHandshake.class.getName());
 
   public Result createSession(HttpHandler client, Command command) throws IOException {
@@ -87,7 +87,7 @@ public class ProtocolHandshakeNew {
     }
   }
 
-  public Either<SessionNotCreatedException, Result> createSession(HttpHandler client, NewSessionPayload payload) throws IOException {
+  public Either<SessionNotCreatedException, ProtocolHandshake.Result> createSession(HttpHandler client, NewSessionPayload payload) throws IOException {
     int threshold = (int) Math.min(Runtime.getRuntime().freeMemory() / 10, Integer.MAX_VALUE);
     FileBackedOutputStream os = new FileBackedOutputStream(threshold, true);
 
@@ -105,7 +105,7 @@ public class ProtocolHandshakeNew {
     }
   }
 
-  private Either<SessionNotCreatedException, Result> createSession(HttpHandler client, Supplier<InputStream> contentSupplier, long size) {
+  private Either<SessionNotCreatedException, ProtocolHandshake.Result> createSession(HttpHandler client, Supplier<InputStream> contentSupplier, long size) {
     // Create the http request and send it
     HttpRequest request = new HttpRequest(HttpMethod.POST, "/session");
 
@@ -153,7 +153,7 @@ public class ProtocolHandshakeNew {
       .map(func -> func.apply(initialResponse))
       .filter(Objects::nonNull)
       .findFirst()
-      .<Either<SessionNotCreatedException, Result>>map(Either::right)
+      .<Either<SessionNotCreatedException, ProtocolHandshake.Result>>map(Either::right)
       .orElseGet(() -> Either.left(
         new SessionNotCreatedException("Handshake response does not match any supported protocol")));
   }
@@ -214,5 +214,5 @@ public class ProtocolHandshakeNew {
       return String.format("%s: %s", dialect, capabilities);
     }
   }
-*/
+
 }

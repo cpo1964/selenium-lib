@@ -35,11 +35,8 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.lang.SystemUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-//import org.junit.Rule;
-//import org.junit.rules.TestRule;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -49,7 +46,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -173,8 +169,10 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 
 		if ("chrome".equalsIgnoreCase(browser)) {
 			setupChromeDriver();
+			LOGGER.info("using local chromedriver: " + System.getProperty("webdriver.chrome.driver"));
 		} else if ("firefox".equalsIgnoreCase(browser)) {
 			setupFirefoxDriver();
+			LOGGER.info("using local geckodriver: " + System.getProperty("webdriver.gecko.driver"));
 		}
 //		java.util.logging.Logger.getLogger("org.openqua.selenium.remote.RemoteWebDriver").setLevel(Level.OFF);
 //		driver.setLogLevel(java.util.logging.Level.OFF);
@@ -205,7 +203,9 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * Setup firefox driver.
 	 */
 	protected static void setupFirefoxDriver() {
-		WebDriverManager.firefoxdriver().setup();
+		if (driver == null) {
+			WebDriverManager.firefoxdriver().setup();
+		}
 //		if (SystemUtils.IS_OS_LINUX) {
 ////			System.setProperty("webdriver.gecko.driver", "/usr/local/bin/geckodriver");
 //			System.setProperty("webdriver.gecko.driver",
@@ -215,7 +215,6 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 //					"src/test/resources/selenium_standalone_binaries/windows/marionette/64bit/geckodriver.exe");
 //		}
 
-		System.out.println("geckodriver: " + System.getProperty("webdriver.gecko.driver"));
 		System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, "FFLogs.txt");
 
 //		DriverService serviceBuilder = new GeckoDriverService.Builder().build();

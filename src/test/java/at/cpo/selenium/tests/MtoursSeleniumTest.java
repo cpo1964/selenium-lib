@@ -33,6 +33,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.BeforeParam;
 import org.junit.runners.Parameterized.Parameter;
 
 import at.cpo.platform.PlatformHelper;
@@ -44,6 +45,16 @@ import at.cpo.selenium.common.pageobjects.MToursLoginPage;
  * Test Login by Selenium.
  */
 @RunWith(Parameterized.class)
+/* 
+ * ein JUnit Test
+ * Aufrufreihenfolge:
+ * 1) die Methoden annotiert mit @Parameterized.Parameters - zb getData()
+ * 2) die Methode annotiert mit @BeforeClass - zb setUpBeforeClass()
+ * 3) die Methoden annotiert mit @Before - zb setUp()
+ * 4) die Methoden annotiert mit @Test - zb doSeleniumTest()
+ * 5) die Methoden annotiert mit @After - zb tearDown()
+ * 6) die Methode annotiert mit @AfterClass - zb tearDownAfterClass()
+ */
 public class MtoursSeleniumTest extends PlatformHelper {
 
 	/**
@@ -77,6 +88,11 @@ public class MtoursSeleniumTest extends PlatformHelper {
 	@Parameter(5)
 	public String runlocal;
 
+	@BeforeParam
+	public static void beforeTestsForParameter() {
+		commonSetup(PLATFORM_SELENIUM);
+	}
+
 	/**
 	 * Gets the data.
 	 *
@@ -85,8 +101,6 @@ public class MtoursSeleniumTest extends PlatformHelper {
 	 */
 	@Parameterized.Parameters // (name = "{index}: {0}")
 	public static Collection<?> getData() throws IOException {
-		// FIRST evaluate the file path THEN call getTestDataFile()
-		commonSetup(PLATFORM_SELENIUM);
 		return getTestdata(MtoursSeleniumTest.class.getSimpleName());
 	}
 

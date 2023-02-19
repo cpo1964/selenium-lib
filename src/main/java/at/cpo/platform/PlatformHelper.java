@@ -47,8 +47,6 @@ public class PlatformHelper implements PlatformInterface {
 	/** The platform. */
 	static PlatformInterface platform;
 	
-//	static final PlatformHelper platformHelper = new PlatformHelper();
-	
 	/** The value. */
 	protected static String value;
 
@@ -69,8 +67,6 @@ public class PlatformHelper implements PlatformInterface {
 		if (PLATFORM_SELENIUM.equalsIgnoreCase(value)) {
 			platform = new SeleniumHelper();
 			platform.commonSetup();
-//			Class<?> c = ExtentHelper.getClassByQualifiedName("");
-//			platform = platform.commonSetup(); // TODO
 		} else {
 			throw new RuntimeException();
 		}
