@@ -30,11 +30,12 @@ import java.util.Collection;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.Assert;
 
 import at.cpo.platform.selenium.SeleniumHelper;
 import at.cpo.utils.ExcelHelper;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class EnvironmentHelper.
  */
@@ -45,6 +46,8 @@ public class PlatformHelper implements PlatformInterface {
 
 	/** The platform. */
 	static PlatformInterface platform;
+	
+//	static final PlatformHelper platformHelper = new PlatformHelper();
 	
 	/** The value. */
 	protected static String value;
@@ -66,6 +69,8 @@ public class PlatformHelper implements PlatformInterface {
 		if (PLATFORM_SELENIUM.equalsIgnoreCase(value)) {
 			platform = new SeleniumHelper();
 			platform.commonSetup();
+//			Class<?> c = ExtentHelper.getClassByQualifiedName("");
+//			platform = platform.commonSetup(); // TODO
 		} else {
 			throw new RuntimeException();
 		}
@@ -156,11 +161,11 @@ public class PlatformHelper implements PlatformInterface {
 	 * Input by xpath.
 	 *
 	 * @param xpath the xpath
-	 * @param className the class name
+	 * @param type the class name
 	 * @param value the value
 	 */
-	public void inputByXpath(String xpath, String className, String value) {
-		platform.inputByXpath(xpath, className, value);
+	public void inputByXpath(String xpath, String type, String value) {
+		platform.inputByXpath(xpath, type, value);
 	}
 
 	/**
@@ -180,7 +185,8 @@ public class PlatformHelper implements PlatformInterface {
 	 * @param description the description
 	 */
 	public void validate(boolean condition, String description) {
-		platform.validate(condition, description);	
+		platform.validate(condition, description);
+		Assert.assertTrue(condition);
 	}
 
 	/**
@@ -249,11 +255,14 @@ public class PlatformHelper implements PlatformInterface {
 	}
 
 	/**
-	 * Report end test.
+	 * Test log info.
+	 *
+	 * @param msg the msg
 	 */
-	public void reportEndTest() {
-		platform.reportEndTest();
+	public void reportTestInfo(String msg) {
+		platform.reportTestInfo(msg);
 	}
+
 	/**
 	 * Test log pass.
 	 *
@@ -324,7 +333,7 @@ public class PlatformHelper implements PlatformInterface {
 	 * Report teardown.
 	 */
 	public static void reportTeardown() {
-		new PlatformHelper().reportTearDown();	
+		platform.reportTearDown();	
 	}
 	// logging stuff ==========================================================
 
@@ -366,7 +375,7 @@ public class PlatformHelper implements PlatformInterface {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static Collection<?> getTestdata(String simpleName) throws IOException {
-		return new ExcelHelper(new PlatformHelper().getTestDataFile(), simpleName).getData();
+		return new ExcelHelper(platform.getTestDataFile(), simpleName).getData();
 	}
 
 	/**
@@ -386,7 +395,7 @@ public class PlatformHelper implements PlatformInterface {
 	 */
 	protected static String testPlatformPropertiesGet(String key) {
 		String url = (String) PlatformInterface.testPlatformProperties.get(key);
-		new PlatformHelper().reportTestPass("Starting app: " + url);
+		platform.reportTestInfo("Starting app: " + url);
 		return url;	
 	}
 	
@@ -501,9 +510,8 @@ public class PlatformHelper implements PlatformInterface {
 	 * Common setup.
 	 */
 	@Override
-	public void commonSetup() {
-		// TODO Auto-generated method stub
-		
+	public SeleniumHelper commonSetup() {
+		return null; // TODO
 	}
 
 }

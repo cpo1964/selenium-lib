@@ -37,7 +37,7 @@ import org.junit.runners.Parameterized.Parameter;
 
 import at.cpo.platform.PlatformHelper;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * Test Login by Selenium.
  */
@@ -75,6 +75,8 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 	@Parameter(5)
 	public String runlocal;
 
+	private static int iteration = 0;
+	
 	/**
 	 * Gets the data.
 	 *
@@ -113,14 +115,19 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 	 */
 	@Before
 	public void setUp() throws IOException, InterruptedException {
+		iteration++;
 		if (isTrue(skip)) {
 			return;
 		}
-		LOGGER.info("# setUp #");
-		LOGGER.info("# username: '" + username + "'");
-		LOGGER.info("# password: '" + password + "'");
-		LOGGER.info("# localhostUrl: '" + localhostUrl + "'");
-		LOGGER.info("# remoteUrl: '" + remoteUrl + "'");
+
+		reportCreateTest("TestCase #" + iteration + " login to Jpetstore - runlocal: " + runlocal);
+		reportTestInfo("Jpetstore started");
+		reportTestInfo("username: '" + username + "'");
+		reportTestInfo("password: '" + password + "'");
+		reportTestInfo("localhostUrl: '" + localhostUrl + "'");
+		reportTestInfo("remoteUrl: '" + remoteUrl + "'");
+
+		reportCreateStep("setUp TestCase #" + iteration + " #");
 
 		setupDriver();
 	}
@@ -130,13 +137,14 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 	 */
 	@After
 	public void tearDown() {
-		LOGGER.info("# tearDown #");
 		if (isTrue(skip)) {
 			return;
 		}
-
-//		logAll();
+		
+		reportCreateStep("tearDown #");
 		closeBrowser();
+
+		reportTestInfo("Jpetstore finished" + System.lineSeparator());
 	}
 
 	/**
@@ -159,24 +167,51 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 	 * Do test jpetstore.
 	 */
 	private void doTestJpetstore() {
-		LOGGER.info("# login to Jpetstore ######################");
-		reportCreateTest("login to Jpetstore - runlocal: " + runlocal); // level = 0
+		testStep01("Step #1 - start Jpetstore");
+		testStep02("Step #2 - Login to Jpetstore");
+		testStep03("Step #3 - Logout of Jpetstore");
+	}
 
-		// start Jpetstore
-		reportCreateStep("Step #1 - start Jpetstore");
-		validate(navigateToStartJpetstorePage(), "Jpetstore started");
+	/**
+	 * Test step start app.
+	 *
+	 * @param msg the msg
+	 */
+	private void testStep01(String msg) {
+		reportCreateStep(msg);
+		validate(navigateToStartJpetstorePage(), "Jpetstore app started");
+		ok = existsByXpath("//a[contains(@href, '/account/signonForm')]", true);
+		validate(ok, "signonForm is visible");
 		reportStepPassScreenshot();
+	}
 
-		reportCreateStep("Step #2 - Login to Jpetstore");
-		testLogin("cpo1964", "Test");
+	/**
+	 * test Step 02.
+	 *
+	 * @param msg the msg
+	 */
+	private void testStep02(String msg) {
+		reportCreateStep(msg);
+		clickByXpath("//a[contains(@href, '/account/signonForm')]");
+		inputByXpath("//input[@name='username']", EDITFIELD, username);
+		inputByXpath("//input[@name='password']", EDITFIELD, password);
+		clickByXpath("//div[@id='Signon']/form/div/div/button");
+		ok = existsByXpath("//a[contains(@href, '/account/signoff')]", true);
+		validate(ok, "signonOff link is visible");
 		reportStepPassScreenshot();
+	}
 
-		reportCreateStep("Step #3 - Logout of Jpetstore");
-		testSignoffTestCase();
+	/**
+	 * Test step 03.
+	 *
+	 * @param msg the msg
+	 */
+	private void testStep03(String msg) {
+		reportCreateStep(msg);
+		clickByXpath("//a[contains(@href, '/account/signoff')]");
+		ok = existsByXpath("//a[contains(text(),'Sign Up')]", true);
+		validate(ok, "Sign Up link is visible");
 		reportStepPassScreenshot();
-
-		reportTestPass("Jpetstore finished");
-//		reportEndTest();
 	}
 
 	/**
@@ -200,52 +235,14 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 	}
 
 	/**
-	 * Test login.
-	 *
-	 * @param user the user
-	 * @param passwort the passwort
-	 */
-	private void testLogin(String user, String passwort) {
-		ok = existsByXpath("//a[contains(@href, '/account/signonForm')]", true);
-		validate(ok, "signonForm is visible");
-		clickByXpath("//a[contains(@href, '/account/signonForm')]");
-		inputByXpath("//input[@name='username']", EDITFIELD, user);
-		inputByXpath("//input[@name='password']", EDITFIELD, passwort);
-		clickByXpath("//div[@id='Signon']/form/div/div/button");
-	}
-
-	/**
-	 * Test signoff test case.
-	 */
-	private void testSignoffTestCase() {
-		driverImplicitlyWait(3000);
-		clickByXpath("//a[contains(@href, '/account/signoff')]");
-		existsByXpath("//a[contains(text(),'Sign Up')]", true);
-//		for (int second = 0;; second++) {
-//			if (second >= 3)
-//				fail("timeout");
-//			try {
-//				if (existsByXpath("//a[contains(text(),'Sign Up')]"))
-//					break;
-//			} catch (Exception e) {
-//			}
-//			try {
-//				Thread.sleep(1000);
-//			} catch (InterruptedException e) {
-//			}
-//		}
-		driverImplicitlyWait(30000);
-	}
-
-	/**
 	 * Test signin test case.
 	 *
 	 * @throws Exception the exception
 	 */
 	public void testSigninTestCase() throws Exception {
 		clickByXpath("//a[contains(@href, '/account/newAccountForm')]");
-		inputByXpath("//input[@name='username']", EDITFIELD, "cpo1964");
-		inputByXpath("//input[@name='password']", EDITFIELD, "Test");
+		inputByXpath("//input[@name='username']", EDITFIELD, "j2ee");
+		inputByXpath("//input[@name='password']", EDITFIELD, "j2ee");
 		inputByXpath("//input[@name='repeatedPassword']", EDITFIELD, "Test");
 		inputByXpath("//input[@name='firstName']", EDITFIELD, "Cpo");
 		inputByXpath("//input[@name='lastName']", EDITFIELD, "Cpo");

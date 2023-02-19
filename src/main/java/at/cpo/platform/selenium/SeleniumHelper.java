@@ -23,14 +23,11 @@
  */
 package at.cpo.platform.selenium;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.Reader;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -51,20 +48,17 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.firefox.GeckoDriverService;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.service.DriverService;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import at.cpo.platform.PlatformInterface;
 import at.cpo.report.extent.ExtentHelper;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class SeleniumHelper.
  */
@@ -211,34 +205,38 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * Setup firefox driver.
 	 */
 	protected static void setupFirefoxDriver() {
-		if (SystemUtils.IS_OS_LINUX) {
-//			System.setProperty("webdriver.gecko.driver", "/usr/local/bin/geckodriver");
-			System.setProperty("webdriver.gecko.driver",
-					"src/test/resources/selenium_standalone_binaries/linux/marionette/64bit/geckodriver");
-		} else if (SystemUtils.IS_OS_WINDOWS) {
-			System.setProperty("webdriver.gecko.driver",
-					"src/test/resources/selenium_standalone_binaries/windows/marionette/64bit/geckodriver.exe");
-		}
-				
+		WebDriverManager.firefoxdriver().setup();
+//		if (SystemUtils.IS_OS_LINUX) {
+////			System.setProperty("webdriver.gecko.driver", "/usr/local/bin/geckodriver");
+//			System.setProperty("webdriver.gecko.driver",
+//					"src/test/resources/selenium_standalone_binaries/linux/marionette/64bit/geckodriver");
+//		} else if (SystemUtils.IS_OS_WINDOWS) {
+//			System.setProperty("webdriver.gecko.driver",
+//					"src/test/resources/selenium_standalone_binaries/windows/marionette/64bit/geckodriver.exe");
+//		}
+
+		System.out.println("geckodriver: " + System.getProperty("webdriver.gecko.driver"));
 		System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, "FFLogs.txt");
 
-		DriverService serviceBuilder = new GeckoDriverService.Builder().build();
-		serviceBuilder.sendOutputTo(new OutputStream() {
-			@Override
-			public void write(int b) {
-			}
-		});
+//		DriverService serviceBuilder = new GeckoDriverService.Builder().build();
+//		serviceBuilder.sendOutputTo(new OutputStream() {
+//			@Override
+//			public void write(int b) {
+//			}
+//		});
 
-		DesiredCapabilities capabilities = new DesiredCapabilities();
-		capabilities.setCapability("marionette", true);
-		FirefoxOptions options = new FirefoxOptions();
-		options.merge(capabilities);
-		options.setLogLevel(FirefoxDriverLogLevel.ERROR);
-		options.addPreference("browser.link.open_newwindow", 3);
-		options.addPreference("browser.link.open_newwindow.restriction", 0);
+//		DesiredCapabilities capabilities = new DesiredCapabilities();
+//		capabilities.setCapability("marionette", true);
+//		FirefoxOptions options = new FirefoxOptions();
+//		options.merge(capabilities);
+//		options.setLogLevel(FirefoxDriverLogLevel.ERROR);
+//		options.addPreference("browser.link.open_newwindow", 3);
+//		options.addPreference("browser.link.open_newwindow.restriction", 0);
 //      options.setHeadless(Boolean.getBoolean("headless"));
 
-		driver = new FirefoxDriver(options);
+//		driver = new FirefoxDriver(options);
+		driver = new FirefoxDriver();
+
 		/*
 		 * WebDriverManager.firefoxdriver().setup(); -> freischaltung fehlt !
 		 * 
@@ -367,13 +365,13 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		boolean exists = existsByXpath(xpath, timeout);
 		if (!exists)  {
 			if (reportFailed) {
-				reportStepFail("<b>exist</b>s by xpath $(\"" + xpath + "\") - false");
+				reportStepFail("<b>EXISTS  </b>s by xpath $(\"" + xpath + "\") - false");
 			} else {
-				reportStepPass("<b>exist</b>s by xpath $(\"" + xpath + "\") - false");
+				reportStepPass("<b>EXISTS  </b>s by xpath $(\"" + xpath + "\") - false");
 			}
 			return false;
 		}
-		reportStepPass("<b>exists</b> by xpath $(\"" + xpath + "\") - true");
+		reportStepPass("<b>EXISTS  </b> by xpath $(\"" + xpath + "\") - true");
 		return exists;
 	}
 
@@ -426,10 +424,10 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			        .perform();
 				}
 			}
-			reportStepPass("<b>click</b> by xpath $(\"" + xpath + "\")");
+			reportStepPass("<b>CLICK   </b> by xpath $(\"" + xpath + "\")");
 		} else {
 			try {
-				reportStepFail(test.addScreenCaptureFromPath(screenshotFile(driver)) + "<b>click</b> by xpath $(\"" + xpath + "\")");
+				reportStepFail(test.addScreenCaptureFromPath(screenshotFile(driver)) + "<b>CLICK   </b> by xpath $(\"" + xpath + "\")");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -507,7 +505,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 				webEl.click();
 				webEl.clear();
 				webEl.sendKeys(value);
-				reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + getSecretString(value, secret) + "'");
+				reportStepPass("<b>INPUT   </b> by xpath $(\"" + xpath + "\"), value: '" + getSecretString(value, secret) + "'");
 				try {
 					logSecret(xpath, value, secret);
 				} catch (IOException e) {
@@ -515,26 +513,26 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 				}
 			} else  if (LISTBOX.equalsIgnoreCase(className)) {
 				new Select(webEl).selectByVisibleText(value);
-				reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
+				reportStepPass("<b>INPUT   </b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
 			} else if (CHECKBOX.equalsIgnoreCase(className)
 					|| RADIOBUTTON.equalsIgnoreCase(className)) {
 				if (webEl.isSelected() && "OFF".equalsIgnoreCase(value)) {
 					webEl.click();
-					reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
+					reportStepPass("<b>INPUT   </b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
 				} else if (!webEl.isSelected() && "ON".equalsIgnoreCase(value)) {
 					webEl.click();
-					reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
+					reportStepPass("<b>INPUT   </b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
 				} else {
-					throw new NotFoundException("<b>input</b> by xpath $(\"" + xpath + "\"), value not found: '" + value + "'");
+					throw new NotFoundException("<b>INPUT   </b> by xpath $(\"" + xpath + "\"), value not found: '" + value + "'");
 				}
 			} else if (RADIOGROUP.equalsIgnoreCase(className)) {
 				int option = Integer.valueOf(value);
 				List<WebElement> radios = driver.findElements(By.xpath(xpath));
 				if (option > 0 && option <= radios.size()) {
 					radios.get(option - 1).click();
-					reportStepPass("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
+					reportStepPass("<b>INPUT   </b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
 				} else {
-					throw new NotFoundException("<b>input</b> by xpath $(\"" + xpath + "\"), value not found: '" + value + "'");
+					throw new NotFoundException("<b>INPUT   </b> by xpath $(\"" + xpath + "\"), value not found: '" + value + "'");
 				}
 			} else {
 				throw new NotFoundException("type of webelement unknown: '" + className + "'");
@@ -542,8 +540,8 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		} catch (RuntimeException e) {
 			// webelement does not exist or is disabled
 			try {
-				logError("<b>input</b> by xpath $(\"" + xpath + "\"), value: '" + getSecretString(value, secret) + "'");
-				reportStepFail(node.addScreenCaptureFromPath(ExtentHelper.screenshotFile(driver)) + "<b>input</b> ("
+				logError("<b>INPUT   </b> by xpath $(\"" + xpath + "\"), value: '" + getSecretString(value, secret) + "'");
+				reportStepFail(node.addScreenCaptureFromPath(ExtentHelper.screenshotFile(driver)) + "<b>INPUT   </b> ("
 						+ xpath + ", '" + getSecretString(value, secret) + ")'");
 			} catch (IOException e1) {
 				e.printStackTrace();
@@ -600,7 +598,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	public String outputByXpath(String xpath) {
 		webEl = driver.findElement(By.xpath(xpath));
 		String output = webEl.getAttribute("textContent");
-		reportStepPass("<b>output</b> by xpath $(\"" + xpath + "\")<br>text: '" + output + "'");
+		reportStepPass("<b>OUTPUT   </b> by xpath $(\"" + xpath + "\")<br>text: '" + output + "'");
 		return output;
 	}
 
@@ -624,12 +622,41 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	@Override
 	public void validate(boolean condition, String description) {
 		if (condition) {
-			reportStepPass("<b>validate</b> '" + description + "' - " + condition);
+			reportStepPass("<b>VALIDATE</b> '" + description + "' - " + condition);
 		} else {
-			reportStepFail("<b>validate</b> '" + description + "' - " + condition);
+			reportStepFail("<b>VALIDATE</b> '" + description + "' - " + condition);
 			reportStepFailScreenshot();
 		}
-		assertTrue(condition);
+	}
+
+	/**
+	 * Drag and drop.
+	 *
+	 * @param locatorFrom the locator from
+	 * @param locatorTo the locator to
+	 */
+	@Override
+	public void dragAndDrop(String locatorFrom, String locatorTo) {
+		 // expected: xpath from the property file
+		String xpathFrom = getLocator(locatorFrom);
+		String xpathTo = getLocator(locatorTo);
+		dragAndDropByXpath(xpathFrom, xpathTo);
+	}
+
+	/**
+	 * Drag and drop by xpath.
+	 *
+	 * @param xpathFrom the xpath from
+	 * @param xpathTo the xpath to
+	 */
+	@Override
+	public void dragAndDropByXpath(String xpathFrom, String xpathTo) {
+		WebElement webElFrom = driver.findElement(By.xpath(xpathFrom));	
+		WebElement webElTo = driver.findElement(By.xpath(xpathTo));	
+		// see: https://www.selenium.dev/documentation/webdriver/actions_api/mouse/
+		new Actions(driver)
+        .dragAndDrop(webElFrom, webElTo)
+        .perform();	
 	}
 
 	/**
@@ -715,11 +742,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		String cn = locatorDelegateSplit[0];
 		String key = locatorDelegateSplit[2];
 		Class<?> c = null;
-		try {
-			c = Class.forName("at.cpo.selenium.common.pageobjects." + cn);
-		} catch (ClassNotFoundException e) {
-			return null;
-		}
+		c = getClassByQualifiedName("at.cpo.selenium.common.pageobjects." + cn);
 		return getResourcePropertyValueByKey(c, key);
 	}
 
@@ -795,23 +818,6 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	}
 
 	/**
-	 * Common setup.
-	 */
-	public void commonSetup() {
-		getProdukt();
-		String mandantTestEnvironment = "";
-		if (!getMandant().isEmpty()) {
-			mandantTestEnvironment = File.separator + getMandant();
-			if (!getTestEnvironment().isEmpty()) {
-				mandantTestEnvironment = File.separator + getMandant() + "-" + getTestEnvironment();
-			}
-		}
-		testDataPath = Paths.get("").toAbsolutePath().toString() + File.separator + TESTDATADIR
-				+ mandantTestEnvironment;
-		setTestPlatformProperties(testDataPath + File.separator + TEST_PLATFORM_PROPERTIES);
-	}
-
-	/**
 	 * Gets the mandant.
 	 *
 	 * @return the mandant
@@ -845,33 +851,22 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	}
 
 	/**
-	 * Drag and drop.
-	 *
-	 * @param locatorFrom the locator from
-	 * @param locatorTo the locator to
+	 * Common setup.
+	 * @return 
 	 */
-	@Override
-	public void dragAndDrop(String locatorFrom, String locatorTo) {
-		 // expected: xpath from the property file
-		String xpathFrom = getLocator(locatorFrom);
-		String xpathTo = getLocator(locatorTo);
-		dragAndDropByXpath(xpathFrom, xpathTo);
-	}
-
-	/**
-	 * Drag and drop by xpath.
-	 *
-	 * @param xpathFrom the xpath from
-	 * @param xpathTo the xpath to
-	 */
-	@Override
-	public void dragAndDropByXpath(String xpathFrom, String xpathTo) {
-		WebElement webElFrom = driver.findElement(By.xpath(xpathFrom));	
-		WebElement webElTo = driver.findElement(By.xpath(xpathTo));	
-		// see: https://www.selenium.dev/documentation/webdriver/actions_api/mouse/
-		new Actions(driver)
-        .dragAndDrop(webElFrom, webElTo)
-        .perform();	
+	public SeleniumHelper commonSetup() {
+		getProdukt();
+		String mandantTestEnvironment = "";
+		if (!getMandant().isEmpty()) {
+			mandantTestEnvironment = File.separator + getMandant();
+			if (!getTestEnvironment().isEmpty()) {
+				mandantTestEnvironment = File.separator + getMandant() + "-" + getTestEnvironment();
+			}
+		}
+		testDataPath = Paths.get("").toAbsolutePath().toString() + File.separator + TESTDATADIR
+				+ mandantTestEnvironment;
+		setTestPlatformProperties(testDataPath + File.separator + TEST_PLATFORM_PROPERTIES);
+		return new SeleniumHelper();
 	}
 
 }

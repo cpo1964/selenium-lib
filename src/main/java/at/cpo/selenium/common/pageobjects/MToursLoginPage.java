@@ -25,23 +25,53 @@ package at.cpo.selenium.common.pageobjects;
 
 import at.cpo.platform.selenium.SeleniumHelper;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class SeleniumLoginPage.
  */
-public class MToursFlightsPage extends SeleniumHelper {
+public class MToursLoginPage extends SeleniumHelper {
 
 	/** The page. */
-	protected static String PAGE = "MToursFlightsPage.";
+	protected static String PAGE = "MToursLoginPage.";
 
 	/**
 	 * The constant USERNAME.
 	 */
-	public static final String PASSENGERCOUNT = PAGE + LISTBOX + ".PassCountLB";
+	public static final String USERNAME = PAGE + EDITFIELD + ".UsernameIN";
 
 	/**
 	 * The constant PASSWORD.
 	 */
-	public static final String SERVICECLASS_FIRST = PAGE + RADIOGROUP + ".ServClassRB";
+	public static final String PASSWORD = PAGE + EDITFIELD + ".PasswordIN";
+
+	/**
+	 * The constant Login.
+	 */
+	public static final String LOGIN = PAGE + BUTTON + ".LoginBT";
+	
+	/**
+	 * The constant LoginOk.
+	 */
+	public static final String LOGINOK = PAGE + TEXT + ".LoginOkTXT";
+
+	/**
+	 * The constant Login.
+	 */
+	public static final String NOTICE = PAGE + BUTTON + ".NoticeBT";
+
+	/**
+	 * The constant HOME.
+	 */
+	public static final String HOME = PAGE + LINK + ".HomeLN";
+
+	/**
+	 * The constant HOME.
+	 */
+	public static final String FLIGHTS = PAGE + LINK + ".FlightsLN";
+
+	/**
+	 * The constant SIGNININFO.
+	 */
+	public static final String SIGNININFO = PAGE + TEXT + ".SigInInfoTXT";
 
 }

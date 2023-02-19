@@ -39,7 +39,7 @@ import at.cpo.platform.PlatformHelper;
 import at.cpo.selenium.common.pageobjects.MToursFlightsPage;
 import at.cpo.selenium.common.pageobjects.MToursLoginPage;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * Test Login by Selenium.
  */

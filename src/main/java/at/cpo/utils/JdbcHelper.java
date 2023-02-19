@@ -30,7 +30,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The type Jdbc helper.
  */

@@ -47,11 +47,15 @@ import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 
 import at.cpo.report.ReportInterface;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The class tearDownExtent.
  */
 public class ExtentHelper implements ReportInterface {
+
+	/** The logger. */
+	Logger LOGGER;
+
 	/** The driver. */
 	protected static RemoteWebDriver driver;
 
@@ -67,9 +71,6 @@ public class ExtentHelper implements ReportInterface {
 	/** The report. */
 	protected static ExtentReports report;
 	
-	/** The logger. */
-	Logger LOGGER;
-
 	{
 		LOGGER = LogManager.getLogger(this.getClass().getSimpleName());
 
@@ -138,14 +139,10 @@ public class ExtentHelper implements ReportInterface {
 	 * @param msg the msg
 	 */
 	public void reportCreateTest(String msg) {
-		test = report.createTest(msg);
-	}
-
-	/**
-	 * Report end test.
-	 */
-	public void reportEndTest() {
-		report.removeTest(test);
+		test = report.createTest("<b>" + msg + "</b>");
+		LOGGER.info("##################");
+		LOGGER.info("## " + msg);
+		LOGGER.info("##################");
 	}
 
 	/**
@@ -155,6 +152,7 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	public void reportTestFail(String msg) {
 		test.log(Status.FAIL, msg);
+		LOGGER.error(msg.replace("<br>", System.lineSeparator()));
 	}
 
 	/**
@@ -164,6 +162,17 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	public void reportTestPass(String msg) {
 		test.log(Status.PASS, msg);
+		LOGGER.info(msg.replace("<br>", System.lineSeparator()));
+	}
+
+	/**
+	 * Test log pass.
+	 *
+	 * @param msg the msg
+	 */
+	public void reportTestInfo(String msg) {
+		test.log(Status.INFO, msg);
+		LOGGER.info(msg.replace("<br>", System.lineSeparator()));
 	}
 
 	/**
@@ -172,7 +181,8 @@ public class ExtentHelper implements ReportInterface {
 	 * @param msg the msg
 	 */
 	public void reportCreateStep(String msg) {
-		node = test.createNode(msg);
+		node = test.createNode("<b>" + msg + "</b>");
+		LOGGER.info("### " + msg.replace("<br>", System.lineSeparator()));
 	}
 
 	/**
@@ -181,8 +191,10 @@ public class ExtentHelper implements ReportInterface {
 	 * @param msg the msg
 	 */
 	public void reportStepFail(String msg) {
-		logBuffer.add("ERROR#" + msg);
+//		logBuffer.add("ERROR#" + msg);
 		node.log(Status.FAIL, msg);
+		msg = msg.replace("<b>", "");
+		LOGGER.error(msg.replace("</b>", ""));
 	}
 
 	/**
@@ -191,8 +203,10 @@ public class ExtentHelper implements ReportInterface {
 	 * @param msg the msg
 	 */
 	public void reportStepPass(String msg) {
-		logBuffer.add("INFO#" + msg);
+//		logBuffer.add("INFO#" + msg);
 		node.log(Status.PASS, msg);
+		msg = msg.replace("<b>", "");
+		LOGGER.info(msg.replace("</b>", ""));
 	}
 
 	/**
@@ -360,7 +374,7 @@ public class ExtentHelper implements ReportInterface {
 //		clearConsole();
 
 		for (String el : logBuffer) {
-			el = el.replace("<br>", "\n");
+			el = el.replace("<br>", System.lineSeparator());
 			el = el.replace("<b>", "");
 			el = el.replace("</b>", "");
 			if (el.startsWith("INFO#")) {
@@ -372,6 +386,16 @@ public class ExtentHelper implements ReportInterface {
 			}
 		}
 
+	}
+
+	public static Class<?> getClassByQualifiedName(String cn) {
+		Class<?> c = null;
+		try {
+			c = Class.forName(cn);
+		} catch (ClassNotFoundException e) {
+			return null;
+		}
+		return c;
 	}
 
 }

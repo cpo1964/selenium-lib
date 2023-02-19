@@ -28,7 +28,7 @@ import java.util.Properties;
 
 import at.cpo.report.ReportInterface;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Interface EnvironmentInterface.
  */
@@ -361,6 +361,7 @@ public interface PlatformInterface extends ReportInterface {
 	 *
 	 * @param condition the condition
 	 * @param description the description
+	 * @return 
 	 */
 	void validate(boolean condition, String description);
 	
@@ -413,7 +414,8 @@ public interface PlatformInterface extends ReportInterface {
 	
 	/**
 	 * Common setup.
+	 * @return 
 	 */
-	void commonSetup();
+	PlatformInterface commonSetup();
 
 }
