@@ -86,8 +86,9 @@ public class PlatformHelper implements PlatformInterface {
 	 *
 	 * @param value the new up platform
 	 * @throws ConfigurationException 
+	 * @throws IOException 
 	 */
-	protected static void commonSetup(String value) throws ConfigurationException {
+	protected static void commonSetup(String value) throws ConfigurationException, IOException {
 		if (PLATFORM_SELENIUM.equalsIgnoreCase(value)) {
 			platform = new SeleniumHelper();
 			platform.commonSetup();
@@ -361,7 +362,9 @@ public class PlatformHelper implements PlatformInterface {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static List<Object[]> getTestdata(String simpleName) throws IOException {
-		return new ExcelHelper(platform.getTestDataFile(), simpleName).getData();
+		File file = platform.getTestDataFile();
+		ExcelHelper xl = new ExcelHelper(file, simpleName);
+		return xl.getData();
 	}
 
 	/**
@@ -488,9 +491,10 @@ public class PlatformHelper implements PlatformInterface {
 	 * Common setup.
 	 *
 	 * @return the platform interface
+	 * @throws IOException 
 	 */
 	@Override
-	public PlatformInterface commonSetup() {
+	public PlatformInterface commonSetup() throws IOException {
 		return platform.commonSetup();
 	}
 

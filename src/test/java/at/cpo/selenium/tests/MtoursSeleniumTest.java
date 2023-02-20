@@ -91,8 +91,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 	public String runlocal;
 
 	@BeforeParam
-	public static void beforeTestsForParameter() throws ConfigurationException {
-		commonSetup(PLATFORM_SELENIUM);
+	public static void beforeTestsForParameter() {
 	}
 
 	/**
@@ -100,9 +99,11 @@ public class MtoursSeleniumTest extends PlatformHelper {
 	 *
 	 * @return the data
 	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ConfigurationException 
 	 */
 	@Parameterized.Parameters // (name = "{index}: {0}")
-	public static Collection<?> getData() throws IOException {
+	public static Collection<?> getData() throws IOException, ConfigurationException {
+		commonSetup(PLATFORM_SELENIUM);
 		return getTestdata(MtoursSeleniumTest.class.getSimpleName());
 	}
 

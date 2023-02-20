@@ -24,6 +24,7 @@
 package at.cpo.platform;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Properties;
 
 import at.cpo.report.ReportInterface;
@@ -420,7 +421,8 @@ public interface PlatformInterface extends ReportInterface {
 	 * Common setup.
 	 *
 	 * @return the platform interface
+	 * @throws IOException 
 	 */
-	PlatformInterface commonSetup();
+	PlatformInterface commonSetup() throws IOException;
 
 }

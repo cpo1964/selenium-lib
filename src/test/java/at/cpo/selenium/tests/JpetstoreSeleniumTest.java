@@ -77,8 +77,6 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 	@Parameter(5)
 	public String runlocal;
 
-	private static int iteration = 0;
-	
 	/**
 	 * Gets the data.
 	 *

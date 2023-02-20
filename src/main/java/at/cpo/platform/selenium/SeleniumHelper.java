@@ -764,13 +764,11 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * Sets the test platform properties.
 	 *
 	 * @param filePath the new test platform properties
+	 * @throws IOException 
 	 */
-	private void setTestPlatformProperties(String filePath) {
-		try (Reader inStream = new InputStreamReader(new FileInputStream(new File(filePath))))  {
-			testPlatformProperties.load(inStream);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	private void setTestPlatformProperties(String filePath) throws IOException {
+		Reader inStream = new InputStreamReader(new FileInputStream(new File(filePath)));
+		testPlatformProperties.load(inStream);
 	}
 
 	/**
@@ -809,8 +807,9 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * Common setup.
 	 *
 	 * @return the selenium helper
+	 * @throws IOException 
 	 */
-	public SeleniumHelper commonSetup() {
+	public SeleniumHelper commonSetup() throws IOException {
 		getProdukt();
 		String mandantTestEnvironment = "";
 		if (!getMandant().isEmpty()) {
