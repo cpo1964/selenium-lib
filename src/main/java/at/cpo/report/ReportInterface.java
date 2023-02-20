@@ -94,33 +94,7 @@ public interface ReportInterface {
 	/**
 	 * Tear down extent.
 	 */
-	void reportTearDown();
+	static void reportTearDown() {
+	}
 
-	// logging stuff
-
-//	/**
-//	 * Log info.
-//	 *
-//	 * @param msg the msg
-//	 */
-//	void logInfo(String msg);
-//
-//	/**
-//	 * Log debug.
-//	 *
-//	 * @param msg the msg
-//	 */
-//	void logDebug(String msg);
-//
-//	/**
-//	 * Log error.
-//	 *
-//	 * @param msg the msg
-//	 */
-//	void logError(String msg);
-//
-//	/**
-//	 * Log all.
-//	 */
-//	void logAll();
 }

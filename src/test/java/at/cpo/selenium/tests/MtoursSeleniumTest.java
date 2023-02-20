@@ -26,6 +26,8 @@ package at.cpo.selenium.tests;
 import java.io.IOException;
 import java.util.Collection;
 
+import javax.naming.ConfigurationException;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -89,7 +91,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 	public String runlocal;
 
 	@BeforeParam
-	public static void beforeTestsForParameter() {
+	public static void beforeTestsForParameter() throws ConfigurationException {
 		commonSetup(PLATFORM_SELENIUM);
 	}
 
@@ -132,11 +134,11 @@ public class MtoursSeleniumTest extends PlatformHelper {
 		if (isTrue(skip)) {
 			return;
 		}
-		LOGGER.info("# setUp #");
-		LOGGER.info("# username: '" + username + "'");
-		LOGGER.info("# password: '" + password + "'");
-		LOGGER.info("# localhostUrl: '" + localhostUrl + "'");
-		LOGGER.info("# remoteUrl: '" + remoteUrl + "'");
+		log.info("# setUp #");
+		log.info("# username: '" + username + "'");
+		log.info("# password: '" + password + "'");
+		log.info("# localhostUrl: '" + localhostUrl + "'");
+		log.info("# remoteUrl: '" + remoteUrl + "'");
 
 		setupDriver();
 	}
@@ -146,7 +148,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 	 */
 	@After
 	public void tearDown() {
-		LOGGER.info("# tearDown #");
+		log.info("# tearDown #");
 		if (isTrue(skip)) {
 			return;
 		}
@@ -175,7 +177,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 		 * Do test mtours.
 		 */
 		private void doTestMtours() {
-		LOGGER.info("# login to MTours ######################");
+		log.info("# login to MTours ######################");
 		reportCreateTest("Starting MTours - runlocal: " + runlocal); // level = 0
 
 		// start MTours
@@ -232,7 +234,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 		if (isTrue(runlocal)) {
 			try {
 				url = testPlatformPropertiesGet(localhostUrl);
-				LOGGER.info("localhostUrl: " + url);
+				log.info("localhostUrl: " + url);
 				driverGet(url);
 			} catch (Exception e1) {
 				reportTestFail("MTours is down");
@@ -241,7 +243,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 		} else {
 			try {
 				url = testPlatformPropertiesGet(remoteUrl);
-				LOGGER.info("remoteUrl: " + url);
+				log.info("remoteUrl: " + url);
 				driverGet(url);
 				driverImplicitlyWait(3000);
 				// Send future commands to iFrame

@@ -26,6 +26,8 @@ package at.cpo.selenium.tests;
 import java.io.IOException;
 import java.util.Collection;
 
+import javax.naming.ConfigurationException;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -82,9 +84,10 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 	 *
 	 * @return the data
 	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ConfigurationException 
 	 */
 	@Parameterized.Parameters // (name = "{index}: {0}")
-	public static Collection<?> getData() throws IOException {
+	public static Collection<?> getData() throws IOException, ConfigurationException {
 		// FIRST evaluate the file path THEN call getTestDataFile()
 		commonSetup(PLATFORM_SELENIUM);
 		return getTestdata(JpetstoreSeleniumTest.class.getSimpleName());

@@ -31,16 +31,16 @@ import at.cpo.platform.selenium.SeleniumHelper;
 public class MToursFlightsPage extends SeleniumHelper {
 
 	/** The page. */
-	protected static String PAGE = "MToursFlightsPage.";
+	protected static String page = "MToursFlightsPage.";
 
 	/**
 	 * The constant USERNAME.
 	 */
-	public static final String PASSENGERCOUNT = PAGE + LISTBOX + ".PassCountLB";
+	public static final String PASSENGERCOUNT = page + LISTBOX + ".PassCountLB";
 
 	/**
 	 * The constant PASSWORD.
 	 */
-	public static final String SERVICECLASS_FIRST = PAGE + RADIOGROUP + ".ServClassRB";
+	public static final String SERVICECLASS_FIRST = page + RADIOGROUP + ".ServClassRB";
 
 }

@@ -26,9 +26,13 @@ package at.cpo.selenium.tests;
 import java.io.IOException;
 import java.util.Collection;
 
+import javax.naming.ConfigurationException;
+
+import org.junit.Assert;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.runners.Parameterized.BeforeParam;
@@ -68,7 +72,7 @@ public class JpetstoreSeleniumJunit5Test extends PlatformHelper {
 	 * @throws IOException          Signals that an I/O exception has occurred.
 	 * @throws InterruptedException the interrupted exception
 	 */
-//	@BeforeEach
+	@BeforeEach
 	public void setUp() throws IOException, InterruptedException {
 //		if (isTrue(skip)) {
 //			return;
@@ -105,8 +109,9 @@ public class JpetstoreSeleniumJunit5Test extends PlatformHelper {
 	 *
 	 * @return the data
 	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ConfigurationException 
 	 */
-	static Collection<?> getData() throws IOException {
+	static Collection<?> getData() throws IOException, ConfigurationException {
 		commonSetup(PLATFORM_SELENIUM);
 		return getTestdata(JpetstoreSeleniumTest.class.getSimpleName());
 	}
@@ -119,16 +124,16 @@ public class JpetstoreSeleniumJunit5Test extends PlatformHelper {
 	 */
 	@ParameterizedTest
 	@MethodSource("getData")
-	public void doSeleniumTest(String username, String password, String localhostUrl, String remotehostUrl, String skip,
+	void doSeleniumTest(String username, String password, String localhostUrl, String remotehostUrl, String skip,
 			String runlocal) throws InterruptedException, IOException {
 		setupDriver();
 
-		iteration++;
+		setIteration(getIteration() + 1);
 		if (isTrue(skip)) {
 			return;
 		}
 
-		reportCreateTest("TestCase #" + iteration + " login to Jpetstore - runlocal: " + runlocal);
+		reportCreateTest("TestCase #" + getIteration() + " login to Jpetstore - runlocal: " + runlocal);
 		reportTestInfo("Jpetstore started");
 		reportTestInfo("<br>Testparameter:<br>" +
 				"username: '" + username + "'<br>" + 
@@ -137,7 +142,7 @@ public class JpetstoreSeleniumJunit5Test extends PlatformHelper {
 				"remotehostUrl: '" + remotehostUrl + "'<br>" +
 				"runlocal: '" + runlocal + "'<br>");
 
-		reportCreateStep("setUp TestCase #" + iteration + " #");
+		reportCreateStep("setUp TestCase #" + getIteration() + " #");
 
 		if (localhostUrl.startsWith("jpetstore")) {
 			testStep01("Step #1 - start Jpetstore", runlocal, localhostUrl, remotehostUrl);
@@ -153,9 +158,10 @@ public class JpetstoreSeleniumJunit5Test extends PlatformHelper {
 	 */
 	private void testStep01(String msg, String runlocal, String localhostUrl, String remoteUrl) {
 		reportCreateStep(msg);
-		validate(navigateToStartJpetstorePage(runlocal, localhostUrl, remoteUrl), "Jpetstore app started");
+		ok = navigateToStartJpetstorePage(runlocal, localhostUrl, remoteUrl);
+		Assert.assertTrue(validate(ok, "Jpetstore app started"));
 		ok = existsByXpath("//a[contains(@href, '/account/signonForm')]", true);
-		validate(ok, "signonForm is visible");
+		Assert.assertTrue(validate(ok, "signonForm is visible"));
 		reportStepPassScreenshot();
 	}
 
@@ -171,7 +177,7 @@ public class JpetstoreSeleniumJunit5Test extends PlatformHelper {
 		inputByXpath("//input[@name='password']", EDITFIELD, password);
 		clickByXpath("//div[@id='Signon']/form/div/div/button");
 		ok = existsByXpath("//a[contains(@href, '/account/signoff')]", true);
-		validate(ok, "signonOff link is visible");
+		Assert.assertTrue(validate(ok, "signonOff link is visible"));
 		reportStepPassScreenshot();
 	}
 
@@ -184,7 +190,7 @@ public class JpetstoreSeleniumJunit5Test extends PlatformHelper {
 		reportCreateStep(msg);
 		clickByXpath("//a[contains(@href, '/account/signoff')]");
 		ok = existsByXpath("//a[contains(text(),'Sign Up')]", true);
-		validate(ok, "Sign Up link is visible");
+		Assert.assertTrue(validate(ok, "Sign Up link is visible"));
 		reportStepPassScreenshot();
 	}
 

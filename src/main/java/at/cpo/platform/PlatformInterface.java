@@ -78,7 +78,7 @@ public interface PlatformInterface extends ReportInterface {
 	public static final String ENABLED = "Enabled";
 
 	/** The Constant EXISTS. */
-	public static final String EXISTS = "Exists";
+	public static final String EXISTSKEY = "Exists";
 
 	/** The Constant VISIBLE. */
 	public static final String VISIBLE = "Visible";
@@ -89,7 +89,7 @@ public interface PlatformInterface extends ReportInterface {
 	public static final String ALTCLICK = "left click while holding the Alt key down";
 
 	/** The Constant CLICK. */
-	public static final String CLICK = "click with the left mouse button";
+	public static final String CLICKKEY = "click with the left mouse button";
 
 	/** The Constant CONTROLCLICK. */
 	public static final String CONTROLCLICK = "left click while holding the Ctrl key down";
@@ -111,17 +111,13 @@ public interface PlatformInterface extends ReportInterface {
 
 	// platform stuff
 	
-	/** The after with failed information. */
-	//	@Rule
-	//	public TestRule afterWithFailedInformation;
-	
-	public static final String PRODUKT = "produkt";
+	public static final String PRODUKTKEY = "produkt";
 
 	/** The Constant TEST_ENVIRONMENT. */
 	public static final String TEST_ENVIRONMENT = "testEnvironment";
 
 	/** The Constant MANDANT. */
-	public static final String MANDANT = "mandant";
+	public static final String MANDANTKEY = "mandant";
 
 	/** The Constant TEST_PLATFORM_PROPERTIES. */
 	public static final String TEST_PLATFORM_PROPERTIES = "test-platform.properties";
@@ -133,13 +129,13 @@ public interface PlatformInterface extends ReportInterface {
 	public static final String TESTDATADIR = "src" + File.separator + "test" + File.separator + "data";
 	
 	/** The test platform properties. */
-	public static Properties testPlatformProperties = new Properties();
+	static Properties testPlatformProperties = new Properties();
 
 	/** The ok. */
-	public static boolean ok = false;
+	public static boolean OKKEY = false;
 
 	/** The value. */
-	public static String value = "";
+	public static String VALUEKEY = "";
 
 	/**
 	 * Setup driver.
@@ -362,8 +358,9 @@ public interface PlatformInterface extends ReportInterface {
 	 *
 	 * @param condition the condition
 	 * @param description the description
+	 * @return 
 	 */
-	void validate(boolean condition, String description);
+	boolean validate(boolean condition, String description);
 	
 	/**
 	 * Drag and drop.

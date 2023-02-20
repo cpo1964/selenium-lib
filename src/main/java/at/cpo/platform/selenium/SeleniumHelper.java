@@ -63,8 +63,12 @@ import at.cpo.report.extent.ExtentHelper;
  */
 public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 
+	private static final String VALUE2 = "\"), value: '";
+
+	private static final String BOLD_INPUT_BY_XPATH = "<b>INPUT   </b> by xpath $(\"";
+
 	/** The logger. */
-	Logger LOGGER = LogManager.getLogger(this.getClass().getSimpleName());
+	static Logger logSelenium = LogManager.getLogger(SeleniumHelper.class.getSimpleName());
 	
 	/** The name. */
 	protected String name = "";
@@ -79,7 +83,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	protected WebElement webEl;
 
 	/** The test environment. */
-	private String testEnvironment = ""; // eg dev, prod
+//	private String testEnvironment = ""; // eg dev, prod
 
 	/** The mandant. */
 	private String mandant = ""; // eg dev, prod
@@ -93,25 +97,37 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	/** The driver loaded. */
 	private static boolean driverLoaded = false;
 	
-//	{
-//		afterWithFailedInformation = RuleChain.outerRule(new ExternalResource() {
-//			@Override
-//			protected void after() {
-//				logInfo("Test " + name + " " + (failed ? "failed" : "finished") + ".");
-//			}
-//
-//		}).around(new TestWatcher() {
-//			@Override
-//			protected void finished(Description description) {
-//				name = description.getDisplayName();
-//			}
-//
-//			@Override
-//			protected void failed(Throwable e, Description description) {
-//				failed = true;
-//			}
-//		});
-//	}
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public static boolean isDriverLoaded() {
+		return driverLoaded;
+	}
+
+	public static void setDriverLoaded(boolean driverLoaded) {
+		SeleniumHelper.driverLoaded = driverLoaded;
+	}
+
+	public void setMandant(String mandant) {
+		this.mandant = mandant;
+	}
+
+	public void setProdukt(String produkt) {
+		this.produkt = produkt;
+	}
+
+	public static String getBrowser() {
+		return browser;
+	}
+
+	public static void setBrowser(String browser) {
+		SeleniumHelper.browser = browser;
+	}
 
 	/**
 	 * Driver get.
@@ -134,7 +150,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	@Override
 	public boolean driverSwitchToIFrame(String name) {
 		List<WebElement> iframes = driver.findElements(By.tagName("iframe"));
-		if (iframes.size() > 0) {
+		if (!iframes.isEmpty()) {
 			driver.switchTo().frame(name);
 			return true;
 		}
@@ -163,38 +179,33 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 
 	/**
 	 * Setup driver.
+	 * 
+	 * see:
+	 * https://github.com/bharadwaj-pendyala/selenium-java-lean-test-achitecture
+	 * https://github.com/bharadwaj-pendyala/selenium-java-lean-test-achitecture/blob/master/src/main/java/driver/local/LocalDriverManager.java
 	 *
 	 * @return the object
 	 */
 	public Object setupDriver() {
-		browser = System.getProperty("browser");
-		if (browser == null || browser.isEmpty()) {
-			browser = "firefox";
+		setBrowser(System.getProperty("browser"));
+		if (getBrowser() == null || getBrowser().isEmpty()) {
+			setBrowser("firefox");
 		}
-		// see:
-		// https://github.com/bharadwaj-pendyala/selenium-java-lean-test-achitecture
-		// https://github.com/bharadwaj-pendyala/selenium-java-lean-test-achitecture/blob/master/src/main/java/driver/local/LocalDriverManager.java
 
 		if ("chrome".equalsIgnoreCase(browser)) {
 			setupChromeDriver();
 			if (!driverLoaded) {
-				LOGGER.info("using local chromedriver: " + System.getProperty("webdriver.chrome.driver") + System.lineSeparator());
-				driverLoaded = true;
+				logSelenium.info(() -> "using local chromedriver: " + System.getProperty("webdriver.chrome.driver") + System.lineSeparator());
+				setDriverLoaded(true);
 			}
 		} else if ("firefox".equalsIgnoreCase(browser)) {
 			setupFirefoxDriver();
 			if (!driverLoaded) {
-				LOGGER.info("using local geckodriver: " + System.getProperty("webdriver.gecko.driver") + System.lineSeparator());
-				driverLoaded = true;
+				logSelenium.info(() -> "using local geckodriver: " + System.getProperty("webdriver.gecko.driver") + System.lineSeparator());
+				setDriverLoaded(true);
 			}
 		}
-//		java.util.logging.Logger.getLogger("org.openqua.selenium.remote.RemoteWebDriver").setLevel(Level.OFF);
-//		driver.setLogLevel(java.util.logging.Level.OFF);
-
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-//		driver.manage().window().maximize();
-//        driver.manage().window().setSize(new Dimension(1900, 1000));
-
 		return driver;
 	}
 
@@ -221,45 +232,8 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		if (driver == null) {
 			io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver().setup();
 		}
-//		if (SystemUtils.IS_OS_LINUX) {
-////			System.setProperty("webdriver.gecko.driver", "/usr/local/bin/geckodriver");
-//			System.setProperty("webdriver.gecko.driver",
-//					"src/test/resources/selenium_standalone_binaries/linux/marionette/64bit/geckodriver");
-//		} else if (SystemUtils.IS_OS_WINDOWS) {
-//			System.setProperty("webdriver.gecko.driver",
-//					"src/test/resources/selenium_standalone_binaries/windows/marionette/64bit/geckodriver.exe");
-//		}
-
 		System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, "FFLogs.txt");
-
-//		DriverService serviceBuilder = new GeckoDriverService.Builder().build();
-//		serviceBuilder.sendOutputTo(new OutputStream() {
-//			@Override
-//			public void write(int b) {
-//			}
-//		});
-
-//		DesiredCapabilities capabilities = new DesiredCapabilities();
-//		capabilities.setCapability("marionette", true);
-//		FirefoxOptions options = new FirefoxOptions();
-//		options.merge(capabilities);
-//		options.setLogLevel(FirefoxDriverLogLevel.ERROR);
-//		options.addPreference("browser.link.open_newwindow", 3);
-//		options.addPreference("browser.link.open_newwindow.restriction", 0);
-//      options.setHeadless(Boolean.getBoolean("headless"));
-
-//		driver = new FirefoxDriver(options);
 		driver = new FirefoxDriver();
-
-		/*
-		 * WebDriverManager.firefoxdriver().setup(); -> freischaltung fehlt !
-		 * 
-		 * io.github.bonigarcia.wdm.config.WebDriverManagerException:
-		 * org.apache.hc.client5.http.HttpHostConnectException: Connect to
-		 * https://api.github.com:443 [api.github.com/140.82.121.6] failed: Connection
-		 * timed out
-		 */
-
 	}
 
 	/**
@@ -284,15 +258,12 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	public boolean existsByXpath(String xpath, long timeout) {
 		webEl = null;
-//		boolean enabled = true;
 		driverImplicitlyWait(3000);
 		List<WebElement> webEls = driver.findElements(By.xpath(xpath));
-		if (webEls.size() > 0) {
+		if (!webEls.isEmpty()) {
 			webEl = webEls.get(0);
 			WebDriverWait wa = new WebDriverWait(driver, Duration.ofSeconds(timeout));
 			webEl = wa.until(ExpectedConditions.elementToBeClickable(webEl));
-//			webEl = wa.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
-//			enabled = wa.until(ExpectedConditions.attributeToBe(webEl, "", ""));
 		}
 		return webEl != null;
 	}
@@ -399,7 +370,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	public void clickByXpath(String xpath, String value) {
 		webEl = driver.findElement(By.xpath(xpath));
 		if (webEl.isEnabled()) {
-			if (CLICK.equals(value)) {
+			if (CLICKKEY.equals(value)) {
 				webEl.click();
 			} else {
 				// The user-facing API for emulating complex user gestures. 
@@ -451,7 +422,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	@Override
 	public void clickByXpath(String xpath) {
-		clickByXpath(xpath, CLICK);
+		clickByXpath(xpath, CLICKKEY);
 	}
 
 	/**
@@ -472,7 +443,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @param locatorDelegate the locator delegate
 	 */
 	public void click(String locatorDelegate) {
-		click(locatorDelegate, CLICK);
+		click(locatorDelegate, CLICKKEY);
 	}
 
 	/**
@@ -499,14 +470,9 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 				webEl = waitUntilClickable(webEl, 30);
 			} 
 			if (webEl == null) {
-				try {
 					logSecret(xpath + "(unknown) -> not done ", getSecretString(value, secret), secret);
 					reportStepFail(node.addScreenCaptureFromPath(screenshotFile(driver)) + "<b>input</b> ("
 							+ xpath + ", '" + getSecretString(value, secret) + ")'");
-					throw new RuntimeException();
-				} catch (IOException e) {
-					throw new RuntimeException();
-				}
 			}
 			if (EDITFIELD.equalsIgnoreCase(className)
 					|| NUMERICFIELD.equalsIgnoreCase(className)
@@ -515,41 +481,35 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 				webEl.click();
 				webEl.clear();
 				webEl.sendKeys(value);
-				reportStepPass("<b>INPUT   </b> by xpath $(\"" + xpath + "\"), value: '" + getSecretString(value, secret) + "'");
-				try {
-					logSecret(xpath, value, secret);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + getSecretString(value, secret) + "'");
+				logSecret(xpath, value, secret);
 			} else  if (LISTBOX.equalsIgnoreCase(className)) {
 				new Select(webEl).selectByVisibleText(value);
-				reportStepPass("<b>INPUT   </b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
+				reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + value + "'");
 			} else if (CHECKBOX.equalsIgnoreCase(className)
 					|| RADIOBUTTON.equalsIgnoreCase(className)) {
-				if (webEl.isSelected() && "OFF".equalsIgnoreCase(value)) {
+				if (webEl.isSelected() && "OFF".equalsIgnoreCase(value) ||
+						!webEl.isSelected() && "ON".equalsIgnoreCase(value)) {
 					webEl.click();
-					reportStepPass("<b>INPUT   </b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
-				} else if (!webEl.isSelected() && "ON".equalsIgnoreCase(value)) {
-					webEl.click();
-					reportStepPass("<b>INPUT   </b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
+					reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + value + "'");
 				} else {
-					throw new NotFoundException("<b>INPUT   </b> by xpath $(\"" + xpath + "\"), value not found: '" + value + "'");
+					throw new NotFoundException(BOLD_INPUT_BY_XPATH + xpath + "\"), value not found: '" + value + "'");
 				}
 			} else if (RADIOGROUP.equalsIgnoreCase(className)) {
-				int option = Integer.valueOf(value);
+				int option = Integer.parseInt(value);
 				List<WebElement> radios = driver.findElements(By.xpath(xpath));
 				if (option > 0 && option <= radios.size()) {
 					radios.get(option - 1).click();
-					reportStepPass("<b>INPUT   </b> by xpath $(\"" + xpath + "\"), value: '" + value + "'");
+					reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + value + "'");
 				} else {
-					throw new NotFoundException("<b>INPUT   </b> by xpath $(\"" + xpath + "\"), value not found: '" + value + "'");
+					throw new NotFoundException(BOLD_INPUT_BY_XPATH + xpath + "\"), value not found: '" + value + "'");
 				}
 			} else {
 				throw new NotFoundException("type of webelement unknown: '" + className + "'");
 			}
-		} catch (RuntimeException e) {
-			reportStepFail(node.addScreenCaptureFromPath(screenshotFile(driver)) + "<b>INPUT   </b> ("
-					+ xpath + ", '" + getSecretString(value, secret) + ")'");
+		} catch (IOException e) {
+			reportStepFail(node.addScreenCaptureFromPath(screenshotFile(driver)) + 
+					"<b>INPUT   </b> (" + xpath + ", '" + getSecretString(value, secret) + ")'");
 		}
 	}
 
@@ -622,15 +582,17 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 *
 	 * @param condition the condition
 	 * @param description the description
+	 * @return 
 	 */
 	@Override
-	public void validate(boolean condition, String description) {
+	public boolean validate(boolean condition, String description) {
 		if (condition) {
 			reportStepPass("<b>VALIDATE</b> '" + description + "' - " + condition);
 		} else {
 			reportStepFail("<b>VALIDATE</b> '" + description + "' - " + condition);
 			reportStepFailScreenshot(screenshotFile(driver));
 		}
+		return condition;
 	}
 
 	/**
@@ -673,7 +635,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	protected void logSecret(String locatorDelegate, String value, boolean secret) throws IOException {
 		String text = getSecretString(value, secret);
-		LOGGER.debug("<b>input</b> by xpath $(\"" + locatorDelegate + "\"), value=" + text);
+		logSelenium.debug(() -> "<b>input</b> by xpath $(\"" + locatorDelegate + "\"), value=" + text);
 	}
 
 	/**
@@ -684,12 +646,12 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @return the secret string
 	 */
 	public String getSecretString(String value, boolean secret) {
-		String text = "";
+		StringBuilder bld = new StringBuilder();
 		if (secret) {
 			for (int i = 1; i < value.length(); i++) {
-				text = text + "*";
+				bld.append("*");
 			}
-			return text;
+			return bld.toString();
 		} else {
 			return value;
 		}
@@ -761,12 +723,10 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		String propertiesFileDestination = propHolder.getSimpleName() + ".properties";
 		InputStream stream = propHolder.getResourceAsStream(propertiesFileDestination);
 		if (stream == null) {
-//			ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-//			InputStream stream = classloader.getResourceAsStream("test-data/myExcel.xlsx");
 			URL url = propHolder.getClassLoader().getResource(propertiesFileDestination);
 			if (url != null) {
-				try {
-					stream = url.openStream();
+				try (InputStream streamOpen = url.openStream()) {
+					stream = streamOpen;
 				} catch (IOException e1) {
 					throw new UnsupportedOperationException("Can not find property file: " + propertiesFileDestination);
 				}
@@ -786,8 +746,8 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			throw new IllegalArgumentException("Property \"" + key + "\" from file " + propertiesFileDestination
 					+ " does not exists or is empty!");
 		}
-		LOGGER.debug("Found value '" + (!key.equals("password") ? value : "*****") + "' by key '" + key + "' from file '"
-				+ propertiesFileDestination + "'");
+		logSelenium.debug(() -> "Found value '" + (!key.equals("password") ? value : "*****") + 
+				"' by key '" + key + "' from file '" + propertiesFileDestination + "'");
 		return value;
 	}
 
@@ -806,18 +766,11 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @param filePath the new test platform properties
 	 */
 	private void setTestPlatformProperties(String filePath) {
-		Reader inStream;
-		try {
-			inStream = new InputStreamReader(new FileInputStream(new File(filePath)));
+		try (Reader inStream = new InputStreamReader(new FileInputStream(new File(filePath))))  {
 			testPlatformProperties.load(inStream);
 		} catch (IOException e) {
+			e.printStackTrace();
 		}
-
-//		Enumeration<?> e = testPlatforProperties.propertyNames();
-//		while (e.hasMoreElements()) {
-//			String key = (String) e.nextElement();
-//			System.out.println(key + " -- " + testPlatforProperties.getProperty(key));
-//		}
 	}
 
 	/**
@@ -827,7 +780,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	@Override
 	public String getMandant() {
-		mandant = System.getProperty(MANDANT, "");
+		mandant = System.getProperty(MANDANTKEY, "");
 		return mandant;
 	}
 
@@ -838,8 +791,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	@Override
 	public String getTestEnvironment() {
-		testEnvironment = System.getProperty(TEST_ENVIRONMENT, "");
-		return testEnvironment;
+		return System.getProperty(TEST_ENVIRONMENT, "");
 	}
 
 	/**
@@ -849,7 +801,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	@Override
 	public String getProdukt() {
-		produkt = System.getProperty(PRODUKT, "");
+		produkt = System.getProperty(PRODUKTKEY, "");
 		return produkt;
 	}
 
@@ -903,9 +855,8 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @return the string
 	 * @throws Exception the exception
 	 */
-	public static String screenshotBase64(TakesScreenshot driver) throws Exception {
-		TakesScreenshot newScreen = (TakesScreenshot) driver;
-		String scnShot = newScreen.getScreenshotAs(OutputType.BASE64);
+	public static String screenshotBase64(TakesScreenshot driver) {
+		String scnShot = driver.getScreenshotAs(OutputType.BASE64);
 		return "data:image/jpg;base64, " + scnShot;
 
 	}

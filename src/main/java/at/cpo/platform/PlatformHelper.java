@@ -26,13 +26,15 @@ package at.cpo.platform;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.List;
+
+import javax.naming.ConfigurationException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Assert;
 
 import at.cpo.platform.selenium.SeleniumHelper;
+import at.cpo.report.extent.ExtentHelper;
 import at.cpo.utils.ExcelHelper;
 
 /**
@@ -41,7 +43,7 @@ import at.cpo.utils.ExcelHelper;
 public class PlatformHelper implements PlatformInterface {
 
 	/** The logger. */
-	protected Logger LOGGER = LogManager.getLogger(this.getClass().getSimpleName());
+	protected Logger log = LogManager.getLogger(this.getClass().getSimpleName());
 
 	/** The platform. */
 	static PlatformInterface platform;
@@ -56,24 +58,41 @@ public class PlatformHelper implements PlatformInterface {
 	protected boolean ok;
 	
 	/** The iteration. */
-	public static int iteration = 0;
+	private static int iteration = 0;
 
 	// START - place to expand platform specific features - eg Selenium:
 
+	private static Object getDriver() {
+		return driver;
+	}
+
+	private static void setDriver(Object driver) {
+		PlatformHelper.driver = driver;
+	}
+
+	public static int getIteration() {
+		return iteration;
+	}
+
+	public static void setIteration(int iteration) {
+		PlatformHelper.iteration = iteration;
+	}
+
 	/** The PLATFORM_SELENIUM. */
-	protected static String PLATFORM_SELENIUM = "Selenium";
+	protected static final String PLATFORM_SELENIUM = "Selenium";
 	
 	/**
 	 * Sets the up platform.
 	 *
 	 * @param value the new up platform
+	 * @throws ConfigurationException 
 	 */
-	protected static void commonSetup(String value) {
+	protected static void commonSetup(String value) throws ConfigurationException {
 		if (PLATFORM_SELENIUM.equalsIgnoreCase(value)) {
 			platform = new SeleniumHelper();
 			platform.commonSetup();
 		} else {
-			throw new RuntimeException();
+			throw new ConfigurationException();
 		}
 	}
 	
@@ -87,8 +106,8 @@ public class PlatformHelper implements PlatformInterface {
 	 * @return the object
 	 */
 	public Object setupDriver() {
-		driver = platform.setupDriver(); 
-		return driver;
+		setDriver(platform.setupDriver()); 
+		return getDriver();
 	}
 	
 	/**
@@ -188,9 +207,8 @@ public class PlatformHelper implements PlatformInterface {
 	 * @param condition the condition
 	 * @param description the description
 	 */
-	public void validate(boolean condition, String description) {
-		platform.validate(condition, description);
-		Assert.assertTrue(condition);
+	public boolean validate(boolean condition, String description) {
+		return platform.validate(condition, description);
 	}
 
 	/**
@@ -327,17 +345,10 @@ public class PlatformHelper implements PlatformInterface {
 	}
 
 	/**
-	 * Tear down extent.
-	 */
-	public void reportTearDown() {
-		platform.reportTearDown();	
-	}
-
-	/**
 	 * Report teardown.
 	 */
 	public static void reportTeardown() {
-		platform.reportTearDown();	
+		((ExtentHelper) platform).reportTearDown();	
 	}
 
 	// other stuff ============================================================
@@ -349,7 +360,7 @@ public class PlatformHelper implements PlatformInterface {
 	 * @return the testdata
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public static Collection<?> getTestdata(String simpleName) throws IOException {
+	public static List<Object[]> getTestdata(String simpleName) throws IOException {
 		return new ExcelHelper(platform.getTestDataFile(), simpleName).getData();
 	}
 
@@ -381,7 +392,7 @@ public class PlatformHelper implements PlatformInterface {
 	 * @return true, if value.toLowerCase() is "true" or "ok" or "on"
 	 */
 	protected boolean isTrue(String value) {
-		if (value == null || value.isEmpty() || value.isEmpty()) {
+		if (value == null || value.isEmpty()) {
 			value = "false";
 		}
 		String[] values = {"true", "ok", "on"};

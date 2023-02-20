@@ -31,46 +31,46 @@ import at.cpo.platform.selenium.SeleniumHelper;
 public class MToursLoginPage extends SeleniumHelper {
 
 	/** The page. */
-	protected static String PAGE = "MToursLoginPage.";
+	protected static String page = "MToursLoginPage.";
 
 	/**
 	 * The constant USERNAME.
 	 */
-	public static final String USERNAME = PAGE + EDITFIELD + ".UsernameIN";
+	public static final String USERNAME = page + EDITFIELD + ".UsernameIN";
 
 	/**
 	 * The constant PASSWORD.
 	 */
-	public static final String PASSWORD = PAGE + EDITFIELD + ".PasswordIN";
+	public static final String PASSWORD = page + EDITFIELD + ".PasswordIN";
 
 	/**
 	 * The constant Login.
 	 */
-	public static final String LOGIN = PAGE + BUTTON + ".LoginBT";
+	public static final String LOGIN = page + BUTTON + ".LoginBT";
 	
 	/**
 	 * The constant LoginOk.
 	 */
-	public static final String LOGINOK = PAGE + TEXT + ".LoginOkTXT";
+	public static final String LOGINOK = page + TEXT + ".LoginOkTXT";
 
 	/**
 	 * The constant Login.
 	 */
-	public static final String NOTICE = PAGE + BUTTON + ".NoticeBT";
+	public static final String NOTICE = page + BUTTON + ".NoticeBT";
 
 	/**
 	 * The constant HOME.
 	 */
-	public static final String HOME = PAGE + LINK + ".HomeLN";
+	public static final String HOME = page + LINK + ".HomeLN";
 
 	/**
 	 * The constant HOME.
 	 */
-	public static final String FLIGHTS = PAGE + LINK + ".FlightsLN";
+	public static final String FLIGHTS = page + LINK + ".FlightsLN";
 
 	/**
 	 * The constant SIGNININFO.
 	 */
-	public static final String SIGNININFO = PAGE + TEXT + ".SigInInfoTXT";
+	public static final String SIGNININFO = page + TEXT + ".SigInInfoTXT";
 
 }
