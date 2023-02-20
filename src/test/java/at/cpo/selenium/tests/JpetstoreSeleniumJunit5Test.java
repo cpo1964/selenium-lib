@@ -41,16 +41,14 @@ import at.cpo.platform.PlatformHelper;
 
 /**
  * Test Login by Selenium.
- */
-//@ExtendWith(value = { null })
-//(Parameterized.class)
-/*
- * ein JUnit Test Aufrufreihenfolge: 1) die Methoden annotiert
- * mit @Parameterized.Parameters - zb getData() 2) die Methode annotiert
- * mit @BeforeClass - zb setUpBeforeClass() 3) die Methoden annotiert
- * mit @Before - zb setUp() 4) die Methoden annotiert mit @Test - zb
- * doSeleniumTest() 5) die Methoden annotiert mit @After - zb tearDown() 6) die
- * Methode annotiert mit @AfterClass - zb tearDownAfterClass()
+ * 
+ * ein JUnit Test Aufrufreihenfolge: 
+ * 1) die Methoden annotiert mit @Parameterized.Parameters - zb getData() 
+ * 2) die Methode annotiert mit @BeforeClass - zb setUpBeforeClass() 
+ * 3) die Methoden annotiert mit @Before - zb setUp() 
+ * 4) die Methoden annotiert mit @Test - zb doSeleniumTest() 
+ * 5) die Methoden annotiert mit @After - zb tearDown() 
+ * 6) die Methode annotiert mit @AfterClass - zb tearDownAfterClass()
  */
 public class JpetstoreSeleniumJunit5Test extends PlatformHelper {
 
@@ -74,10 +72,6 @@ public class JpetstoreSeleniumJunit5Test extends PlatformHelper {
 	 */
 	@BeforeEach
 	public void setUp() throws IOException, InterruptedException {
-//		if (isTrue(skip)) {
-//			return;
-//		}
-
 	}
 
 	/**
@@ -85,13 +79,8 @@ public class JpetstoreSeleniumJunit5Test extends PlatformHelper {
 	 */
 	@AfterEach
 	public void tearDown() {
-//		if (isTrue(skip)) {
-//			return;
-//		}
-
 		reportCreateStep("tearDown #");
 		closeBrowser();
-
 		reportTestInfo("Jpetstore finished" + System.lineSeparator());
 	}
 

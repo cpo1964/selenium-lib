@@ -78,7 +78,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 	 * The remoteUrl.
 	 */
 	@Parameter(3)
-	public String remoteUrl;
+	public String remotehostUrl;
 	/**
 	 * The Skip.
 	 */
@@ -131,14 +131,20 @@ public class MtoursSeleniumTest extends PlatformHelper {
 	 */
 	@Before
 	public void setUp() throws IOException, InterruptedException {
+		setIteration(getIteration() + 1);
 		if (isTrue(skip)) {
 			return;
 		}
-		log.info("# setUp #");
-		log.info("# username: '" + username + "'");
-		log.info("# password: '" + password + "'");
-		log.info("# localhostUrl: '" + localhostUrl + "'");
-		log.info("# remoteUrl: '" + remoteUrl + "'");
+		reportCreateTest("TestCase #" + getIteration() + " login to MTours - runlocal: " + runlocal);
+		reportTestInfo("MTours started");
+		reportTestInfo("<br>Testparameter:<br>" +
+				"username: '" + username + "'<br>" + 
+				"password: '" + password + "'<br>" + 
+				"localhostUrl: '" + localhostUrl + "'<br>" +
+				"remotehostUrl: '" + remotehostUrl + "'<br>" +
+				"runlocal: '" + runlocal + "'<br>");
+
+		reportCreateStep("setUp TestCase #" + getIteration() + " #");
 
 		setupDriver();
 	}
@@ -148,13 +154,14 @@ public class MtoursSeleniumTest extends PlatformHelper {
 	 */
 	@After
 	public void tearDown() {
-		log.info("# tearDown #");
 		if (isTrue(skip)) {
 			return;
 		}
-
-//		logAll();
+		
+		reportCreateStep("tearDown #");
 		closeBrowser();
+
+		reportTestInfo("MTours finished" + System.lineSeparator());
 	}
 
 	/**
@@ -177,8 +184,6 @@ public class MtoursSeleniumTest extends PlatformHelper {
 		 * Do test mtours.
 		 */
 		private void doTestMtours() {
-		log.info("# login to MTours ######################");
-		reportCreateTest("Starting MTours - runlocal: " + runlocal); // level = 0
 
 		// start MTours
 		reportCreateStep("Step #1 - start MTours");
@@ -190,12 +195,14 @@ public class MtoursSeleniumTest extends PlatformHelper {
 		input(MToursLoginPage.USERNAME, username);
 		input(MToursLoginPage.PASSWORD, password);
 		click(MToursLoginPage.LOGIN);
+
 //		value = output(SeleniumLoginPage.LOGINOK);
 //		String expectedText = "Login Successfully";
 //		validate(normalizedValue().contains(expectedText),
 //				"value of LoginOk'<br>" +
 //				"expected: '" + expectedText + "'<br>" +
 //				"found: '" + value + "'<br>'result");
+
 		reportStepPassScreenshot();
 		if ("false".equalsIgnoreCase(runlocal)) {
 			ok = exists(MToursLoginPage.FLIGHTS, 3);
@@ -219,9 +226,6 @@ public class MtoursSeleniumTest extends PlatformHelper {
 					+ "'<br>" + "found: '" + value + "'<br>'result");
 		}
 		reportStepPassScreenshot();
-
-		reportTestPass("Mtours finished");
-//		reportEndTest();
 	}
 
 	/**
@@ -242,7 +246,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 			}
 		} else {
 			try {
-				url = testPlatformPropertiesGet(remoteUrl);
+				url = testPlatformPropertiesGet(remotehostUrl);
 				log.info("remoteUrl: " + url);
 				driverGet(url);
 				driverImplicitlyWait(3000);
