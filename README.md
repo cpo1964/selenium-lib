@@ -2,17 +2,17 @@
 
 <b>fine tuned function library based on selenium webdriver api</b>
 
-this is an example of automated tests of a web application
+This is an example of automated tests of a web application
 - by usage of junit and Excel test data by Junit 4
 - by usage of Selenium 4 / ExtentReport 5
 - by automation with key driven framework
 - by storage of web locators in property files -> no compile needed after changes
 
-and the best:
+And the best:
 - flexible framework for possible usage of different or more then one java automation platform<br>
   eg Selenium & UFT Developer (in this project not yet provided)
 
-libs in use:
+Libs in use:
 - Selenium 4
 - ExtentReport 5
 - org.apache.poi 3
@@ -20,14 +20,22 @@ libs in use:
 - log4j2
 - maven 3
 
-<b>run all existing junit4 tests:</b>
+<b>Run all existing junit4 tests:</b>
 
 - open console window (windows command or linux shell)
 - navigate to root directory of this project
 - call: mvn test
 - or call: mvn test -Dbrowser=firefox -Dmandant=ooe -DtestEnvironment=prod
 
-if needed add additional proxy settings with your credentials: -Dproxy=yourProxyHost -DproxyUser=yourProxyUser -DproxyPass=yourProxyPassword
+If needed add additional proxy settings with your credentials:
+-Dproxy=yourProxyHost -DproxyUser=yourProxyUser -DproxyPass=yourProxyPassword
+
+There is no need to download any selenium browser driver - this is done like magic by the maven artifact io.github.bonigarcia.webdrivermanager
+The selenium drivers will be loaded at runtime automatically from:
+src/test/resources
+If you wish to define a different directory for the download of selenium browser drivers, 
+then you can set the system property 'wdm.cachePath' as maven parameter, eg:
+-Dwdm.cachePath=src/test/MyDriverDir
 
 <b>Following sites will be tested by above mvn calls</b><br>
 

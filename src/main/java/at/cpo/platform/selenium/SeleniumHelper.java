@@ -63,6 +63,8 @@ import at.cpo.report.extent.ExtentHelper;
  */
 public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 
+	private static final String WDM_CACHE_PATH = "wdm.cachePath";
+
 	private static final String VALUE2 = "\"), value: '";
 
 	private static final String BOLD_INPUT_BY_XPATH = "<b>INPUT   </b> by xpath $(\"";
@@ -229,7 +231,11 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * Setup firefox driver.
 	 */
 	protected static void setupFirefoxDriver() {
-		System.setProperty("wdm.cachePath", "src/test/resources");
+		System.setProperty(WDM_CACHE_PATH, "src/test/resources");
+		String wdmCachePath = System.getProperty(WDM_CACHE_PATH);
+		if (wdmCachePath != null && !wdmCachePath.isEmpty()) {
+			System.setProperty(WDM_CACHE_PATH, wdmCachePath);
+		}
 		String proxy = System.getProperty("proxy");
 		String proxyUser = System.getProperty("proxyUser");
 		String proxyPass = System.getProperty("proxyPass");
