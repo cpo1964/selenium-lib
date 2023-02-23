@@ -51,6 +51,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -63,72 +64,164 @@ import at.cpo.report.extent.ExtentHelper;
  */
 public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 
-	private static final String WDM_CACHE_PATH = "wdm.cachePath";
-
-	private static final String VALUE2 = "\"), value: '";
-
-	private static final String BOLD_INPUT_BY_XPATH = "<b>INPUT   </b> by xpath $(\"";
-
 	/** The logger. */
 	static Logger logSelenium = LogManager.getLogger(SeleniumHelper.class.getSimpleName());
 	
+	/** The Constant WDM_CACHE_PATH. */
+	private static final String WDM_CACHE_PATH = "wdm.cachePath";
+
+	/** The Constant VALUE2. */
+	private static final String VALUE2 = "\"), value: '";
+
+	/** The Constant BOLD_INPUT_BY_XPATH. */
+	private static final String BOLD_INPUT_BY_XPATH = "<b>INPUT   </b> by xpath $(\"";
+
 	/** The name. */
-	protected String name = "";
+	private String name = "";
 
 	/** The failed. */
-	protected boolean failed;
+	private boolean failed;
 
-	/** The browser. */
-	protected static String browser;
+	/** The getDriver(). */
+	private static RemoteWebDriver driver;
 
-	/** The web el. */
-	protected WebElement webEl;
-
-	/** The test environment. */
-//	private String testEnvironment = ""; // eg dev, prod
-
-	/** The mandant. */
-	private String mandant = ""; // eg dev, prod
-
-	/** The produkt. */
-	private String produkt = ""; // eg mtours
+	/** The web element. */
+	private WebElement webElement;
 
 	/** The test data path. */
 	private String testDataPath;
 
+	/** The proxy. */
+	private static String proxy;
+
+	/** The proxy user. */
+	private static String proxyUser;
+
+	/** The proxy pass. */
+	private static String proxyPass;
+
 	/** The driver loaded. */
 	private static boolean driverLoaded = false;
 	
+	/**
+	 * Checks if is failed.
+	 *
+	 * @return true, if is failed
+	 */
+	public boolean isFailed() {
+		return failed;
+	}
+
+	/**
+	 * Sets the failed.
+	 *
+	 * @param failed the new failed
+	 */
+	public void setFailed(boolean failed) {
+		this.failed = failed;
+	}
+
+	/**
+	 * Gets the driver.
+	 *
+	 * @return the driver
+	 */
+	public static RemoteWebDriver getDriver() {
+		return driver;
+	}
+
+	/**
+	 * Sets the driver.
+	 *
+	 * @param driver the new driver
+	 */
+	public static void setDriver(RemoteWebDriver driver) {
+		SeleniumHelper.driver = driver;
+	}
+
+	/**
+	 * Gets the web element.
+	 *
+	 * @return the web element
+	 */
+	public WebElement getWebElement() {
+		return webElement;
+	}
+
+	/**
+	 * Sets the web element.
+	 *
+	 * @param webElement the new web element
+	 */
+	public void setWebElement(WebElement webElement) {
+		this.webElement = webElement;
+	}
+
+	/**
+	 * Gets the test data path.
+	 *
+	 * @return the test data path
+	 */
+	public String getTestDataPath() {
+		return testDataPath;
+	}
+
+	/**
+	 * Sets the test data path.
+	 *
+	 * @param testDataPath the new test data path
+	 */
+	public void setTestDataPath(String testDataPath) {
+		this.testDataPath = testDataPath;
+	}
+
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Sets the name.
+	 *
+	 * @param name the new name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * Checks if is driver loaded.
+	 *
+	 * @return true, if is driver loaded
+	 */
 	public static boolean isDriverLoaded() {
 		return driverLoaded;
 	}
 
+	/**
+	 * Sets the driver loaded.
+	 *
+	 * @param driverLoaded the new driver loaded
+	 */
 	public static void setDriverLoaded(boolean driverLoaded) {
 		SeleniumHelper.driverLoaded = driverLoaded;
 	}
 
-	public void setMandant(String mandant) {
-		this.mandant = mandant;
-	}
-
-	public void setProdukt(String produkt) {
-		this.produkt = produkt;
-	}
-
+	/**
+	 * Gets the browser.
+	 *
+	 * @return the browser
+	 */
 	public static String getBrowser() {
+		String browser = System.getProperty("browser");
+		if (browser == null || browser.isEmpty()) {
+			browser ="firefox";
+		}
 		return browser;
-	}
-
-	public static void setBrowser(String browser) {
-		SeleniumHelper.browser = browser;
 	}
 
 	/**
@@ -138,7 +231,61 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	@Override
 	public void driverGet(String url) {
-		driver.get(url);
+		getDriver().get(url);
+	}
+
+	/**
+	 * Gets the proxy.
+	 *
+	 * @return the proxy
+	 */
+	public static String getProxy() {
+		return proxy;
+	}
+
+	/**
+	 * Sets the proxy.
+	 *
+	 * @param proxy the new proxy
+	 */
+	public static void setProxy(String proxy) {
+		SeleniumHelper.proxy = proxy;
+	}
+
+	/**
+	 * Gets the proxy user.
+	 *
+	 * @return the proxy user
+	 */
+	public static String getProxyUser() {
+		return proxyUser;
+	}
+
+	/**
+	 * Sets the proxy user.
+	 *
+	 * @param proxyUser the new proxy user
+	 */
+	public static void setProxyUser(String proxyUser) {
+		SeleniumHelper.proxyUser = proxyUser;
+	}
+
+	/**
+	 * Gets the proxy pass.
+	 *
+	 * @return the proxy pass
+	 */
+	public static String getProxyPass() {
+		return proxyPass;
+	}
+
+	/**
+	 * Sets the proxy pass.
+	 *
+	 * @param proxyPass the new proxy pass
+	 */
+	public static void setProxyPass(String proxyPass) {
+		SeleniumHelper.proxyPass = proxyPass;
 	}
 
 	/**
@@ -151,9 +298,9 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	@Override
 	public boolean driverSwitchToIFrame(String name) {
-		List<WebElement> iframes = driver.findElements(By.tagName("iframe"));
+		List<WebElement> iframes = getDriver().findElements(By.tagName("iframe"));
 		if (!iframes.isEmpty()) {
-			driver.switchTo().frame(name);
+			getDriver().switchTo().frame(name);
 			return true;
 		}
 		return false;
@@ -166,7 +313,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	@Override
 	public void driverSwitchToDefaultContent() {
-		driver.switchTo().defaultContent();
+		getDriver().switchTo().defaultContent();
 	}
 
 	/**
@@ -176,11 +323,11 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	@Override
 	public void driverImplicitlyWait(long value) {
-		driver.manage().timeouts().implicitlyWait(Duration.ofMillis(value));
+		getDriver().manage().timeouts().implicitlyWait(Duration.ofMillis(value));
 	}
 
 	/**
-	 * Setup driver.
+	 * Setup getDriver().
 	 * 
 	 * see:
 	 * https://github.com/bharadwaj-pendyala/selenium-java-lean-test-achitecture
@@ -189,37 +336,41 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @return the object
 	 */
 	public Object setupDriver() {
-		setBrowser(System.getProperty("browser"));
-		if (getBrowser() == null || getBrowser().isEmpty()) {
-			setBrowser("firefox");
+		System.setProperty(WDM_CACHE_PATH, "src/test/resources");
+		String wdmCachePath = System.getProperty(WDM_CACHE_PATH);
+		if (wdmCachePath != null && !wdmCachePath.isEmpty()) {
+			System.setProperty(WDM_CACHE_PATH, wdmCachePath);
 		}
+		setProxy(System.getProperty("proxy"));
+		setProxyUser(System.getProperty("proxyUser"));
+		setProxyPass(System.getProperty("proxyPass"));
 
-		if ("chrome".equalsIgnoreCase(browser)) {
+		if ("chrome".equalsIgnoreCase(getBrowser())) {
 			setupChromeDriver();
-			if (!driverLoaded) {
-				logSelenium.info(() -> "using local chromedriver: " + System.getProperty("webdriver.chrome.driver") + System.lineSeparator());
+			if (!isDriverLoaded()) {
+				logSelenium.info(() -> "using local chromedriver: " + System.getProperty("webgetDriver().chrome.driver") + System.lineSeparator());
 				setDriverLoaded(true);
 			}
-		} else if ("firefox".equalsIgnoreCase(browser)) {
+		} else if ("firefox".equalsIgnoreCase(getBrowser())) {
 			setupFirefoxDriver();
-			if (!driverLoaded) {
-				logSelenium.info(() -> "using local geckodriver: " + System.getProperty("webdriver.gecko.driver") + System.lineSeparator());
+			if (!isDriverLoaded()) {
+				logSelenium.info(() -> "using local geckodriver: " + System.getProperty("webgetDriver().gecko.driver") + System.lineSeparator());
 				setDriverLoaded(true);
 			}
 		}
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+		getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
 		return driver;
 	}
 
 	/**
-	 * Setup chrome driver.
+	 * Setup chrome getDriver().
 	 */
 	private static void setupChromeDriver() {
-		System.setProperty("webdriver.chrome.silentLogging", "true");
-		System.setProperty("webdriver.chrome.verboseLogging", "false");
-		System.setProperty("webdriver.chrome.silentOutput", "true");
+		System.setProperty("webgetDriver().chrome.silentLogging", "true");
+		System.setProperty("webgetDriver().chrome.verboseLogging", "false");
+		System.setProperty("webgetDriver().chrome.silentOutput", "true");
 
-		System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
+		System.setProperty("webgetDriver().chrome.driver", "src/test/resources/chromegetDriver().exe");
 
 		ChromeOptions chromeOptions = new ChromeOptions();
 		chromeOptions.setHeadless(true);
@@ -228,20 +379,12 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	}
 
 	/**
-	 * Setup firefox driver.
+	 * Setup firefox getDriver().
 	 */
 	protected static void setupFirefoxDriver() {
-		System.setProperty(WDM_CACHE_PATH, "src/test/resources");
-		String wdmCachePath = System.getProperty(WDM_CACHE_PATH);
-		if (wdmCachePath != null && !wdmCachePath.isEmpty()) {
-			System.setProperty(WDM_CACHE_PATH, wdmCachePath);
-		}
-		String proxy = System.getProperty("proxy");
-		String proxyUser = System.getProperty("proxyUser");
-		String proxyPass = System.getProperty("proxyPass");
 		if (driver == null) {
-			if (proxyUser != null && !proxyUser.isEmpty()) {
-				io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver().proxyUser(proxyUser).proxyPass(proxyPass).proxy(proxy).setup();
+			if (getProxyUser() != null && !getProxyUser().isEmpty()) {
+				io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver().proxyUser(getProxyUser()).proxyPass(getProxyPass()).proxy(getProxy()).setup();
 			} else {
 				io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver().setup();
 			}
@@ -256,7 +399,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	public void closeBrowser() {
 		try {
 			if (driver != null) {
-				driver.quit();
+				getDriver().quit();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -271,15 +414,15 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @return true, if successful
 	 */
 	public boolean existsByXpath(String xpath, long timeout) {
-		webEl = null;
+		setWebElement(null);
 		driverImplicitlyWait(3000);
-		List<WebElement> webEls = driver.findElements(By.xpath(xpath));
+		List<WebElement> webEls = getDriver().findElements(By.xpath(xpath));
 		if (!webEls.isEmpty()) {
-			webEl = webEls.get(0);
+			setWebElement(webEls.get(0));
 			WebDriverWait wa = new WebDriverWait(driver, Duration.ofSeconds(timeout));
-			webEl = wa.until(ExpectedConditions.elementToBeClickable(webEl));
+			setWebElement(wa.until(ExpectedConditions.elementToBeClickable(getWebElement())));
 		}
-		return webEl != null;
+		return getWebElement() != null;
 	}
 
 	/**
@@ -290,7 +433,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	@Override
 	public boolean existsByXpath(String xpath) {
-		return existsByXpath(xpath, driver.manage().timeouts().getImplicitWaitTimeout().getSeconds());
+		return existsByXpath(xpath, getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds());
 	}
 
 	/**
@@ -349,7 +492,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @return true, if successful
 	 */
 	public boolean existsByXpath(String xpath, boolean reportFailed) {
-		return existsByXpath(xpath, reportFailed, driver.manage().timeouts().getImplicitWaitTimeout().getSeconds());
+		return existsByXpath(xpath, reportFailed, getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds());
 	}
 	
 	/**
@@ -382,50 +525,50 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	@Override
 	public void clickByXpath(String xpath, String value) {
-		webEl = driver.findElement(By.xpath(xpath));
-		if (webEl.isEnabled()) {
+		setWebElement(getDriver().findElement(By.xpath(xpath)));
+		if (getWebElement().isEnabled()) {
 			if (CLICKKEY.equals(value)) {
-				webEl.click();
+				getWebElement().click();
 			} else {
 				// The user-facing API for emulating complex user gestures. 
 				// Use this class rather than using the Keyboard or Mouse directly
-				Actions action = new Actions(driver);
+				Actions action = new Actions(getDriver());
 				if (RIGHTCLICK.equals(value)) {
 					// context-click at middle of the given element
-					action.contextClick(webEl).perform();
+					action.contextClick(getWebElement()).perform();
 				} else if (ALTCLICK.equals(value)) {
 					action
 			        .keyDown(Keys.ALT)
-			        .click(webEl)
+			        .click(getWebElement())
 			        .keyUp(Keys.ALT)
 			        .perform();
 				} else if (CONTROLCLICK.equals(value)) {
 					action
 			        .keyDown(Keys.CONTROL)
-			        .click(webEl)
+			        .click(getWebElement())
 			        .keyUp(Keys.CONTROL)
 			        .perform();
 				} else if (DOUBLECLICK.equals(value)) {
-					action.doubleClick(webEl).perform();
+					action.doubleClick(getWebElement()).perform();
 				} else if (LONGCLICK.equals(value)) {
 					// Clicks (without releasing) in the middle of the given element
-					action.clickAndHold(webEl).perform();
+					action.clickAndHold(getWebElement()).perform();
 					wait(2000);
 					// Releases the depressed left mouse button, in the middle of the given element
-					action.release(webEl).perform();
+					action.release(getWebElement()).perform();
 				} else if (MOUSEOVER.equals(value)) {
-					action.moveToElement(webEl).build().perform();
+					action.moveToElement(getWebElement()).build().perform();
 				} else if (SHIFTCLICK.equals(value)) {
 					action
 			        .keyDown(Keys.SHIFT)
-			        .click(webEl)
+			        .click(getWebElement())
 			        .keyUp(Keys.SHIFT)
 			        .perform();
 				}
 			}
 			reportStepPass("<b>CLICK   </b> by xpath $(\"" + xpath + "\")");
 		} else {
-			reportStepFail(test.addScreenCaptureFromPath(screenshotFile(driver)) + "<b>CLICK   </b> by xpath $(\"" + xpath + "\")");
+			reportStepFail(getTest().addScreenCaptureFromPath(screenshotFile(driver)) + "<b>CLICK   </b> by xpath $(\"" + xpath + "\")");
 		}
 	}
 
@@ -477,41 +620,41 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @param secret          the secret
 	 */
 	public void inputByXpath(String xpath, String className, String value, boolean secret) {
-		webEl = null;
+		setWebElement(null);
 		try {
 			if (className != null) {
-				webEl = driver.findElement(By.xpath(xpath));
-				webEl = waitUntilClickable(webEl, 30);
+				setWebElement(getDriver().findElement(By.xpath(xpath)));
+				setWebElement(waitUntilClickable(getWebElement(), 30));
 			} 
-			if (webEl == null) {
+			if (getWebElement() == null) {
 					logSecret(xpath + "(unknown) -> not done ", getSecretString(value, secret), secret);
-					reportStepFail(node.addScreenCaptureFromPath(screenshotFile(driver)) + "<b>input</b> ("
+					reportStepFail(getNode().addScreenCaptureFromPath(screenshotFile(driver)) + "<b>input</b> ("
 							+ xpath + ", '" + getSecretString(value, secret) + ")'");
 			}
 			if (EDITFIELD.equalsIgnoreCase(className)
 					|| NUMERICFIELD.equalsIgnoreCase(className)
 					|| SLIDER.equalsIgnoreCase(className) // type='range'
 					|| FILEFIELD.equalsIgnoreCase(className)) {
-				webEl.click();
-				webEl.clear();
-				webEl.sendKeys(value);
+				getWebElement().click();
+				getWebElement().clear();
+				getWebElement().sendKeys(value);
 				reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + getSecretString(value, secret) + "'");
 				logSecret(xpath, value, secret);
 			} else  if (LISTBOX.equalsIgnoreCase(className)) {
-				new Select(webEl).selectByVisibleText(value);
+				new Select(getWebElement()).selectByVisibleText(value);
 				reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + value + "'");
 			} else if (CHECKBOX.equalsIgnoreCase(className)
 					|| RADIOBUTTON.equalsIgnoreCase(className)) {
-				if (webEl.isSelected() && "OFF".equalsIgnoreCase(value) ||
-						!webEl.isSelected() && "ON".equalsIgnoreCase(value)) {
-					webEl.click();
+				if (getWebElement().isSelected() && "OFF".equalsIgnoreCase(value) ||
+						!getWebElement().isSelected() && "ON".equalsIgnoreCase(value)) {
+					getWebElement().click();
 					reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + value + "'");
 				} else {
 					throw new NotFoundException(BOLD_INPUT_BY_XPATH + xpath + "\"), value not found: '" + value + "'");
 				}
 			} else if (RADIOGROUP.equalsIgnoreCase(className)) {
 				int option = Integer.parseInt(value);
-				List<WebElement> radios = driver.findElements(By.xpath(xpath));
+				List<WebElement> radios = getDriver().findElements(By.xpath(xpath));
 				if (option > 0 && option <= radios.size()) {
 					radios.get(option - 1).click();
 					reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + value + "'");
@@ -522,7 +665,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 				throw new NotFoundException("type of webelement unknown: '" + className + "'");
 			}
 		} catch (IOException e) {
-			reportStepFail(node.addScreenCaptureFromPath(screenshotFile(driver)) + 
+			reportStepFail(getNode().addScreenCaptureFromPath(screenshotFile(driver)) + 
 					"<b>INPUT   </b> (" + xpath + ", '" + getSecretString(value, secret) + ")'");
 		}
 	}
@@ -574,8 +717,8 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	@Override
 	public String outputByXpath(String xpath) {
-		webEl = driver.findElement(By.xpath(xpath));
-		String output = webEl.getAttribute("textContent");
+		setWebElement(getDriver().findElement(By.xpath(xpath)));
+		String output = getWebElement().getAttribute("textContent");
 		reportStepPass("<b>OUTPUT   </b> by xpath $(\"" + xpath + "\")<br>text: '" + output + "'");
 		return output;
 	}
@@ -596,7 +739,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 *
 	 * @param condition the condition
 	 * @param description the description
-	 * @return 
+	 * @return true, if successful
 	 */
 	@Override
 	public boolean validate(boolean condition, String description) {
@@ -631,8 +774,8 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	@Override
 	public void dragAndDropByXpath(String xpathFrom, String xpathTo) {
-		WebElement webElFrom = driver.findElement(By.xpath(xpathFrom));	
-		WebElement webElTo = driver.findElement(By.xpath(xpathTo));	
+		WebElement webElFrom = getDriver().findElement(By.xpath(xpathFrom));	
+		WebElement webElTo = getDriver().findElement(By.xpath(xpathTo));	
 		// see: https://www.selenium.dev/documentation/webdriver/actions_api/mouse/
 		new Actions(driver)
         .dragAndDrop(webElFrom, webElTo)
@@ -771,18 +914,19 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @return Das Testdaten Excel als File.
 	 */
 	public File getTestDataFile() {
-		return new File(testDataPath + File.separator + TESTDATA_XLS);
+		return new File(getTestDataPath() + File.separator + TESTDATA_XLS);
 	}
 
 	/**
 	 * Sets the test platform properties.
 	 *
 	 * @param filePath the new test platform properties
-	 * @throws IOException 
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private void setTestPlatformProperties(String filePath) throws IOException {
-		Reader inStream = new InputStreamReader(new FileInputStream(new File(filePath)));
-		testPlatformProperties.load(inStream);
+		try (Reader inStream = new InputStreamReader(new FileInputStream(new File(filePath)))) {
+			testPlatformProperties.load(inStream);
+		}
 	}
 
 	/**
@@ -792,8 +936,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	@Override
 	public String getMandant() {
-		mandant = System.getProperty(MANDANTKEY, "");
-		return mandant;
+		return System.getProperty(MANDANTKEY, "");
 	}
 
 	/**
@@ -813,15 +956,14 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	@Override
 	public String getProdukt() {
-		produkt = System.getProperty(PRODUKTKEY, "");
-		return produkt;
+		return System.getProperty(PRODUKTKEY, "");
 	}
 
 	/**
 	 * Common setup.
 	 *
 	 * @return the selenium helper
-	 * @throws IOException 
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public SeleniumHelper commonSetup() throws IOException {
 		getProdukt();
@@ -832,9 +974,9 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 				mandantTestEnvironment = File.separator + getMandant() + "-" + getTestEnvironment();
 			}
 		}
-		testDataPath = Paths.get("").toAbsolutePath().toString() + File.separator + TESTDATADIR
-				+ mandantTestEnvironment;
-		setTestPlatformProperties(testDataPath + File.separator + TEST_PLATFORM_PROPERTIES);
+		setTestDataPath(Paths.get("").toAbsolutePath().toString() + File.separator + TESTDATADIR
+				+ mandantTestEnvironment);
+		setTestPlatformProperties(getTestDataPath() + File.separator + TEST_PLATFORM_PROPERTIES);
 		return new SeleniumHelper();
 	}
 
@@ -864,12 +1006,10 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	/**
 	 * Screenshot base 64.
 	 *
-	 * @param driver the driver
 	 * @return the string
-	 * @throws Exception the exception
 	 */
-	public static String screenshotBase64(TakesScreenshot driver) {
-		String scnShot = driver.getScreenshotAs(OutputType.BASE64);
+	public static String screenshotBase64() {
+		String scnShot = getDriver().getScreenshotAs(OutputType.BASE64);
 		return "data:image/jpg;base64, " + scnShot;
 
 	}

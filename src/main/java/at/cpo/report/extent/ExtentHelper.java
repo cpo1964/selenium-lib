@@ -33,7 +33,6 @@ import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
@@ -49,22 +48,43 @@ import at.cpo.report.ReportInterface;
 public class ExtentHelper implements ReportInterface {
 
 	/** The logger. */
-	Logger log = LogManager.getLogger(this.getClass().getSimpleName());
-
-	/** The driver. */
-	protected static RemoteWebDriver driver;
+	private static Logger logExtent = LogManager.getLogger(ExtentHelper.class.getSimpleName());
 
 	/** The test. */
-	protected static ExtentTest test;
+	private static ExtentTest test;
 
-	/** The node. */
-	protected static ExtentTest node;
+	/** The getNode(). */
+	private static ExtentTest node;
 
-	/** The report. */
-	protected static ExtentReports report = ExtentHelper.prepareExtentReport();
+	/** The getReport(). */
+	private static ExtentReports report = ExtentHelper.prepareExtentReport();
 	
+	public static ExtentTest getTest() {
+		return test;
+	}
+
+	public static void setTest(ExtentTest test) {
+		ExtentHelper.test = test;
+	}
+
+	public static ExtentTest getNode() {
+		return node;
+	}
+
+	public static void setNode(ExtentTest node) {
+		ExtentHelper.node = node;
+	}
+
+	public static ExtentReports getReport() {
+		return report;
+	}
+
+	public static void setReport(ExtentReports report) {
+		ExtentHelper.report = report;
+	}
+
 	/**
-	 * Prepare extent report.
+	 * Prepare extent getReport().
 	 *
 	 * @return the extent reports
 	 */
@@ -74,7 +94,7 @@ public class ExtentHelper implements ReportInterface {
 		createDirectories(runResultsDir+ File.separatorChar + "Resources"+ File.separatorChar + "Snapshots");
 		ExtentSparkReporter r = new ExtentSparkReporter(runResultsDir + File.separatorChar + "runresults.html");
 		report = new ExtentReports();
-		report.attachReporter(r);
+		getReport().attachReporter(r);
 		return report;
 	}
 
@@ -127,13 +147,13 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	public void reportCreateTest(String msg) {
 		createTest(msg);
-		log.info("##################");
-		log.info(() -> "## " + msg);
-		log.info("##################");
+		logExtent.info("##################");
+		logExtent.info(() -> "## " + msg);
+		logExtent.info("##################");
 	}
 
 	private static void createTest(String msg) {
-		test = report.createTest("<b>" + msg + "</b>");
+		setTest(getReport().createTest("<b>" + msg + "</b>"));
 	}
 
 	/**
@@ -143,7 +163,7 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	public void reportTestFail(String msg) {
 		test.log(Status.FAIL, msg);
-		log.error(() -> msg.replace("<br>", System.lineSeparator()));
+		logExtent.error(() -> msg.replace("<br>", System.lineSeparator()));
 	}
 
 	/**
@@ -153,7 +173,7 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	public void reportTestPass(String msg) {
 		test.log(Status.PASS, msg);
-		log.info(() -> msg.replace("<br>", System.lineSeparator()));
+		logExtent.info(() -> msg.replace("<br>", System.lineSeparator()));
 	}
 
 	/**
@@ -163,21 +183,21 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	public void reportTestInfo(String msg) {
 		test.log(Status.INFO, msg);
-		log.info(() -> msg.replace("<br>", System.lineSeparator()));
+		logExtent.info(() -> msg.replace("<br>", System.lineSeparator()));
 	}
 
 	/**
-	 * Test create node.
+	 * Test create getNode().
 	 *
 	 * @param msg the msg
 	 */
 	public void reportCreateStep(String msg) {
 		createStep(msg);
-		log.info(() -> "### " + msg.replace("<br>", System.lineSeparator()));
+		logExtent.info(() -> "### " + msg.replace("<br>", System.lineSeparator()));
 	}
 
 	private static void createStep(String msg) {
-		node = test.createNode("<b>" + msg + "</b>");
+		setNode(test.createNode("<b>" + msg + "</b>"));
 	}
 
 	/**
@@ -186,9 +206,9 @@ public class ExtentHelper implements ReportInterface {
 	 * @param msg the msg
 	 */
 	public void reportStepFail(String msg) {
-		node.log(Status.FAIL, msg);
+		getNode().log(Status.FAIL, msg);
 		final String msgRP = msg.replace("<b>", "");
-		log.error(() -> msgRP.replace("</b>", ""));
+		logExtent.error(() -> msgRP.replace("</b>", ""));
 	}
 
 	/**
@@ -197,9 +217,9 @@ public class ExtentHelper implements ReportInterface {
 	 * @param msg the msg
 	 */
 	public void reportStepPass(String msg) {
-		node.log(Status.PASS, msg);
+		getNode().log(Status.PASS, msg);
 		final String msgRP = msg.replace("<b>", "");
-		log.info(() -> msgRP.replace("</b>", ""));
+		logExtent.info(() -> msgRP.replace("</b>", ""));
 	}
 
 	/**
@@ -208,7 +228,7 @@ public class ExtentHelper implements ReportInterface {
 	 * @param screenShot the screen shot
 	 */
 	public void reportStepFailScreenshot(String screenShot) {
-		screenshotNode(screenShot, node, Status.FAIL);
+		screenshotNode(screenShot, Status.FAIL);
 	}
 
 	/**
@@ -217,28 +237,28 @@ public class ExtentHelper implements ReportInterface {
 	 * @param screenShot the screen shot
 	 */
 	public void reportStepPassScreenshot(String screenShot) {
-		screenshotNode(screenShot, node, Status.PASS);
+		screenshotNode(screenShot, Status.PASS);
 	}
 
 	/**
 	 * Tear down extent.
 	 */
 	public void reportTearDown() {
-		report.flush();
+		getReport().flush();
 	}
 
 	/**
-	 * Screenshot node.
+	 * Screenshot getNode().
 	 *
 	 * @param screenShot the screen shot
 	 * @param node   the node
 	 * @param s      the s
 	 */
-	public void screenshotNode(String screenShot, ExtentTest node, Status s) {
+	public void screenshotNode(String screenShot, Status s) {
 		// ExtentReport 5
-		Media media = node.addScreenCaptureFromPath(screenShot).getModel().getMedia().get(0);
-		node.getModel().getMedia().clear();
-		node.log(s, media);
+		Media media = getNode().addScreenCaptureFromPath(screenShot).getModel().getMedia().get(0);
+		getNode().getModel().getMedia().clear();
+		getNode().log(s, media);
 	}
 
 	/**
