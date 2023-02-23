@@ -30,11 +30,16 @@ Libs in use:
 If needed add additional proxy settings with your credentials:
 -Dproxy=yourProxyHost -DproxyUser=yourProxyUser -DproxyPass=yourProxyPassword
 
-There is no need to download any selenium browser driver - this is done like magic by the maven artifact io.github.bonigarcia.webdrivermanager
-The selenium drivers will be loaded at runtime automatically from:
-src/test/resources
-If you wish to define a different directory for the download of selenium browser drivers, 
-then you can set the system property 'wdm.cachePath' as maven parameter, eg:
+There is no need to download any selenium browser driver - this is done like magic by the maven artifact io.github.bonigarcia.webdrivermanager<br>
+The selenium drivers will be loaded at runtime automatically from:<br>
+src/test/resources<br>
+
+Starting a browser driver you maybe will see warnings in the console like 'Unable to find an exact match for CDP version XXX'.<br>
+To avoid this warning the usage of the maven artifact 'org.seleniumhq.selenium.selenium-devtools-vXXX' will help.<br>
+XXX stands for the used browser version.
+
+If you wish to define a different directory for the download of selenium browser drivers,<br>
+then you can set the system property 'wdm.cachePath' as maven parameter, eg:<br>
 -Dwdm.cachePath=src/test/MyDriverDir
 
 <b>Following sites will be tested by above mvn calls</b><br>
