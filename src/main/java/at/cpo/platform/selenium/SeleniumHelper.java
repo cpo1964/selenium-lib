@@ -361,7 +361,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			}
 		}
 		getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-		return driver;
+		return getDriver();
 	}
 
 	/**
@@ -377,14 +377,14 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		ChromeOptions chromeOptions = new ChromeOptions();
 		chromeOptions.setHeadless(true);
 
-		driver = new ChromeDriver(chromeOptions);
+		setDriver(new ChromeDriver(chromeOptions));
 	}
 
 	/**
 	 * Setup firefox driver.
 	 */
 	protected static void setupFirefoxDriver() {
-		if (driver == null) {
+		if (getDriver() == null) {
 			if (getProxyUser() != null && !getProxyUser().isEmpty()) {
 				io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver().proxyUser(getProxyUser()).proxyPass(getProxyPass()).proxy(getProxy()).setup();
 			} else {
@@ -398,9 +398,9 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		    firefoxBinary.addCommandLineOptions("--headless");
 		    FirefoxOptions firefoxOptions = new FirefoxOptions();
 		    firefoxOptions.setBinary(firefoxBinary);
-		    driver = new FirefoxDriver(firefoxOptions);
+		    setDriver(new FirefoxDriver(firefoxOptions));
 		} else {
-			driver = new FirefoxDriver();
+			setDriver(new FirefoxDriver());
 		}
 	}
 
@@ -409,7 +409,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	public void closeBrowser() {
 		try {
-			if (driver != null) {
+			if (getDriver() != null) {
 				getDriver().quit();
 			}
 		} catch (Exception e) {
@@ -430,7 +430,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		List<WebElement> webEls = getDriver().findElements(By.xpath(xpath));
 		if (!webEls.isEmpty()) {
 			setWebElement(webEls.get(0));
-			WebDriverWait wa = new WebDriverWait(driver, Duration.ofSeconds(timeout));
+			WebDriverWait wa = new WebDriverWait(getDriver(), Duration.ofSeconds(timeout));
 			setWebElement(wa.until(ExpectedConditions.elementToBeClickable(getWebElement())));
 		}
 		return getWebElement() != null;
@@ -579,7 +579,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			}
 			reportStepPass("<b>CLICK   </b> by xpath $(\"" + xpath + "\")");
 		} else {
-			reportStepFail(getTest().addScreenCaptureFromPath(screenshotFile(driver)) + "<b>CLICK   </b> by xpath $(\"" + xpath + "\")");
+			reportStepFail(getTest().addScreenCaptureFromPath(screenshotFile()) + "<b>CLICK   </b> by xpath $(\"" + xpath + "\")");
 		}
 	}
 
@@ -639,7 +639,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			} 
 			if (getWebElement() == null) {
 					logSecret(xpath + "(unknown) -> not done ", getSecretString(value, secret), secret);
-					reportStepFail(getNode().addScreenCaptureFromPath(screenshotFile(driver)) + "<b>input</b> ("
+					reportStepFail(getNode().addScreenCaptureFromPath(screenshotFile()) + "<b>input</b> ("
 							+ xpath + ", '" + getSecretString(value, secret) + ")'");
 			}
 			if (EDITFIELD.equalsIgnoreCase(className)
@@ -676,7 +676,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 				throw new NotFoundException("type of webelement unknown: '" + className + "'");
 			}
 		} catch (IOException e) {
-			reportStepFail(getNode().addScreenCaptureFromPath(screenshotFile(driver)) + 
+			reportStepFail(getNode().addScreenCaptureFromPath(screenshotFile()) + 
 					"<b>INPUT   </b> (" + xpath + ", '" + getSecretString(value, secret) + ")'");
 		}
 	}
@@ -758,7 +758,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			reportStepPass("<b>VALIDATE</b> '" + description + "' - " + condition);
 		} else {
 			reportStepFail("<b>VALIDATE</b> '" + description + "' - " + condition);
-			reportStepFailScreenshot(screenshotFile(driver));
+			reportStepFailScreenshot(screenshotFile());
 		}
 		return condition;
 	}
@@ -788,7 +788,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		WebElement webElFrom = getDriver().findElement(By.xpath(xpathFrom));	
 		WebElement webElTo = getDriver().findElement(By.xpath(xpathTo));	
 		// see: https://www.selenium.dev/documentation/webdriver/actions_api/mouse/
-		new Actions(driver)
+		new Actions(getDriver())
         .dragAndDrop(webElFrom, webElTo)
         .perform();	
 	}
@@ -831,7 +831,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @param timeoutSeconds the timeout seconds
 	 */
 	public static void waitUntilFullyLoaded(int timeoutSeconds) {
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
+		WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(timeoutSeconds));
 		wait.until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState")
 				.equals("complete"));
 	}
@@ -844,7 +844,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @return the web element
 	 */
 	public static WebElement waitUntilClickable(WebElement webEl, int timeoutSeconds) {
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
+		WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(timeoutSeconds));
 		return wait.until(ExpectedConditions.elementToBeClickable(webEl));
 	}
 
@@ -998,9 +998,10 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @param driver the driver
 	 * @return the string
 	 */
-	public String screenshotFile(Object driver) {
+//	public String screenshotFile(Object driver) { // TODO
+	public String screenshotFile() { // TODO
 		long time = new Date().getTime();
-		File source = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		File source = ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.FILE);
 		String snapshotsDir = Paths.get("").toAbsolutePath().toString() + File.separator + "RunResults" + File.separator
 				+ "Resources" + File.separator + "Snapshots";
 		try {

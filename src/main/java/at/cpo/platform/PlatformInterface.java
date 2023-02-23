@@ -385,7 +385,7 @@ public interface PlatformInterface extends ReportInterface {
 	 * @param driver the driver
 	 * @return the string
 	 */
-	String screenshotFile(Object driver);
+	String screenshotFile();
 	
 	// other stuff
 

@@ -335,14 +335,14 @@ public class PlatformHelper implements PlatformInterface {
 	 * Screenshot step pass.
 	 */
 	public void reportStepPassScreenshot() {
-		platform.reportStepPassScreenshot(platform.screenshotFile(driver));
+		platform.reportStepPassScreenshot(platform.screenshotFile());
 	}
 
 	/**
 	 * Screenshot step fail.
 	 */
 	public void reportStepFailScreenshot() {
-		platform.reportStepFailScreenshot(platform.screenshotFile(driver));
+		platform.reportStepFailScreenshot(platform.screenshotFile());
 	}
 
 	/**
@@ -525,8 +525,8 @@ public class PlatformHelper implements PlatformInterface {
 	 * @return the string
 	 */
 	@Override
-	public String screenshotFile(Object driver) {
-		return platform.screenshotFile(driver);
+	public String screenshotFile() {
+		return platform.screenshotFile();
 	}
 
 }
