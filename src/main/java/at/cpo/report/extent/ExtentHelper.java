@@ -58,7 +58,7 @@ public class ExtentHelper implements ReportInterface {
 
 	/** The getReport(). */
 	private static ExtentReports report = ExtentHelper.prepareExtentReport();
-	
+
 	public static ExtentTest getTest() {
 		return test;
 	}
@@ -91,7 +91,7 @@ public class ExtentHelper implements ReportInterface {
 	public static ExtentReports prepareExtentReport() {
 		String runResultsDir = Paths.get("").toAbsolutePath().toString() + File.separatorChar + "RunResults";
 		deleteDirectory(runResultsDir);
-		createDirectories(runResultsDir+ File.separatorChar + "Resources"+ File.separatorChar + "Snapshots");
+		createDirectories(runResultsDir + File.separatorChar + "Resources" + File.separatorChar + "Snapshots");
 		ExtentSparkReporter r = new ExtentSparkReporter(runResultsDir + File.separatorChar + "runresults.html");
 		report = new ExtentReports();
 		getReport().attachReporter(r);
@@ -118,23 +118,26 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	private static void deleteDirectory(String path) {
 		Path index = Paths.get(path);
-		try (Stream<Path> stream = Files.walk(index);) {
-			if (!Files.exists(index)) {
+		if (!Files.exists(index)) {
+			try {
 				Files.createDirectories(index);
-			} else {
-				// as the file tree is traversed depth-first and 
-				// that deleted dirs have to be empty
-				stream.sorted(Comparator.reverseOrder()).forEach(t -> {
-					try {
-						Files.delete(t);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				});
-				if (!Files.exists(index)) {
-					Files.createDirectories(index);
-				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
+		}
+		try (Stream<Path> stream = Files.walk(index);) {
+			// as the file tree is traversed depth-first and
+			// that deleted dirs have to be empty
+			stream.sorted(Comparator.reverseOrder()).forEach(t -> {
+				try {
+					Files.delete(t);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			});
+//			if (!Files.exists(index)) {
+//				Files.createDirectories(index);
+//			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -251,8 +254,8 @@ public class ExtentHelper implements ReportInterface {
 	 * Screenshot getNode().
 	 *
 	 * @param screenShot the screen shot
-	 * @param node   the node
-	 * @param s      the s
+	 * @param node       the node
+	 * @param s          the s
 	 */
 	public void screenshotNode(String screenShot, Status s) {
 		// ExtentReport 5

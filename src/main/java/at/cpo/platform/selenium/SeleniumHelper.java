@@ -49,7 +49,9 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -82,7 +84,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	/** The failed. */
 	private boolean failed;
 
-	/** The getDriver(). */
+	/** The driver. */
 	private static RemoteWebDriver driver;
 
 	/** The web element. */
@@ -327,7 +329,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	}
 
 	/**
-	 * Setup getDriver().
+	 * Setup driver.
 	 * 
 	 * see:
 	 * https://github.com/bharadwaj-pendyala/selenium-java-lean-test-achitecture
@@ -348,13 +350,13 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		if ("chrome".equalsIgnoreCase(getBrowser())) {
 			setupChromeDriver();
 			if (!isDriverLoaded()) {
-				logSelenium.info(() -> "using local chromedriver: " + System.getProperty("webgetDriver().chrome.driver") + System.lineSeparator());
+				logSelenium.info(() -> "using local chromedriver: " + System.getProperty("webdriver.chrome.driver") + System.lineSeparator());
 				setDriverLoaded(true);
 			}
 		} else if ("firefox".equalsIgnoreCase(getBrowser())) {
 			setupFirefoxDriver();
 			if (!isDriverLoaded()) {
-				logSelenium.info(() -> "using local geckodriver: " + System.getProperty("webgetDriver().gecko.driver") + System.lineSeparator());
+				logSelenium.info(() -> "using local geckodriver: " + System.getProperty("webdriver.gecko.driver") + System.lineSeparator());
 				setDriverLoaded(true);
 			}
 		}
@@ -363,14 +365,14 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	}
 
 	/**
-	 * Setup chrome getDriver().
+	 * Setup chrome driver.
 	 */
 	private static void setupChromeDriver() {
-		System.setProperty("webgetDriver().chrome.silentLogging", "true");
-		System.setProperty("webgetDriver().chrome.verboseLogging", "false");
-		System.setProperty("webgetDriver().chrome.silentOutput", "true");
+		System.setProperty("webdriver.chrome.silentLogging", "true");
+		System.setProperty("webdriver.chrome.verboseLogging", "false");
+		System.setProperty("webdriver.chrome.silentOutput", "true");
 
-		System.setProperty("webgetDriver().chrome.driver", "src/test/resources/chromegetDriver().exe");
+		System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
 
 		ChromeOptions chromeOptions = new ChromeOptions();
 		chromeOptions.setHeadless(true);
@@ -379,7 +381,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	}
 
 	/**
-	 * Setup firefox getDriver().
+	 * Setup firefox driver.
 	 */
 	protected static void setupFirefoxDriver() {
 		if (driver == null) {
@@ -390,7 +392,16 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			}
 		}
 		System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, "FFLogs.txt");
-		driver = new FirefoxDriver();
+
+		if ("true".equalsIgnoreCase(System.getProperty("headless"))) {
+			FirefoxBinary firefoxBinary = new FirefoxBinary();
+		    firefoxBinary.addCommandLineOptions("--headless");
+		    FirefoxOptions firefoxOptions = new FirefoxOptions();
+		    firefoxOptions.setBinary(firefoxBinary);
+		    driver = new FirefoxDriver(firefoxOptions);
+		} else {
+			driver = new FirefoxDriver();
+		}
 	}
 
 	/**
