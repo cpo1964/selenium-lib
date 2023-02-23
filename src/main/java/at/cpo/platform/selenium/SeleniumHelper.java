@@ -1006,8 +1006,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @param driver the driver
 	 * @return the string
 	 */
-//	public String screenshotFile(Object driver) { // TODO
-	public String screenshotFile() { // TODO
+	public String screenshotFile() {
 		long time = new Date().getTime();
 		File source = ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.FILE);
 		String snapshotsDir = Paths.get("").toAbsolutePath().toString() + File.separator + "RunResults" + File.separator
