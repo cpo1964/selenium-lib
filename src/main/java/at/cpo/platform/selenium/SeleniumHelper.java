@@ -372,10 +372,18 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		System.setProperty("webdriver.chrome.verboseLogging", "false");
 		System.setProperty("webdriver.chrome.silentOutput", "true");
 
-		System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
+		if (getDriver() == null) {
+			if (getProxyUser() != null && !getProxyUser().isEmpty()) {
+				io.github.bonigarcia.wdm.WebDriverManager.chromedriver().proxyUser(getProxyUser()).proxyPass(getProxyPass()).proxy(getProxy()).setup();
+			} else {
+				io.github.bonigarcia.wdm.WebDriverManager.chromedriver().setup();
+			}
+		}
 
 		ChromeOptions chromeOptions = new ChromeOptions();
-		chromeOptions.setHeadless(true);
+		if ("true".equalsIgnoreCase(System.getProperty("headless"))) {
+			chromeOptions.setHeadless(true);
+		}
 
 		setDriver(new ChromeDriver(chromeOptions));
 	}
