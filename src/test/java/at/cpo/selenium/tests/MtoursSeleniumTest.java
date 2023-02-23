@@ -35,7 +35,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.BeforeParam;
 import org.junit.runners.Parameterized.Parameter;
 
 import at.cpo.platform.PlatformHelper;
@@ -89,10 +88,6 @@ public class MtoursSeleniumTest extends PlatformHelper {
 	 */
 	@Parameter(5)
 	public String runlocal;
-
-	@BeforeParam
-	public static void beforeTestsForParameter() {
-	}
 
 	/**
 	 * Gets the data.

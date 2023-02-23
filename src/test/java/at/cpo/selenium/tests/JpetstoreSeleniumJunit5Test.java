@@ -35,7 +35,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.runners.Parameterized.BeforeParam;
 
 import at.cpo.platform.PlatformHelper;
 
@@ -51,10 +50,6 @@ import at.cpo.platform.PlatformHelper;
  * 6) die Methode annotiert mit @AfterClass - zb tearDownAfterClass()
  */
 public class JpetstoreSeleniumJunit5Test extends PlatformHelper {
-
-	@BeforeParam
-	public static void beforeTestsForParameter() {
-	}
 
 	/**
 	 * Sets up before class.
