@@ -27,8 +27,11 @@ Libs in use:
 - call: mvn test
 - or call: mvn test -Dbrowser=firefox -Dmandant=ooe -DtestEnvironment=prod
 
-If needed add additional proxy settings with your credentials:
+If needed add additional proxy settings with your credentials:<br>
 -Dproxy=yourProxyHost -DproxyUser=yourProxyUser -DproxyPass=yourProxyPassword
+
+Use this maven property for hidden browser:<br>
+-Dhidden=true
 
 There is no need to download any selenium browser driver - this is done like magic by the maven artifact io.github.bonigarcia.webdrivermanager<br>
 The selenium drivers will be loaded at runtime automatically from:<br>
