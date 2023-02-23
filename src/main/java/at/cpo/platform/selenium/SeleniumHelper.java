@@ -229,6 +229,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * Setup firefox driver.
 	 */
 	protected static void setupFirefoxDriver() {
+		System.setProperty("wdm.cachePath", "src/test/resources");
 		String proxy = System.getProperty("proxy");
 		String proxyUser = System.getProperty("proxyUser");
 		String proxyPass = System.getProperty("proxyPass");

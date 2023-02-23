@@ -27,6 +27,8 @@ libs in use:
 - call: mvn test
 - or call: mvn test -Dbrowser=firefox -Dmandant=ooe -DtestEnvironment=prod
 
+if needed add additional proxy settings with your credentials: -Dproxy=yourProxyHost -DproxyUser=yourProxyUser -DproxyPass=yourProxyPassword
+
 <b>Following sites will be tested by above mvn calls</b><br>
 
 * web application mtours<br>
