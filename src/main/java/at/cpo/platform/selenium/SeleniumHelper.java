@@ -229,8 +229,15 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * Setup firefox driver.
 	 */
 	protected static void setupFirefoxDriver() {
+		String proxy = System.getProperty("proxy");
+		String proxyUser = System.getProperty("proxyUser");
+		String proxyPass = System.getProperty("proxyPass");
 		if (driver == null) {
-			io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver().setup();
+			if (proxyUser != null && !proxyUser.isEmpty()) {
+				io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver().proxyUser(proxyUser).proxyPass(proxyPass).proxy(proxy).setup();
+			} else {
+				io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver().setup();
+			}
 		}
 		System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, "FFLogs.txt");
 		driver = new FirefoxDriver();
