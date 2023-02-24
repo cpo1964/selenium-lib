@@ -1,0 +1,7 @@
+
+*.ipr
+selenium-lib.iml
+selenium-lib.iws
+*.iml
+*.class
+*.lst
