@@ -139,6 +139,21 @@ public interface PlatformInterface extends ReportInterface {
 	public static String VALUEKEY = "";
 
 	/**
+	 * Common setup.
+	 *
+	 * @return the platform interface
+	 * @throws IOException 
+	 */
+	PlatformInterface commonSetup() throws IOException;
+
+	/**
+	 * Common teardown.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	void commonTeardown() throws IOException;
+
+	/**
 	 * Setup driver.
 	 *
 	 * @return the object
@@ -146,11 +161,18 @@ public interface PlatformInterface extends ReportInterface {
 	Object setupDriver();
 	
 	/**
+	 * Gets the driver implicitly wait timout seconds.
+	 *
+	 * @return the driver implicitly wait timout seconds
+	 */
+	long getDriverImplicitlyWaitTimoutSeconds();
+
+	/**
 	 * Driver implicitly wait.
 	 *
 	 * @param value the value
 	 */
-	void driverImplicitlyWait(long value);
+	void setDriverImplicitlyWaitTimoutSeconds(long value);
 
 	/**
 	 * Driver switch to default content.
@@ -211,6 +233,23 @@ public interface PlatformInterface extends ReportInterface {
 	void click(String locatorDelegate, String value);
 
 	/**
+	 * Click.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param timeout the timeout
+	 */
+	void click(String locatorDelegate, long timeout);
+
+	/**
+	 * Click.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param action the action
+	 * @param timeout the timeout
+	 */
+	void click(String locatorDelegate, String action, long timeout);
+
+	/**
 	 * Click by xpath.
 	 *
 	 * @param xpath the xpath
@@ -224,6 +263,15 @@ public interface PlatformInterface extends ReportInterface {
 	 * @param value the value
 	 */
 	void clickByXpath(String xpath, String value);
+
+	/**
+	 * Click by xpath.
+	 *
+	 * @param xpath the xpath
+	 * @param value the value
+	 * @param timeout the timeout
+	 */
+	void clickByXpath(String xpath, String value, long timeout);
 
 	/**
 	 * Input at the webelement referenced by locatorDelegate
@@ -418,11 +466,11 @@ public interface PlatformInterface extends ReportInterface {
 	File getTestDataFile();
 	
 	/**
-	 * Common setup.
+	 * Wait until fully loaded.
 	 *
-	 * @return the platform interface
-	 * @throws IOException 
+	 * @param timeoutSeconds the timeout seconds
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	PlatformInterface commonSetup() throws IOException;
+	void waitUntilFullyLoaded(long timeoutSeconds) throws IOException;
 
 }

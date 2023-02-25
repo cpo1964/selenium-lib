@@ -5,3 +5,4 @@ selenium-lib.iws
 *.iml
 *.class
 *.lst
+/target/

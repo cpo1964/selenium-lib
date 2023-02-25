@@ -47,6 +47,18 @@ import at.cpo.report.ReportInterface;
  */
 public class ExtentHelper implements ReportInterface {
 
+	/** The exists count. */
+	private int existsCount;
+
+	/** The clicks count. */
+	private int clicksCount;
+
+	/** The inputs count. */
+	private int inputsCount;
+
+	/** The ouputs count. */
+	private int outputsCount;
+
 	/** The logger. */
 	private static Logger logExtent = LogManager.getLogger(ExtentHelper.class.getSimpleName());
 
@@ -93,9 +105,9 @@ public class ExtentHelper implements ReportInterface {
 		deleteDirectory(runResultsDir);
 		createDirectories(runResultsDir + File.separatorChar + "Resources" + File.separatorChar + "Snapshots");
 		ExtentSparkReporter r = new ExtentSparkReporter(runResultsDir + File.separatorChar + "runresults.html");
-		report = new ExtentReports();
+		setReport(new ExtentReports());
 		getReport().attachReporter(r);
-		return report;
+		return getReport();
 	}
 
 	/**
@@ -135,9 +147,6 @@ public class ExtentHelper implements ReportInterface {
 					e.printStackTrace();
 				}
 			});
-//			if (!Files.exists(index)) {
-//				Files.createDirectories(index);
-//			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -149,14 +158,34 @@ public class ExtentHelper implements ReportInterface {
 	 * @param msg the msg
 	 */
 	public void reportCreateTest(String msg) {
-		createTest(msg);
+		existsCount = 0;
+		clicksCount = 0;
+		inputsCount = 0;
+		outputsCount = 0;
+		setTest(getReport().createTest("<b>" + msg + "</b>"));
 		logExtent.info("##################");
 		logExtent.info(() -> "## " + msg);
 		logExtent.info("##################");
 	}
 
-	private static void createTest(String msg) {
-		setTest(getReport().createTest("<b>" + msg + "</b>"));
+	@Override
+	public void reportEndTest(String msg) {
+		if (!msg.isEmpty()) {
+			getTest().log(Status.INFO, msg);
+			msg = msg.replace("<b>", "");
+			msg = msg.replace("</b>", "");
+			msg = msg.replace("<br>", "");
+			logExtent.info(msg);
+		}
+		String countMsg = "# Actions ####################<br>" +
+				"exists: " + existsCount + "<br>" +
+				"clicks: " + clicksCount + "<br>" +
+				"inputs: " + inputsCount + "<br>" +
+				"outputs: " + outputsCount + "<br>";
+		getTest().log(Status.INFO, countMsg);
+		countMsg = msg.replace("<br>", "");
+		logExtent.info(countMsg);
+		getReport().flush();
 	}
 
 	/**
@@ -184,6 +213,7 @@ public class ExtentHelper implements ReportInterface {
 	 *
 	 * @param msg the msg
 	 */
+	@Override
 	public void reportTestInfo(String msg) {
 		test.log(Status.INFO, msg);
 		logExtent.info(() -> msg.replace("<br>", System.lineSeparator()));
@@ -194,24 +224,33 @@ public class ExtentHelper implements ReportInterface {
 	 *
 	 * @param msg the msg
 	 */
+	@Override
 	public void reportCreateStep(String msg) {
-		createStep(msg);
+		setNode(test.createNode("<b>" + msg + "</b>"));
 		logExtent.info(() -> "### " + msg.replace("<br>", System.lineSeparator()));
 	}
 
-	private static void createStep(String msg) {
-		setNode(test.createNode("<b>" + msg + "</b>"));
-	}
-
 	/**
-	 * Node log fail.
+	 * Report end step.
 	 *
 	 * @param msg the msg
 	 */
-	public void reportStepFail(String msg) {
-		getNode().log(Status.FAIL, msg);
-		final String msgRP = msg.replace("<b>", "");
-		logExtent.error(() -> msgRP.replace("</b>", ""));
+	@Override
+	public void reportEndStep(String msg) {
+		reportStepInfo(msg);
+	}
+
+	/**
+	 * Report step info.
+	 *
+	 * @param msg the msg
+	 */
+	@Override
+	public void reportStepInfo(String msg) {
+		getNode().log(Status.INFO, msg);
+		msg = msg.replace("<b>", "");
+		msg = msg.replace("</b>", "");
+		logExtent.info(msg);
 	}
 
 	/**
@@ -219,10 +258,25 @@ public class ExtentHelper implements ReportInterface {
 	 *
 	 * @param msg the msg
 	 */
+	@Override
 	public void reportStepPass(String msg) {
 		getNode().log(Status.PASS, msg);
-		final String msgRP = msg.replace("<b>", "");
-		logExtent.info(() -> msgRP.replace("</b>", ""));
+		msg = msg.replace("<b>", "");
+		msg = msg.replace("</b>", "");
+		logExtent.info(msg);
+	}
+
+	/**
+	 * Node log fail.
+	 *
+	 * @param msg the msg
+	 */
+	@Override
+	public void reportStepFail(String msg) {
+		getNode().log(Status.FAIL, msg);
+		msg = msg.replace("<b>", "");
+		msg = msg.replace("</b>", "");
+		logExtent.error(msg);
 	}
 
 	/**
@@ -230,6 +284,7 @@ public class ExtentHelper implements ReportInterface {
 	 *
 	 * @param screenShot the screen shot
 	 */
+	@Override
 	public void reportStepFailScreenshot(String screenShot) {
 		screenshotNode(screenShot, Status.FAIL);
 	}
@@ -239,15 +294,9 @@ public class ExtentHelper implements ReportInterface {
 	 *
 	 * @param screenShot the screen shot
 	 */
+	@Override
 	public void reportStepPassScreenshot(String screenShot) {
 		screenshotNode(screenShot, Status.PASS);
-	}
-
-	/**
-	 * Tear down extent.
-	 */
-	public void reportTearDown() {
-		getReport().flush();
 	}
 
 	/**

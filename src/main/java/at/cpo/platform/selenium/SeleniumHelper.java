@@ -318,13 +318,18 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		getDriver().switchTo().defaultContent();
 	}
 
+	@Override
+	public long getDriverImplicitlyWaitTimoutSeconds() {
+		return getDriver().manage().timeouts().getImplicitWaitTimeout().toMillis();
+	}
+
 	/**
 	 * Driver implicitly wait.
 	 *
 	 * @param value the value
 	 */
 	@Override
-	public void driverImplicitlyWait(long value) {
+	public void setDriverImplicitlyWaitTimoutSeconds(long value) {
 		getDriver().manage().timeouts().implicitlyWait(Duration.ofMillis(value));
 	}
 
@@ -360,7 +365,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 				setDriverLoaded(true);
 			}
 		}
-		getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+		setDriverImplicitlyWaitTimoutSeconds(30);
 		return getDriver();
 	}
 
@@ -434,13 +439,15 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	public boolean existsByXpath(String xpath, long timeout) {
 		setWebElement(null);
-		driverImplicitlyWait(3000);
+		long oldTimeout = getDriverImplicitlyWaitTimoutSeconds();
+		setDriverImplicitlyWaitTimoutSeconds(3);
 		List<WebElement> webEls = getDriver().findElements(By.xpath(xpath));
 		if (!webEls.isEmpty()) {
 			setWebElement(webEls.get(0));
 			WebDriverWait wa = new WebDriverWait(getDriver(), Duration.ofSeconds(timeout));
 			setWebElement(wa.until(ExpectedConditions.elementToBeClickable(getWebElement())));
 		}
+		setDriverImplicitlyWaitTimoutSeconds(oldTimeout);
 		return getWebElement() != null;
 	}
 
@@ -536,6 +543,12 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		return exists;
 	}
 
+	@Override
+	public void clickByXpath(String xpath, String value, long timeout) {
+		existsByXpath(xpath, timeout);
+		clickByXpath(xpath, value);
+	}
+
 	/**
 	 * Click by xpath.
 	 *
@@ -620,6 +633,30 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	public void click(String locatorDelegate) {
 		click(locatorDelegate, CLICKKEY);
+	}
+
+	/**
+	 * Click.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param action the action
+	 * @param timeout the timeout
+	 */
+	@Override
+	public void click(String locatorDelegate, String action, long timeout) {
+		String xpath = getLocator(locatorDelegate);
+		clickByXpath(xpath, action, timeout);
+	}
+
+	/**
+	 * Click.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param timeout the timeout
+	 */
+	@Override
+	public void click(String locatorDelegate, long timeout) {
+		click(locatorDelegate, CLICKKEY, timeout);
 	}
 
 	/**
@@ -984,6 +1021,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @return the selenium helper
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
+	@Override
 	public SeleniumHelper commonSetup() throws IOException {
 		getProdukt();
 		String mandantTestEnvironment = "";
@@ -999,6 +1037,17 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		return new SeleniumHelper();
 	}
 
+	@Override
+	public void waitUntilFullyLoaded(long timeoutSeconds) throws IOException {
+		WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(timeoutSeconds));
+		wait.until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState")).equals("complete");
+	}
+
+	@Override
+	public void commonTeardown() throws IOException {
+		throw new UnsupportedOperationException("Not implemented, yet");
+	}
+
 	/**
 	 * Screenshot file to "RunResults" + File.separator + "Resources" +
 	 * File.separator + "Snapshots"
@@ -1006,6 +1055,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @param driver the driver
 	 * @return the string
 	 */
+	@Override
 	public String screenshotFile() {
 		long time = new Date().getTime();
 		File source = ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.FILE);

@@ -36,6 +36,13 @@ public interface ReportInterface {
 	void reportCreateTest(String msg);
 
 	/**
+	 * Report end test.
+	 *
+	 * @param msg the msg
+	 */
+	void reportEndTest(String msg);
+
+	/**
 	 * Test log info.
 	 *
 	 * @param msg the msg
@@ -104,11 +111,5 @@ public interface ReportInterface {
 	 * @param screenShot the screen shot
 	 */
 	void reportStepFailScreenshot(String screenShot);
-
-	/**
-	 * Tear down extent.
-	 */
-	static void reportTearDown() {
-	}
 
 }

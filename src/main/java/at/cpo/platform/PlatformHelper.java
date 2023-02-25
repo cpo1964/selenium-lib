@@ -32,9 +32,9 @@ import javax.naming.ConfigurationException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.JavascriptExecutor;
 
 import at.cpo.platform.selenium.SeleniumHelper;
-import at.cpo.report.extent.ExtentHelper;
 import at.cpo.utils.ExcelHelper;
 
 /**
@@ -129,12 +129,21 @@ public class PlatformHelper implements PlatformInterface {
 	}
 
 	/**
+	 * Gets the driver implicitly wait timout seconds.
+	 *
+	 * @return the driver implicitly wait timout seconds
+	 */
+	public long getDriverImplicitlyWaitTimoutSeconds() {
+		return platform.getDriverImplicitlyWaitTimoutSeconds();
+	}
+
+	/**
 	 * Driver implicitly wait.
 	 *
 	 * @param value the value
 	 */
-	public void driverImplicitlyWait(long value) {
-		platform.driverImplicitlyWait(value);
+	public void setDriverImplicitlyWaitTimoutSeconds(long value) {
+		platform.setDriverImplicitlyWaitTimoutSeconds(value);
 	}
 
 	/**
@@ -278,6 +287,16 @@ public class PlatformHelper implements PlatformInterface {
 	}
 
 	/**
+	 * Report end test.
+	 *
+	 * @param msg the msg
+	 */
+	@Override
+	public void reportEndTest(String msg) {
+		platform.reportEndTest(msg);
+	}
+
+	/**
 	 * Test log info.
 	 *
 	 * @param msg the msg
@@ -314,6 +333,26 @@ public class PlatformHelper implements PlatformInterface {
 	}
 
 	/**
+	 * Report end step.
+	 *
+	 * @param msg the msg
+	 */
+	@Override
+	public void reportEndStep(String msg) {
+		platform.reportEndStep(msg);
+	}
+
+	/**
+	 * Report step info.
+	 *
+	 * @param msg the msg
+	 */
+	@Override
+	public void reportStepInfo(String msg) {
+		platform.reportStepInfo(msg);
+	}
+
+	/**
 	 * Step log pass.
 	 *
 	 * @param msg the msg
@@ -343,13 +382,6 @@ public class PlatformHelper implements PlatformInterface {
 	 */
 	public void reportStepFailScreenshot() {
 		platform.reportStepFailScreenshot(platform.screenshotFile());
-	}
-
-	/**
-	 * Report teardown.
-	 */
-	public static void reportTeardown() {
-		((ExtentHelper) platform).reportTearDown();	
 	}
 
 	// other stuff ============================================================
@@ -414,6 +446,29 @@ public class PlatformHelper implements PlatformInterface {
 	}
 
 	/**
+	 * Click.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param timeout the timeout
+	 */
+	@Override
+	public void click(String locatorDelegate, long timeout) {
+		platform.click(locatorDelegate, timeout);
+	}
+
+	/**
+	 * Click.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param action the action
+	 * @param timeout the timeout
+	 */
+	@Override
+	public void click(String locatorDelegate, String action, long timeout) {
+		platform.click(locatorDelegate, action, timeout);
+	}
+
+	/**
 	 * Click by xpath.
 	 *
 	 * @param xpath the xpath
@@ -422,6 +477,18 @@ public class PlatformHelper implements PlatformInterface {
 	@Override
 	public void clickByXpath(String xpath, String value) {
 		platform.clickByXpath(xpath, value);
+	}
+
+	/**
+	 * Click by xpath.
+	 *
+	 * @param xpath the xpath
+	 * @param value the value
+	 * @param timeout the timeout
+	 */
+	@Override
+	public void clickByXpath(String xpath, String value, long timeout) {
+		platform.clickByXpath(xpath, value, timeout);
 	}
 
 	/**
@@ -499,6 +566,16 @@ public class PlatformHelper implements PlatformInterface {
 	}
 
 	/**
+	 * Common teardown.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	@Override
+	public void commonTeardown() throws IOException {
+		platform.commonTeardown();
+	}
+
+	/**
 	 * Report step pass screenshot.
 	 *
 	 * @param screenShot the screen shot
@@ -527,6 +604,37 @@ public class PlatformHelper implements PlatformInterface {
 	@Override
 	public String screenshotFile() {
 		return platform.screenshotFile();
+	}
+
+	/**
+	 * Wait until fully loaded.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	@Override
+	public void waitUntilFullyLoaded(long timeoutSeconds) throws IOException {
+		platform.waitUntilFullyLoaded(timeoutSeconds);
+	}
+	
+	/**
+	 * Scroll to bottom.
+	 */
+	public void scrollToBottom() {
+		((JavascriptExecutor) driver).executeScript("window.scrollBy(0,document.body.scrollHeight)", "");
+	}
+	
+	/**
+	 * Wait.
+	 *
+	 * @param milliseconds the milliseconds
+	 */
+	public static void wait(int milliseconds) {
+		try {
+			Thread.sleep(milliseconds);
+		} catch (InterruptedException e) {
+			Thread .currentThread().interrupt();
+		}
+		
 	}
 
 }

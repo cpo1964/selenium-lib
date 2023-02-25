@@ -76,7 +76,7 @@ public class JpetstoreSeleniumJunit5Test extends PlatformHelper {
 	public void tearDown() {
 		reportCreateStep("tearDown #");
 		closeBrowser();
-		reportTestInfo("Jpetstore finished" + System.lineSeparator());
+		reportEndTest("Jpetstore finished" + System.lineSeparator());
 	}
 
 	/**
@@ -85,7 +85,6 @@ public class JpetstoreSeleniumJunit5Test extends PlatformHelper {
 	 */
 	@AfterAll
 	public static void tearDownAfterClass() {
-		reportTeardown();
 	}
 
 	/**

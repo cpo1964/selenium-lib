@@ -116,7 +116,6 @@ public class MtoursSeleniumTest extends PlatformHelper {
 	 */
 	@AfterClass
 	public static void tearDownAfterClass() {
-		reportTeardown();
 	}
 
 	/**
@@ -157,7 +156,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 		reportCreateStep("tearDown #");
 		closeBrowser();
 
-		reportTestInfo("MTours finished" + System.lineSeparator());
+		reportEndTest("MTours finished" + System.lineSeparator());
 	}
 
 	/**
@@ -245,7 +244,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 				url = testPlatformPropertiesGet(remotehostUrl);
 				log.info("remoteUrl: " + url);
 				driverGet(url);
-				driverImplicitlyWait(3000);
+				setDriverImplicitlyWaitTimoutSeconds(3);
 				// Send future commands to iFrame
 				ok = driverSwitchToIFrame("gdpr-consent-notice");
 				ok = ok && exists(MToursLoginPage.NOTICE, 5);
@@ -254,7 +253,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 					// Send future commands to main document
 					driverSwitchToDefaultContent();
 				}
-//				driverImplicitlyWait(30000);
+				setDriverImplicitlyWaitTimoutSeconds(30);
 			} catch (Exception e2) {
 				reportStepFailScreenshot();
 				reportTestFail("MTours is down");
