@@ -64,6 +64,20 @@ public interface ReportInterface {
 	void reportCreateStep(String msg);
 
 	/**
+	 * Report end step.
+	 *
+	 * @param msg the msg
+	 */
+	void reportEndStep(String msg);
+
+	/**
+	 * Report step info.
+	 *
+	 * @param msg the msg
+	 */
+	void reportStepInfo(String msg);
+
+	/**
 	 * Step log pass.
 	 *
 	 * @param msg the msg
