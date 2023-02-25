@@ -144,7 +144,9 @@ public class ExcelHelper {
 	 */
 	private boolean isEmpty(Row row) {
 		Cell firstCell = row.getCell(0);
-		return firstCell == null || firstCell.getCellTypeEnum().equals(CellType.BLANK);
+		return firstCell == null || firstCell.getCellType()
+//				.getCellType()
+				.equals(CellType.BLANK);
 	}
 
 	/**
@@ -169,7 +171,9 @@ public class ExcelHelper {
 
 		for (Iterator<?> it = cells.iterator(); it.hasNext(); ++columnCount) {
 			Cell cell = (Cell) it.next();
-			if (cell.getCellTypeEnum().equals(CellType.BLANK)) {
+			if (cell.getCellType()
+//					.getCellType()
+					.equals(CellType.BLANK)) {
 				break;
 			}
 		}
@@ -189,13 +193,13 @@ public class ExcelHelper {
 		if (cell == null) {
 			return "";
 		} else {
-			if (cell.getCellTypeEnum().equals(CellType.NUMERIC)) {
+			if (cell.getCellType().equals(CellType.NUMERIC)) {
 				cellValue = "" + this.getNumericCellValue(cell);
-			} else if (cell.getCellTypeEnum().equals(CellType.STRING)) {
+			} else if (cell.getCellType().equals(CellType.STRING)) {
 				cellValue = cell.getRichStringCellValue().getString();
-			} else if (cell.getCellTypeEnum().equals(CellType.FORMULA)) {
+			} else if (cell.getCellType().equals(CellType.FORMULA)) {
 				cellValue = "" + this.evaluateCellFormula(workbook, cell);
-			} else if (cell.getCellTypeEnum().equals(CellType.BOOLEAN)) {
+			} else if (cell.getCellType().equals(CellType.BOOLEAN)) {
 				cellValue = Boolean.toString(cell.getBooleanCellValue());
 			}
 
@@ -231,11 +235,11 @@ public class ExcelHelper {
 		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
 		CellValue cellValue = evaluator.evaluate(cell);
 		Object result = null;
-		if (cellValue.getCellTypeEnum().equals(CellType.NUMERIC)) {
+		if (cellValue.getCellType().equals(CellType.NUMERIC)) {
 			result = cellValue.getNumberValue();
-		} else if (cellValue.getCellTypeEnum().equals(CellType.STRING)) {
+		} else if (cellValue.getCellType().equals(CellType.STRING)) {
 			result = cellValue.getStringValue();
-		} else if (cellValue.getCellTypeEnum().equals(CellType.BOOLEAN)) {
+		} else if (cellValue.getCellType().equals(CellType.BOOLEAN)) {
 			result = cellValue.getBooleanValue();
 		}
 

@@ -6,3 +6,7 @@ selenium-lib.iws
 *.class
 *.lst
 /target/
+/RunResults/
+/.idea/
+/.settings/
+/FFLogs.txt
