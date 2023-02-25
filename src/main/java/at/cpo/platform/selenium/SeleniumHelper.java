@@ -530,6 +530,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @return true, if successful
 	 */
 	public boolean existsByXpath(String xpath, boolean reportFailed, long timeout) {
+		existsCount++;
 		boolean exists = existsByXpath(xpath, timeout);
 		if (!exists)  {
 			if (reportFailed) {
@@ -557,6 +558,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	@Override
 	public void clickByXpath(String xpath, String value) {
+		clicksCount++;
 		setWebElement(getDriver().findElement(By.xpath(xpath)));
 		if (getWebElement().isEnabled()) {
 			if (CLICKKEY.equals(value)) {
@@ -676,6 +678,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @param secret          the secret
 	 */
 	public void inputByXpath(String xpath, String className, String value, boolean secret) {
+		inputsCount++;
 		setWebElement(null);
 		try {
 			if (className != null) {
@@ -773,6 +776,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	@Override
 	public String outputByXpath(String xpath) {
+		outputsCount++;
 		setWebElement(getDriver().findElement(By.xpath(xpath)));
 		String output = getWebElement().getAttribute("textContent");
 		reportStepPass("<b>OUTPUT   </b> by xpath $(\"" + xpath + "\")<br>text: '" + output + "'");

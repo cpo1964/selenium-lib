@@ -48,16 +48,16 @@ import at.cpo.report.ReportInterface;
 public class ExtentHelper implements ReportInterface {
 
 	/** The exists count. */
-	private int existsCount;
+	protected int existsCount;
 
 	/** The clicks count. */
-	private int clicksCount;
+	protected int clicksCount;
 
 	/** The inputs count. */
-	private int inputsCount;
+	protected int inputsCount;
 
 	/** The ouputs count. */
-	private int outputsCount;
+	protected int outputsCount;
 
 	/** The logger. */
 	private static Logger logExtent = LogManager.getLogger(ExtentHelper.class.getSimpleName());
@@ -183,7 +183,7 @@ public class ExtentHelper implements ReportInterface {
 				"inputs: " + inputsCount + "<br>" +
 				"outputs: " + outputsCount + "<br>";
 		getTest().log(Status.INFO, countMsg);
-		countMsg = msg.replace("<br>", "");
+		countMsg = countMsg.replace("<br>", System.lineSeparator());
 		logExtent.info(countMsg);
 		getReport().flush();
 	}
