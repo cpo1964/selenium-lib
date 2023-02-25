@@ -318,6 +318,11 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		getDriver().switchTo().defaultContent();
 	}
 
+	/**
+	 * Gets the driver implicitly wait timout seconds.
+	 *
+	 * @return the driver implicitly wait timout seconds
+	 */
 	@Override
 	public long getDriverImplicitlyWaitTimoutSeconds() {
 		return getDriver().manage().timeouts().getImplicitWaitTimeout().toMillis();
@@ -544,6 +549,13 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		return exists;
 	}
 
+	/**
+	 * Click by xpath.
+	 *
+	 * @param xpath the xpath
+	 * @param value the value
+	 * @param timeout the timeout
+	 */
 	@Override
 	public void clickByXpath(String xpath, String value, long timeout) {
 		existsByXpath(xpath, timeout);
@@ -1041,12 +1053,23 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		return new SeleniumHelper();
 	}
 
+	/**
+	 * Wait until fully loaded.
+	 *
+	 * @param timeoutSeconds the timeout seconds
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Override
 	public void waitUntilFullyLoaded(long timeoutSeconds) throws IOException {
 		WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(timeoutSeconds));
 		wait.until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState")).equals("complete");
 	}
 
+	/**
+	 * Common teardown.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Override
 	public void commonTeardown() throws IOException {
 		throw new UnsupportedOperationException("Not implemented, yet");
@@ -1056,7 +1079,6 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * Screenshot file to "RunResults" + File.separator + "Resources" +
 	 * File.separator + "Snapshots"
 	 *
-	 * @param driver the driver
 	 * @return the string
 	 */
 	@Override

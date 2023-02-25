@@ -112,6 +112,7 @@ public interface PlatformInterface extends ReportInterface {
 
 	// platform stuff
 	
+	/** The Constant PRODUKTKEY. */
 	public static final String PRODUKTKEY = "produkt";
 
 	/** The Constant TEST_ENVIRONMENT. */
@@ -142,7 +143,7 @@ public interface PlatformInterface extends ReportInterface {
 	 * Common setup.
 	 *
 	 * @return the platform interface
-	 * @throws IOException 
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	PlatformInterface commonSetup() throws IOException;
 
@@ -407,7 +408,7 @@ public interface PlatformInterface extends ReportInterface {
 	 *
 	 * @param condition the condition
 	 * @param description the description
-	 * @return 
+	 * @return true, if successful
 	 */
 	boolean validate(boolean condition, String description);
 	
@@ -430,7 +431,6 @@ public interface PlatformInterface extends ReportInterface {
 	/**
 	 * Screenshot file.
 	 *
-	 * @param driver the driver
 	 * @return the string
 	 */
 	String screenshotFile();

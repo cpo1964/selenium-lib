@@ -71,26 +71,56 @@ public class ExtentHelper implements ReportInterface {
 	/** The getReport(). */
 	private static ExtentReports report = ExtentHelper.prepareExtentReport();
 
+	/**
+	 * Gets the test.
+	 *
+	 * @return the test
+	 */
 	public static ExtentTest getTest() {
 		return test;
 	}
 
+	/**
+	 * Sets the test.
+	 *
+	 * @param test the new test
+	 */
 	public static void setTest(ExtentTest test) {
 		ExtentHelper.test = test;
 	}
 
+	/**
+	 * Gets the node.
+	 *
+	 * @return the node
+	 */
 	public static ExtentTest getNode() {
 		return node;
 	}
 
+	/**
+	 * Sets the node.
+	 *
+	 * @param node the new node
+	 */
 	public static void setNode(ExtentTest node) {
 		ExtentHelper.node = node;
 	}
 
+	/**
+	 * Gets the report.
+	 *
+	 * @return the report
+	 */
 	public static ExtentReports getReport() {
 		return report;
 	}
 
+	/**
+	 * Sets the report.
+	 *
+	 * @param report the new report
+	 */
 	public static void setReport(ExtentReports report) {
 		ExtentHelper.report = report;
 	}
@@ -157,6 +187,7 @@ public class ExtentHelper implements ReportInterface {
 	 *
 	 * @param msg the msg
 	 */
+	@Override
 	public void reportCreateTest(String msg) {
 		existsCount = 0;
 		clicksCount = 0;
@@ -168,6 +199,11 @@ public class ExtentHelper implements ReportInterface {
 		logExtent.info("##################");
 	}
 
+	/**
+	 * Report end test.
+	 *
+	 * @param msg the msg
+	 */
 	@Override
 	public void reportEndTest(String msg) {
 		if (!msg.isEmpty()) {
@@ -303,7 +339,6 @@ public class ExtentHelper implements ReportInterface {
 	 * Screenshot getNode().
 	 *
 	 * @param screenShot the screen shot
-	 * @param node       the node
 	 * @param s          the s
 	 */
 	public void screenshotNode(String screenShot, Status s) {

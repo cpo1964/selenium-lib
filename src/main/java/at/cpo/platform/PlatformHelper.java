@@ -62,18 +62,38 @@ public class PlatformHelper implements PlatformInterface {
 
 	// START - place to expand platform specific features - eg Selenium:
 
+	/**
+	 * Gets the driver.
+	 *
+	 * @return the driver
+	 */
 	private static Object getDriver() {
 		return driver;
 	}
 
+	/**
+	 * Sets the driver.
+	 *
+	 * @param driver the new driver
+	 */
 	private static void setDriver(Object driver) {
 		PlatformHelper.driver = driver;
 	}
 
+	/**
+	 * Gets the iteration.
+	 *
+	 * @return the iteration
+	 */
 	public static int getIteration() {
 		return iteration;
 	}
 
+	/**
+	 * Sets the iteration.
+	 *
+	 * @param iteration the new iteration
+	 */
 	public static void setIteration(int iteration) {
 		PlatformHelper.iteration = iteration;
 	}
@@ -85,8 +105,8 @@ public class PlatformHelper implements PlatformInterface {
 	 * Sets the up platform.
 	 *
 	 * @param value the new up platform
-	 * @throws ConfigurationException 
-	 * @throws IOException 
+	 * @throws ConfigurationException the configuration exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	protected static void commonSetup(String value) throws ConfigurationException, IOException {
 		if (PLATFORM_SELENIUM.equalsIgnoreCase(value)) {
@@ -216,6 +236,7 @@ public class PlatformHelper implements PlatformInterface {
 	 *
 	 * @param condition the condition
 	 * @param description the description
+	 * @return true, if successful
 	 */
 	public boolean validate(boolean condition, String description) {
 		return platform.validate(condition, description);
@@ -558,7 +579,7 @@ public class PlatformHelper implements PlatformInterface {
 	 * Common setup.
 	 *
 	 * @return the platform interface
-	 * @throws IOException 
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@Override
 	public PlatformInterface commonSetup() throws IOException {
@@ -598,7 +619,6 @@ public class PlatformHelper implements PlatformInterface {
 	/**
 	 * Screenshot file.
 	 *
-	 * @param driver the driver
 	 * @return the string
 	 */
 	@Override
@@ -609,6 +629,7 @@ public class PlatformHelper implements PlatformInterface {
 	/**
 	 * Wait until fully loaded.
 	 *
+	 * @param timeoutSeconds the timeout seconds
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@Override
