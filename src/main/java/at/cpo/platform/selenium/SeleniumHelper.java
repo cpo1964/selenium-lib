@@ -47,6 +47,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -833,8 +834,8 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			reportStepFail("<b>VALIDATE</b> '" + description + "' - " + condition);
 			try {
 				reportStepFailScreenshot(screenshotFile());
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (WebDriverException e) {
+				reportStepFail("<b>VALIDATE</b> '" + description + "' - " + condition);
 			}
 		}
 		return condition;
