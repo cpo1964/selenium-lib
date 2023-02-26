@@ -132,6 +132,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 		reportCreateTest("TestCase #" + getIteration() + " login to MTours - runlocal: " + runlocal);
 		if (isTrue(skip)) {
 			reportTestInfo("setUp: MTours test skipped");
+			setRunStatus(true);
 			return;
 		}
 		reportTestInfo("MTours started");
@@ -154,6 +155,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 	public void tearDown() {
 		if (isTrue(skip)) {
 			reportTestInfo("tearDown: MTours test skipped");
+			setRunStatus(true);
 			return;
 		}
 		
@@ -174,6 +176,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 		Assert.assertTrue(isRunStatus());
 		if (isTrue(skip)) {
 			reportTestInfo("doSeleniumTest: MTours test skipped");
+			setRunStatus(true);
 			return;
 		}
 
