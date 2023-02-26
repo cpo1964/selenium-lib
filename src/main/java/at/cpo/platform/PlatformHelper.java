@@ -302,7 +302,14 @@ public class PlatformHelper implements PlatformInterface {
 	 * @return true, if successful
 	 */
 	public boolean validate(boolean condition, String description) {
-		return platform.validate(condition, description);
+		try {
+			if (isRunStatus()) {
+				return platform.validate(condition, description);
+			}
+		} catch (Exception e) {
+			setRunStatus(false);
+		}
+		return false;
 	}
 
 	/**
@@ -312,7 +319,14 @@ public class PlatformHelper implements PlatformInterface {
 	 * @return true, if successful
 	 */
 	public boolean exists(String locatorDelegate) {
-		return platform.exists(locatorDelegate);	
+		try {
+			if (isRunStatus()) {
+				return platform.exists(locatorDelegate);	
+			}
+		} catch (Exception e) {
+			setRunStatus(false);
+		}
+		return false;
 	}
 	
 	/**
@@ -323,7 +337,14 @@ public class PlatformHelper implements PlatformInterface {
 	 * @return true, if successful
 	 */
 	public boolean exists(String locatorDelegate, int timeout) {
-		return platform.exists(locatorDelegate, timeout);	
+		try {
+			if (isRunStatus()) {
+				return platform.exists(locatorDelegate, timeout);	
+			}
+		} catch (Exception e) {
+			setRunStatus(false);
+		}
+		return false;
 	}
 
 	/**
@@ -335,7 +356,14 @@ public class PlatformHelper implements PlatformInterface {
 	 * @return true, if successful
 	 */
 	public boolean exists(String locatorDelegate, boolean reportFailed, long timeout) {
-		return platform.exists(locatorDelegate, reportFailed, timeout);	
+		try {
+			if (isRunStatus()) {
+				return platform.exists(locatorDelegate, reportFailed, timeout);	
+			}
+		} catch (Exception e) {
+			setRunStatus(false);
+		}
+		return false;
 	}
 
 	/**
@@ -345,7 +373,14 @@ public class PlatformHelper implements PlatformInterface {
 	 * @return true, if successful
 	 */
 	public boolean existsByXpath(String xpath) {
-		return existsByXpath(xpath, false);	
+		try {
+			if (isRunStatus()) {
+				return existsByXpath(xpath, false);	
+			}
+		} catch (Exception e) {
+			setRunStatus(false);
+		}
+		return false;
 	}
 	
 	/**
@@ -356,7 +391,14 @@ public class PlatformHelper implements PlatformInterface {
 	 * @return true, if successful
 	 */
 	public boolean existsByXpath(String xpath, boolean reportFailed) {
-		return platform.existsByXpath(xpath, reportFailed);	
+		try {
+			if (isRunStatus()) {
+				return platform.existsByXpath(xpath, reportFailed);	
+			}
+		} catch (Exception e) {
+			setRunStatus(false);
+		}
+		return false;
 	}
 	
 	// report stuff ===========================================================
@@ -461,7 +503,8 @@ public class PlatformHelper implements PlatformInterface {
 		try {
 			platform.reportStepPassScreenshot(platform.screenshotFile());
 		} catch (WebDriverException e) {
-			log.warn(e.getMessage());
+			log.warn("reportStepPassScreenshot throws WebDriverException");
+//			log.warn(e.getMessage());
 		}
 	}
 
@@ -472,7 +515,8 @@ public class PlatformHelper implements PlatformInterface {
 		try {
 			platform.reportStepFailScreenshot(platform.screenshotFile());
 		} catch (WebDriverException e) {
-			log.warn(e.getMessage());
+			log.warn("reportStepPassScreenshot throws WebDriverException");
+//			log.warn(e.getMessage());
 		}
 	}
 
