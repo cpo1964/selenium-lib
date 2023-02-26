@@ -12,7 +12,8 @@
 		<extentreports.version>5.0.9</extentreports.version>
 		<log4j2.version>2.19.0</log4j2.version>
 		<slf4j.version>2.0.6</slf4j.version>
-		<junit.version>5.9.2</junit.version>
+		<junit4.version>4.13.2</junit4.version>
+		<junit5.version>5.9.2</junit5.version>
 		<poi.version>[4.1.1,)</poi.version>
 		<httpclient.version>[4.5.13,)</httpclient.version>
 		<commons-lang.version>2.6</commons-lang.version>
@@ -53,11 +54,21 @@
 			<artifactId>poi</artifactId>
 			<version>${poi.version}</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/junit/junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit4.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine 
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
-			<version>${junit.version}</version>
+			<version>${junit5.version}</version>
+			<scope>test</scope>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
