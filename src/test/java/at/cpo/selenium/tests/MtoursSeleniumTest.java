@@ -194,6 +194,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 
 		// login
 		reportCreateStep("Step #2 - login");
+		exists(MToursLoginPage.USERNAME, 10);
 		input(MToursLoginPage.USERNAME, username);
 		input(MToursLoginPage.PASSWORD, password);
 		click(MToursLoginPage.LOGIN);
@@ -260,6 +261,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 				wait(5000);
 				if (ok) {
 					wait(5000);
+					reportStepInfo("iframe mit notiz schliessen ...");
 					click(MToursLoginPage.NOTICE, 10);
 					// Send future commands to main document
 					driverSwitchToDefaultContent();
