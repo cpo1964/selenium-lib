@@ -446,14 +446,18 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		setWebElement(null);
 		long oldTimeout = getDriverImplicitlyWaitTimoutSeconds();
 		setDriverImplicitlyWaitTimoutSeconds(3);
+		getByXpath(xpath, timeout);
+		setDriverImplicitlyWaitTimoutSeconds(oldTimeout);
+		return getWebElement() != null;
+	}
+
+	private void getByXpath(String xpath, long timeout) {
 		List<WebElement> webEls = getDriver().findElements(By.xpath(xpath));
 		if (!webEls.isEmpty()) {
 			setWebElement(webEls.get(0));
 			WebDriverWait wa = new WebDriverWait(getDriver(), Duration.ofSeconds(timeout));
 			setWebElement(wa.until(ExpectedConditions.elementToBeClickable(getWebElement())));
 		}
-		setDriverImplicitlyWaitTimoutSeconds(oldTimeout);
-		return getWebElement() != null;
 	}
 
 	/**
@@ -571,10 +575,12 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	@Override
 	public void clickByXpath(String xpath, String value) {
 		clicksCount++;
-		setWebElement(getDriver().findElement(By.xpath(xpath)));
-		if (getWebElement().isEnabled()) {
+		getByXpath(xpath, getDriverImplicitlyWaitTimoutSeconds());
+		setWebElement(waitUntilClickable(getWebElement(), getDriverImplicitlyWaitTimoutSeconds()));
+		if (getWebElement() != null && getWebElement().isEnabled()) {
 			if (CLICKKEY.equals(value)) {
-				getWebElement().click();
+				Actions actions = new Actions(getDriver());
+				actions.moveToElement(getWebElement()).click().build().perform();
 			} else {
 				// The user-facing API for emulating complex user gestures. 
 				// Use this class rather than using the Keyboard or Mouse directly
@@ -694,13 +700,16 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		setWebElement(null);
 		try {
 			if (className != null) {
-				setWebElement(getDriver().findElement(By.xpath(xpath)));
-				setWebElement(waitUntilClickable(getWebElement(), 30));
+				getByXpath(xpath, 30);
+//				waitUntilClickable(getWebElement(), 30);
+//				setWebElement(getDriver().findElement(By.xpath(xpath)));
+//				setWebElement(waitUntilClickable(getWebElement(), 30));
 			} 
 			if (getWebElement() == null) {
 					logSecret(xpath + "(unknown) -> not done ", getSecretString(value, secret), secret);
 					reportStepFail(getNode().addScreenCaptureFromPath(screenshotFile()) + "<b>input</b> ("
 							+ xpath + ", '" + getSecretString(value, secret) + ")'");
+					return;
 			}
 			if (EDITFIELD.equalsIgnoreCase(className)
 					|| NUMERICFIELD.equalsIgnoreCase(className)
@@ -901,12 +910,15 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * Wait until webelement is clickable.
 	 *
 	 * @param webEl          the web el
-	 * @param timeoutSeconds the timeout seconds
+	 * @param timeout the timeout seconds
 	 * @return the web element
 	 */
-	public static WebElement waitUntilClickable(WebElement webEl, int timeoutSeconds) {
-		WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(timeoutSeconds));
-		return wait.until(ExpectedConditions.elementToBeClickable(webEl));
+	public static WebElement waitUntilClickable(WebElement webEl, long timeout) {
+		if (webEl != null) {
+			WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(timeout));
+			return wait.until(ExpectedConditions.elementToBeClickable(webEl));
+		}
+		return null;
 	}
 
 	/**
