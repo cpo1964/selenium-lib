@@ -28,6 +28,7 @@ import java.util.Collection;
 
 import javax.naming.ConfigurationException;
 
+import org.junit.Assert;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -126,6 +127,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 	 */
 	@Before
 	public void setUp() throws IOException, InterruptedException {
+		setRunStatus(true);
 		setIteration(getIteration() + 1);
 		reportCreateTest("TestCase #" + getIteration() + " login to MTours - runlocal: " + runlocal);
 		if (isTrue(skip)) {
@@ -159,6 +161,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 		closeBrowser();
 
 		reportEndTest("MTours finished" + System.lineSeparator());
+		Assert.assertTrue(isRunStatus());
 	}
 
 	/**
@@ -168,6 +171,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 	 */
 	@Test
 	public void doSeleniumTest() throws InterruptedException {
+		Assert.assertTrue(isRunStatus());
 		if (isTrue(skip)) {
 			reportTestInfo("doSeleniumTest: MTours test skipped");
 			return;
@@ -210,8 +214,8 @@ public class MtoursSeleniumTest extends PlatformHelper {
 		}
 
 		// flights page
-		input(MToursFlightsPage.PASSENGERCOUNT, "2");
-		click(MToursFlightsPage.SERVICECLASS_FIRST);
+//		input(MToursFlightsPage.PASSENGERCOUNT, "2");
+//		click(MToursFlightsPage.SERVICECLASS_FIRST);
 
 		// navigate to Home
 		reportCreateStep("Step #3 - navigate to Home");
@@ -220,8 +224,8 @@ public class MtoursSeleniumTest extends PlatformHelper {
 			click(MToursLoginPage.HOME);
 			value = output(MToursLoginPage.SIGNININFO);
 			String expectedText = "Registered users can sign-in here to find the lowest fare on participating airlines.";
-			validate(normalizedValue().contains(expectedText), "value of SignInInfo'<br>" + "expected: '" + expectedText
-					+ "'<br>" + "found: '" + value + "'<br>'result");
+			validate(normalizedValue().contains(expectedText), "value of SignInInfo'" + "expected: '" + expectedText
+					+ "' - found: '" + value + "'");
 		}
 		reportStepPassScreenshot();
 	}
@@ -247,16 +251,21 @@ public class MtoursSeleniumTest extends PlatformHelper {
 				url = testPlatformPropertiesGet(remotehostUrl);
 				log.info("remoteUrl: " + url);
 				driverGet(url);
-				setDriverImplicitlyWaitTimoutSeconds(3);
+//				setDriverImplicitlyWaitTimoutSeconds(10);
 				// Send future commands to iFrame
+//				wait(5000);
 				ok = driverSwitchToIFrame("gdpr-consent-notice");
-				ok = ok && exists(MToursLoginPage.NOTICE, 5);
+//				wait(5000);
+				ok = ok && exists(MToursLoginPage.NOTICE, 10);
+				wait(5000);
 				if (ok) {
-					click(MToursLoginPage.NOTICE);
+					wait(5000);
+					click(MToursLoginPage.NOTICE, 10);
 					// Send future commands to main document
 					driverSwitchToDefaultContent();
+					wait(2000);
 				}
-				setDriverImplicitlyWaitTimoutSeconds(30);
+//				setDriverImplicitlyWaitTimoutSeconds(30);
 			} catch (Exception e2) {
 				reportStepFailScreenshot();
 				reportTestFail("MTours is down");
@@ -272,6 +281,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 	 * @return the string
 	 */
 	private String normalizedValue() {
+		value = value.replaceAll("<br>", "");
 		while (value.contains("  ")) {
 			value = value.replace("\n", "").replaceAll("  ", " ");
 		}

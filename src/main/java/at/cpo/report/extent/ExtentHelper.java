@@ -48,16 +48,16 @@ import at.cpo.report.ReportInterface;
 public class ExtentHelper implements ReportInterface {
 
 	/** The exists count. */
-	protected int existsCount;
+	private static int existsCount;
 
 	/** The clicks count. */
-	protected int clicksCount;
+	private static int clicksCount;
 
 	/** The inputs count. */
-	protected int inputsCount;
+	private static int inputsCount;
 
 	/** The ouputs count. */
-	protected int outputsCount;
+	private static int outputsCount;
 
 	/** The logger. */
 	private static Logger logExtent = LogManager.getLogger(ExtentHelper.class.getSimpleName());
@@ -71,6 +71,38 @@ public class ExtentHelper implements ReportInterface {
 	/** The getReport(). */
 	private static ExtentReports report = ExtentHelper.prepareExtentReport();
 
+
+	public static int getExistsCount() {
+		return existsCount;
+	}
+
+	public static void setExistsCount(int value) {
+		ExtentHelper.existsCount = value;
+	}
+
+	public static int getClicksCount() {
+		return clicksCount;
+	}
+
+	public static void setClicksCount(int value) {
+		ExtentHelper.clicksCount = value;
+	}
+
+	public static int getInputsCount() {
+		return inputsCount;
+	}
+
+	public static void setInputsCount(int value) {
+		ExtentHelper.inputsCount = value;
+	}
+
+	public static int getOutputsCount() {
+		return outputsCount;
+	}
+
+	public static void setOutputsCount(int value) {
+		ExtentHelper.outputsCount = value;
+	}
 	/**
 	 * Gets the test.
 	 *
@@ -189,10 +221,10 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	@Override
 	public void reportCreateTest(String msg) {
-		existsCount = 0;
-		clicksCount = 0;
-		inputsCount = 0;
-		outputsCount = 0;
+		setExistsCount(0);
+		setClicksCount(0);
+		setInputsCount(0);
+		setOutputsCount(0);
 		setTest(getReport().createTest("<b>" + msg + "</b>"));
 		logExtent.info("##################");
 		logExtent.info(() -> "## " + msg);
@@ -214,10 +246,10 @@ public class ExtentHelper implements ReportInterface {
 			logExtent.info(msg);
 		}
 		String countMsg = "# Actions ####################<br>" +
-				"exists: " + existsCount + "<br>" +
-				"clicks: " + clicksCount + "<br>" +
-				"inputs: " + inputsCount + "<br>" +
-				"outputs: " + outputsCount + "<br>";
+				"exists: " + getExistsCount() + "<br>" +
+				"clicks: " + getClicksCount() + "<br>" +
+				"inputs: " + getInputsCount() + "<br>" +
+				"outputs: " + getOutputsCount() + "<br>";
 		getTest().log(Status.INFO, countMsg);
 		countMsg = countMsg.replace("<br>", System.lineSeparator());
 		logExtent.info(countMsg);
@@ -363,5 +395,6 @@ public class ExtentHelper implements ReportInterface {
 		}
 		return c;
 	}
+
 
 }

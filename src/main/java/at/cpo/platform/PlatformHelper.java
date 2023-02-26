@@ -60,7 +60,27 @@ public class PlatformHelper implements PlatformInterface {
 	/** The iteration. */
 	private static int iteration = 0;
 
+	private static boolean runStatus = true;
+
 	// START - place to expand platform specific features - eg Selenium:
+
+	/**
+	 * Checks if is run status.
+	 *
+	 * @return true, if is run status
+	 */
+	public static boolean isRunStatus() {
+		return runStatus;
+	}
+
+	/**
+	 * Sets the run status.
+	 *
+	 * @param value the new run status
+	 */
+	public static void setRunStatus(boolean value) {
+		runStatus = value;
+	}
 
 	/**
 	 * Gets the driver.
@@ -188,7 +208,13 @@ public class PlatformHelper implements PlatformInterface {
 	 * @param locatorDelegate the locator delegate
 	 */
 	public void click(String locatorDelegate) {
-		platform.click(locatorDelegate);	
+		try {
+			if (isRunStatus()) {
+				platform.click(locatorDelegate);	
+			}
+		} catch (Exception e) {
+			setRunStatus(false);
+		}
 	}
 
 	/**
@@ -197,7 +223,13 @@ public class PlatformHelper implements PlatformInterface {
 	 * @param xpath the xpath
 	 */
 	public void clickByXpath(String xpath) {
-		platform.clickByXpath(xpath);	
+		try {
+			if (isRunStatus()) {
+				platform.clickByXpath(xpath);	
+			}
+		} catch (Exception e) {
+			setRunStatus(false);
+		}
 	}
 
 	/**
@@ -207,7 +239,13 @@ public class PlatformHelper implements PlatformInterface {
 	 * @param value the value
 	 */
 	public void input(String locatorDelegate, String value) {
-		platform.input(locatorDelegate, value);
+		try {
+			if (isRunStatus()) {
+				platform.input(locatorDelegate, value);
+			}
+		} catch (Exception e) {
+			setRunStatus(false);
+		}
 	}
 
 	/**
@@ -218,7 +256,13 @@ public class PlatformHelper implements PlatformInterface {
 	 * @param value the value
 	 */
 	public void inputByXpath(String xpath, String type, String value) {
-		platform.inputByXpath(xpath, type, value);
+		try {
+			if (isRunStatus()) {
+				platform.inputByXpath(xpath, type, value);
+			}
+		} catch (Exception e) {
+			setRunStatus(false);
+		}
 	}
 
 	/**
@@ -228,7 +272,25 @@ public class PlatformHelper implements PlatformInterface {
 	 * @return the string
 	 */
 	public String output(String locatorDelegate) {
-		return platform.output(locatorDelegate);	
+		try {
+			if (isRunStatus()) {
+				return platform.output(locatorDelegate);	
+			}
+		} catch (Exception e) {
+			setRunStatus(false);
+		}
+		return "";
+	}
+
+	/**
+	 * Output by xpath.
+	 *
+	 * @param xpath the xpath
+	 * @return the string
+	 */
+	@Override
+	public String outputByXpath(String xpath) {
+		return platform.outputByXpath(xpath);
 	}
 
 	/**
@@ -395,7 +457,11 @@ public class PlatformHelper implements PlatformInterface {
 	 * Screenshot step pass.
 	 */
 	public void reportStepPassScreenshot() {
-		platform.reportStepPassScreenshot(platform.screenshotFile());
+		try {
+			platform.reportStepPassScreenshot(platform.screenshotFile());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -459,11 +525,17 @@ public class PlatformHelper implements PlatformInterface {
 	 * Click.
 	 *
 	 * @param locatorDelegate the locator delegate
-	 * @param value the value
+	 * @param clickAction the value
 	 */
 	@Override
-	public void click(String locatorDelegate, String value) {
-		platform.click(locatorDelegate, value);
+	public void click(String locatorDelegate, String clickAction) {
+		try {
+			if (isRunStatus()) {
+				platform.click(locatorDelegate, clickAction);
+			}
+		} catch (Exception e) {
+			setRunStatus(false);
+		}
 	}
 
 	/**
@@ -474,53 +546,66 @@ public class PlatformHelper implements PlatformInterface {
 	 */
 	@Override
 	public void click(String locatorDelegate, long timeout) {
-		platform.click(locatorDelegate, timeout);
+		try {
+			if (isRunStatus()) {
+				platform.click(locatorDelegate, timeout);
+			}
+		} catch (Exception e) {
+			setRunStatus(false);
+		}
 	}
 
 	/**
 	 * Click.
 	 *
 	 * @param locatorDelegate the locator delegate
-	 * @param action the action
+	 * @param clickAction the action
 	 * @param timeout the timeout
 	 */
 	@Override
-	public void click(String locatorDelegate, String action, long timeout) {
-		platform.click(locatorDelegate, action, timeout);
+	public void click(String locatorDelegate, String clickAction, long timeout) {
+		try {
+			if (isRunStatus()) {
+				platform.click(locatorDelegate, clickAction, timeout);
+			}
+		} catch (Exception e) {
+			setRunStatus(false);
+		}
 	}
 
 	/**
 	 * Click by xpath.
 	 *
 	 * @param xpath the xpath
-	 * @param value the value
+	 * @param clickAction the value
 	 */
 	@Override
-	public void clickByXpath(String xpath, String value) {
-		platform.clickByXpath(xpath, value);
+	public void clickByXpath(String xpath, String clickAction) {
+		try {
+			if (isRunStatus()) {
+				platform.clickByXpath(xpath, clickAction);
+			}
+		} catch (Exception e) {
+			setRunStatus(false);
+		}
 	}
 
 	/**
 	 * Click by xpath.
 	 *
 	 * @param xpath the xpath
-	 * @param value the value
+	 * @param clickAction the value
 	 * @param timeout the timeout
 	 */
 	@Override
-	public void clickByXpath(String xpath, String value, long timeout) {
-		platform.clickByXpath(xpath, value, timeout);
-	}
-
-	/**
-	 * Output by xpath.
-	 *
-	 * @param xpath the xpath
-	 * @return the string
-	 */
-	@Override
-	public String outputByXpath(String xpath) {
-		return platform.outputByXpath(xpath);
+	public void clickByXpath(String xpath, String clickAction, long timeout) {
+		try {
+			if (isRunStatus()) {
+				platform.clickByXpath(xpath, clickAction, timeout);
+			}
+		} catch (Exception e) {
+			setRunStatus(false);
+		}
 	}
 
 	/**

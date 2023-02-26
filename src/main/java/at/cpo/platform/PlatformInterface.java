@@ -229,9 +229,9 @@ public interface PlatformInterface extends ReportInterface {
 	 * see: values for the click action (defined above)
 	 *
 	 * @param locatorDelegate the locator defined by a delegate
-	 * @param value the click action
+	 * @param clickAction the click action
 	 */
-	void click(String locatorDelegate, String value);
+	void click(String locatorDelegate, String clickAction);
 
 	/**
 	 * Click.
@@ -245,10 +245,10 @@ public interface PlatformInterface extends ReportInterface {
 	 * Click.
 	 *
 	 * @param locatorDelegate the locator delegate
-	 * @param action the action
+	 * @param clickAction the action
 	 * @param timeout the timeout
 	 */
-	void click(String locatorDelegate, String action, long timeout);
+	void click(String locatorDelegate, String clickAction, long timeout);
 
 	/**
 	 * Click by xpath.
@@ -261,18 +261,18 @@ public interface PlatformInterface extends ReportInterface {
 	 * Click by xpath.
 	 *
 	 * @param xpath the xpath
-	 * @param value the value
+	 * @param clickAction the value
 	 */
-	void clickByXpath(String xpath, String value);
+	void clickByXpath(String xpath, String clickAction);
 
 	/**
 	 * Click by xpath.
 	 *
 	 * @param xpath the xpath
-	 * @param value the value
+	 * @param clickAction the value
 	 * @param timeout the timeout
 	 */
-	void clickByXpath(String xpath, String value, long timeout);
+	void clickByXpath(String xpath, String clickAction, long timeout);
 
 	/**
 	 * Input at the webelement referenced by locatorDelegate

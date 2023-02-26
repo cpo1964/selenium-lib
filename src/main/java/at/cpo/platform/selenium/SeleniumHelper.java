@@ -43,6 +43,7 @@ import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -52,6 +53,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -88,7 +90,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	private static RemoteWebDriver driver;
 
 	/** The web element. */
-	private WebElement webElement;
+	private static WebElement webElement;
 
 	/** The test data path. */
 	private String testDataPath;
@@ -146,7 +148,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 *
 	 * @return the web element
 	 */
-	public WebElement getWebElement() {
+	public static WebElement getWebElement() {
 		return webElement;
 	}
 
@@ -155,8 +157,8 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 *
 	 * @param webElement the new web element
 	 */
-	public void setWebElement(WebElement webElement) {
-		this.webElement = webElement;
+	public static void setWebElement(WebElement webEl) {
+		webElement = webEl;
 	}
 
 	/**
@@ -415,6 +417,9 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			FirefoxBinary firefoxBinary = new FirefoxBinary();
 		    firefoxBinary.addCommandLineOptions("--headless");
 		    FirefoxOptions firefoxOptions = new FirefoxOptions();
+		    FirefoxProfile profile = new FirefoxProfile();
+			firefoxOptions.setProfile(profile );
+		    profile.setPreference("privacy.trackingprotection.enabled", false);
 		    firefoxOptions.setBinary(firefoxBinary);
 		    setDriver(new FirefoxDriver(firefoxOptions));
 		} else {
@@ -451,7 +456,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		return getWebElement() != null;
 	}
 
-	private void getByXpath(String xpath, long timeout) {
+	private static void getByXpath(String xpath, long timeout) {
 		List<WebElement> webEls = getDriver().findElements(By.xpath(xpath));
 		if (!webEls.isEmpty()) {
 			setWebElement(webEls.get(0));
@@ -539,7 +544,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @return true, if successful
 	 */
 	public boolean existsByXpath(String xpath, boolean reportFailed, long timeout) {
-		existsCount++;
+		setExistsCount(getExistsCount() + 1);
 		boolean exists = existsByXpath(xpath, timeout);
 		if (!exists)  {
 			if (reportFailed) {
@@ -557,60 +562,60 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * Click by xpath.
 	 *
 	 * @param xpath the xpath
-	 * @param value the value
+	 * @param clickAction the value
 	 * @param timeout the timeout
 	 */
 	@Override
-	public void clickByXpath(String xpath, String value, long timeout) {
+	public void clickByXpath(String xpath, String clickAction, long timeout) {
 		existsByXpath(xpath, timeout);
-		clickByXpath(xpath, value);
+		clickByXpath(xpath, clickAction);
 	}
 
 	/**
 	 * Click by xpath.
 	 *
 	 * @param xpath the xpath
-	 * @param value the value
+	 * @param clickAction the value
 	 */
 	@Override
-	public void clickByXpath(String xpath, String value) {
-		clicksCount++;
+	public void clickByXpath(String xpath, String clickAction) {
+		setClicksCount(getClicksCount() + 1);
 		getByXpath(xpath, getDriverImplicitlyWaitTimoutSeconds());
 		setWebElement(waitUntilClickable(getWebElement(), getDriverImplicitlyWaitTimoutSeconds()));
 		if (getWebElement() != null && getWebElement().isEnabled()) {
-			if (CLICKKEY.equals(value)) {
+			if (CLICKKEY.equals(clickAction)) {
 				Actions actions = new Actions(getDriver());
 				actions.moveToElement(getWebElement()).click().build().perform();
 			} else {
 				// The user-facing API for emulating complex user gestures. 
 				// Use this class rather than using the Keyboard or Mouse directly
 				Actions action = new Actions(getDriver());
-				if (RIGHTCLICK.equals(value)) {
+				if (RIGHTCLICK.equals(clickAction)) {
 					// context-click at middle of the given element
 					action.contextClick(getWebElement()).perform();
-				} else if (ALTCLICK.equals(value)) {
+				} else if (ALTCLICK.equals(clickAction)) {
 					action
 			        .keyDown(Keys.ALT)
 			        .click(getWebElement())
 			        .keyUp(Keys.ALT)
 			        .perform();
-				} else if (CONTROLCLICK.equals(value)) {
+				} else if (CONTROLCLICK.equals(clickAction)) {
 					action
 			        .keyDown(Keys.CONTROL)
 			        .click(getWebElement())
 			        .keyUp(Keys.CONTROL)
 			        .perform();
-				} else if (DOUBLECLICK.equals(value)) {
+				} else if (DOUBLECLICK.equals(clickAction)) {
 					action.doubleClick(getWebElement()).perform();
-				} else if (LONGCLICK.equals(value)) {
+				} else if (LONGCLICK.equals(clickAction)) {
 					// Clicks (without releasing) in the middle of the given element
 					action.clickAndHold(getWebElement()).perform();
 					wait(2000);
 					// Releases the depressed left mouse button, in the middle of the given element
 					action.release(getWebElement()).perform();
-				} else if (MOUSEOVER.equals(value)) {
+				} else if (MOUSEOVER.equals(clickAction)) {
 					action.moveToElement(getWebElement()).build().perform();
-				} else if (SHIFTCLICK.equals(value)) {
+				} else if (SHIFTCLICK.equals(clickAction)) {
 					action
 			        .keyDown(Keys.SHIFT)
 			        .click(getWebElement())
@@ -621,6 +626,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			reportStepPass("<b>CLICK   </b> by xpath $(\"" + xpath + "\")");
 		} else {
 			reportStepFail(getTest().addScreenCaptureFromPath(screenshotFile()) + "<b>CLICK   </b> by xpath $(\"" + xpath + "\")");
+			throw new NoSuchElementException("CLICK   by xpath $(" + xpath + ") failed");
 		}
 	}
 
@@ -638,12 +644,12 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * Click.
 	 *
 	 * @param locatorDelegate the locator delegate
-	 * @param action the action
+	 * @param clickAction the action
 	 */
 	@Override
-	public void click(String locatorDelegate, String action) {
+	public void click(String locatorDelegate, String clickAction) {
 		String xpath = getLocator(locatorDelegate);
-		clickByXpath(xpath, action);
+		clickByXpath(xpath, clickAction);
 	}
 
 	/**
@@ -662,7 +668,6 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @param action the action
 	 * @param timeout the timeout
 	 */
-	@Override
 	public void click(String locatorDelegate, String action, long timeout) {
 		String xpath = getLocator(locatorDelegate);
 		clickByXpath(xpath, action, timeout);
@@ -696,14 +701,11 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @param secret          the secret
 	 */
 	public void inputByXpath(String xpath, String className, String value, boolean secret) {
-		inputsCount++;
+		setInputsCount(getInputsCount() + 1);
 		setWebElement(null);
 		try {
 			if (className != null) {
 				getByXpath(xpath, 30);
-//				waitUntilClickable(getWebElement(), 30);
-//				setWebElement(getDriver().findElement(By.xpath(xpath)));
-//				setWebElement(waitUntilClickable(getWebElement(), 30));
 			} 
 			if (getWebElement() == null) {
 					logSecret(xpath + "(unknown) -> not done ", getSecretString(value, secret), secret);
@@ -715,7 +717,8 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 					|| NUMERICFIELD.equalsIgnoreCase(className)
 					|| SLIDER.equalsIgnoreCase(className) // type='range'
 					|| FILEFIELD.equalsIgnoreCase(className)) {
-				getWebElement().click();
+				Actions actions = new Actions(getDriver());
+				actions.moveToElement(getWebElement()).click().build().perform();
 				getWebElement().clear();
 				getWebElement().sendKeys(value);
 				reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + getSecretString(value, secret) + "'");
@@ -797,7 +800,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	@Override
 	public String outputByXpath(String xpath) {
-		outputsCount++;
+		setOutputsCount(getOutputsCount() + 1);
 		setWebElement(getDriver().findElement(By.xpath(xpath)));
 		String output = getWebElement().getAttribute("textContent");
 		reportStepPass("<b>OUTPUT   </b> by xpath $(\"" + xpath + "\")<br>text: '" + output + "'");
@@ -828,7 +831,11 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			reportStepPass("<b>VALIDATE</b> '" + description + "' - " + condition);
 		} else {
 			reportStepFail("<b>VALIDATE</b> '" + description + "' - " + condition);
-			reportStepFailScreenshot(screenshotFile());
+			try {
+				reportStepFailScreenshot(screenshotFile());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return condition;
 	}
@@ -1093,7 +1100,6 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 *
 	 * @return the string
 	 */
-	@Override
 	public String screenshotFile() {
 		long time = new Date().getTime();
 		File source = ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.FILE);
@@ -1120,5 +1126,4 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		return "data:image/jpg;base64, " + scnShot;
 
 	}
-
 }
