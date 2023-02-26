@@ -116,11 +116,12 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 	@Before
 	public void setUp() throws IOException, InterruptedException {
 		setIteration(getIteration() + 1);
+		reportCreateTest("TestCase #" + getIteration() + " login to Jpetstore - runlocal: " + runlocal);
 		if (isTrue(skip)) {
+			reportTestInfo("setUp: Jpetstore test skipped ...");
 			return;
 		}
 
-		reportCreateTest("TestCase #" + getIteration() + " login to Jpetstore - runlocal: " + runlocal);
 		reportTestInfo("Jpetstore started");
 		reportTestInfo("<br>Testparameter:<br>" +
 				"username: '" + username + "'<br>" + 
@@ -140,6 +141,7 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 	@After
 	public void tearDown() {
 		if (isTrue(skip)) {
+			reportTestInfo("tearDown: Jpetstore test skipped ...<br>");
 			return;
 		}
 		
@@ -157,6 +159,7 @@ public class JpetstoreSeleniumTest extends PlatformHelper {
 	@Test
 	public void doSeleniumTest() throws InterruptedException {
 		if (isTrue(skip)) {
+			reportTestInfo("doSeleniumTest: Jpetstore test skipped ...");
 			return;
 		}
 

@@ -127,10 +127,11 @@ public class MtoursSeleniumTest extends PlatformHelper {
 	@Before
 	public void setUp() throws IOException, InterruptedException {
 		setIteration(getIteration() + 1);
+		reportCreateTest("TestCase #" + getIteration() + " login to MTours - runlocal: " + runlocal);
 		if (isTrue(skip)) {
+			reportTestInfo("setUp: MTours test skipped");
 			return;
 		}
-		reportCreateTest("TestCase #" + getIteration() + " login to MTours - runlocal: " + runlocal);
 		reportTestInfo("MTours started");
 		reportTestInfo("<br>Testparameter:<br>" +
 				"username: '" + username + "'<br>" + 
@@ -150,6 +151,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 	@After
 	public void tearDown() {
 		if (isTrue(skip)) {
+			reportTestInfo("tearDown: MTours test skipped");
 			return;
 		}
 		
@@ -167,6 +169,7 @@ public class MtoursSeleniumTest extends PlatformHelper {
 	@Test
 	public void doSeleniumTest() throws InterruptedException {
 		if (isTrue(skip)) {
+			reportTestInfo("doSeleniumTest: MTours test skipped");
 			return;
 		}
 
