@@ -33,6 +33,7 @@ import javax.naming.ConfigurationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriverException;
 
 import at.cpo.platform.selenium.SeleniumHelper;
 import at.cpo.utils.ExcelHelper;
@@ -459,8 +460,8 @@ public class PlatformHelper implements PlatformInterface {
 	public void reportStepPassScreenshot() {
 		try {
 			platform.reportStepPassScreenshot(platform.screenshotFile());
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (WebDriverException e) {
+			log.warn(e.getMessage());
 		}
 	}
 
@@ -468,7 +469,11 @@ public class PlatformHelper implements PlatformInterface {
 	 * Screenshot step fail.
 	 */
 	public void reportStepFailScreenshot() {
-		platform.reportStepFailScreenshot(platform.screenshotFile());
+		try {
+			platform.reportStepFailScreenshot(platform.screenshotFile());
+		} catch (WebDriverException e) {
+			log.warn(e.getMessage());
+		}
 	}
 
 	// other stuff ============================================================
