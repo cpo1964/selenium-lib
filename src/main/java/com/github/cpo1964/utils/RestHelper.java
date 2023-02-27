@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package at.cpo.utils;
+package com.github.cpo1964.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -21,56 +21,95 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package at.cpo.selenium.common.pageobjects;
-
-import at.cpo.platform.selenium.SeleniumHelper;
+package com.github.cpo1964.report;
 
 /**
- * The Class SeleniumLoginPage.
+ * The Interface EnvironmentInterface.
  */
-public class MToursLoginPage extends SeleniumHelper {
-
-	/** The page. */
-	protected static String page = "MToursLoginPage.";
-
-	/**
-	 * The constant USERNAME.
-	 */
-	public static final String USERNAME = page + EDITFIELD + ".UsernameIN";
-
-	/**
-	 * The constant PASSWORD.
-	 */
-	public static final String PASSWORD = page + EDITFIELD + ".PasswordIN";
-
-	/**
-	 * The constant Login.
-	 */
-	public static final String LOGIN = page + BUTTON + ".LoginBT";
+public interface ReportInterface {
 	
 	/**
-	 * The constant LoginOk.
+	 * Report create test.
+	 *
+	 * @param msg the msg
 	 */
-	public static final String LOGINOK = page + TEXT + ".LoginOkTXT";
+	void reportCreateTest(String msg);
 
 	/**
-	 * The constant Login.
+	 * Report end test.
+	 *
+	 * @param msg the msg
 	 */
-	public static final String NOTICE = page + BUTTON + ".NoticeBT";
+	void reportEndTest(String msg);
 
 	/**
-	 * The constant HOME.
+	 * Test log info.
+	 *
+	 * @param msg the msg
 	 */
-	public static final String HOME = page + LINK + ".HomeLN";
+	void reportTestInfo(String msg);
 
 	/**
-	 * The constant HOME.
+	 * Test log pass.
+	 *
+	 * @param msg the msg
 	 */
-	public static final String FLIGHTS = page + LINK + ".FlightsLN";
+	void reportTestPass(String msg);
 
 	/**
-	 * The constant SIGNININFO.
+	 * Test log fail.
+	 *
+	 * @param msg the msg
 	 */
-	public static final String SIGNININFO = page + TEXT + ".SigInInfoTXT";
+	void reportTestFail(String msg);
+
+	/**
+	 * Test create node.
+	 step
+	 * @param msg the msg
+	 */
+	void reportCreateStep(String msg);
+
+	/**
+	 * Report end step.
+	 *
+	 * @param msg the msg
+	 */
+	void reportEndStep(String msg);
+
+	/**
+	 * Report step info.
+	 *
+	 * @param msg the msg
+	 */
+	void reportStepInfo(String msg);
+
+	/**
+	 * Step log pass.
+	 *
+	 * @param msg the msg
+	 */
+	void reportStepPass(String msg);
+
+	/**
+	 * Step log fail.
+	 *
+	 * @param msg the msg
+	 */
+	void reportStepFail(String msg);
+
+	/**
+	 * Screenshot step pass.
+	 *
+	 * @param screenShot the screen shot
+	 */
+	void reportStepPassScreenshot(String screenShot);
+
+	/**
+	 * Screenshot step fail.
+	 *
+	 * @param screenShot the screen shot
+	 */
+	void reportStepFailScreenshot(String screenShot);
 
 }
