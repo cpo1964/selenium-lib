@@ -52,11 +52,13 @@
 		<developer>
 			<name>Christian Pöcksteiner</name>
 			<email>christian.poecksteiner@aon.at</email>
+			<organization>com.github.cpo1964</organization>
+            <organizationUrl>http://github.com/cpo1964/</organizationUrl>
 		</developer>
 	</developers>
-	<scm>
-		<connection>https://github.com/cpo1964/selenium-lib.git</connection>
-		<developerConnection>https://github.com/cpo1964/selenium-lib.git</developerConnection>
+    <scm>
+		<connection>scm:git:ssh://github.com/cpo1964/selenium-lib.git</connection>
+		<developerConnection>scm:git:ssh://github.com:cpo1964/selenium-lib.git</developerConnection>
 		<url>https://github.com/cpo1964/selenium-lib</url>
 	</scm>
 	<dependencies>
