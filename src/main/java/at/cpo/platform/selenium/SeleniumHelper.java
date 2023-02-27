@@ -351,6 +351,11 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @return the object
 	 */
 	public Object setupDriver() {
+		// supress all java.util.logging messages
+		java.util.logging.LogManager.getLogManager().reset();
+		java.util.logging.Logger globalLogger = java.util.logging.Logger.getLogger(java.util.logging.Logger.GLOBAL_LOGGER_NAME);
+		globalLogger.setLevel(java.util.logging.Level.OFF);
+
 		System.setProperty(WDM_CACHE_PATH, "src/test/resources");
 		String wdmCachePath = System.getProperty(WDM_CACHE_PATH);
 		if (wdmCachePath != null && !wdmCachePath.isEmpty()) {
@@ -381,9 +386,10 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * Setup chrome driver.
 	 */
 	private static void setupChromeDriver() {
-		System.setProperty("webdriver.chrome.silentLogging", "true");
-		System.setProperty("webdriver.chrome.verboseLogging", "false");
-		System.setProperty("webdriver.chrome.silentOutput", "true");
+		
+//		System.setProperty("webdriver.chrome.silentLogging", "true");
+//		System.setProperty("webdriver.chrome.verboseLogging", "false");
+//		System.setProperty("webdriver.chrome.silentOutput", "true");
 
 		if (getDriver() == null) {
 			if (getProxyUser() != null && !getProxyUser().isEmpty()) {
