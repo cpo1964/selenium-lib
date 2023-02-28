@@ -27,6 +27,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import javax.naming.ConfigurationException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
@@ -393,6 +395,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			chromeOptions.setHeadless(true);
 		}
 
+		// start chrome with empty tab
 		setDriver(new ChromeDriver(chromeOptions));
 	}
 
@@ -417,8 +420,10 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			firefoxOptions.setProfile(profile );
 		    profile.setPreference("privacy.trackingprotection.enabled", false);
 		    firefoxOptions.setBinary(firefoxBinary);
+			// start firefox with empty tab
 		    setDriver(new FirefoxDriver(firefoxOptions));
 		} else {
+			// start firefox with epmty tab
 			setDriver(new FirefoxDriver());
 		}
 	}
@@ -621,7 +626,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			}
 			reportStepPass("<b>CLICK   </b> by xpath $(\"" + xpath + "\")");
 		} else {
-			reportStepFail(getTest().addScreenCaptureFromPath(screenshotFile()) + "<b>CLICK   </b> by xpath $(\"" + xpath + "\")");
+			reportStepFailScreenshot(screenshotFile());
 			throw new NoSuchElementException("CLICK   by xpath $(" + xpath + ") failed");
 		}
 	}
@@ -705,8 +710,12 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 			} 
 			if (getWebElement() == null) {
 					logSecret(xpath + "(unknown) -> not done ", getSecretString(value, secret), secret);
-					reportStepFail(getNode().addScreenCaptureFromPath(screenshotFile()) + "<b>input</b> ("
-							+ xpath + ", '" + getSecretString(value, secret) + ")'");
+					try {
+						reportStepFailScreenshot(screenshotFile());
+					} catch (WebDriverException ew) {
+						reportStepFail("type of webelement unknown: '" + className + "'");
+						throw new NotFoundException("type of webelement unknown: '" + className + "'");
+					}
 					return;
 			}
 			if (EDITFIELD.equalsIgnoreCase(className)
@@ -946,8 +955,9 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	public String getLocator(String locatorDelegate) {
 		String[] locatorDelegateSplit = locatorDelegate.split("\\.");
 		if (locatorDelegateSplit.length != 3) {
-			reportStepFail(locatorDelegate);
-			throw new NotFoundException("locatorDelegate must match pattern 'classname.locatortype.locatorDelegate': '" + locatorDelegate + "'");
+			String errMsg = "locatorDelegate must match pattern 'classname.locatortype.locatorDelegate': '" + locatorDelegate + "'";
+			reportStepFail(errMsg);
+			throw new NotFoundException(errMsg );
 		}
 		String cn = locatorDelegateSplit[0];
 		String key = locatorDelegateSplit[2];
@@ -1010,62 +1020,11 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @param filePath the new test platform properties
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void setTestPlatformProperties(String filePath) throws IOException {
+	@Override
+	public void setTestPlatformProperties(String filePath) throws IOException {
 		try (Reader inStream = new InputStreamReader(new FileInputStream(new File(filePath)))) {
 			testPlatformProperties.load(inStream);
 		}
-	}
-
-	/**
-	 * Gets the mandant.
-	 *
-	 * @return the mandant
-	 */
-	@Override
-	public String getMandant() {
-		return System.getProperty(MANDANTKEY, "");
-	}
-
-	/**
-	 * Gets the test environment.
-	 *
-	 * @return the test environment
-	 */
-	@Override
-	public String getTestEnvironment() {
-		return System.getProperty(TEST_ENVIRONMENT, "");
-	}
-
-	/**
-	 * Gets the produkt.
-	 *
-	 * @return the produkt
-	 */
-	@Override
-	public String getProdukt() {
-		return System.getProperty(PRODUKTKEY, "");
-	}
-
-	/**
-	 * Common setup.
-	 *
-	 * @return the selenium helper
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	@Override
-	public SeleniumHelper commonSetup() throws IOException {
-		getProdukt();
-		String mandantTestEnvironment = "";
-		if (!getMandant().isEmpty()) {
-			mandantTestEnvironment = File.separator + getMandant();
-			if (!getTestEnvironment().isEmpty()) {
-				mandantTestEnvironment = File.separator + getMandant() + "-" + getTestEnvironment();
-			}
-		}
-		setTestDataPath(Paths.get("").toAbsolutePath().toString() + File.separator + TESTDATADIR
-				+ mandantTestEnvironment);
-		setTestPlatformProperties(getTestDataPath() + File.separator + TEST_PLATFORM_PROPERTIES);
-		return new SeleniumHelper();
 	}
 
 	/**
@@ -1121,5 +1080,20 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		String scnShot = getDriver().getScreenshotAs(OutputType.BASE64);
 		return "data:image/jpg;base64, " + scnShot;
 
+	}
+
+	/**
+	 * Common setup.
+	 *
+	 * @param platformDelegate the platform delegate
+	 * @param testDataPath the test data path
+	 * @return the platform interface
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ConfigurationException the configuration exception
+	 */
+	@Override
+	public PlatformInterface commonSetup(String platformDelegate, String testDataPath)
+			throws IOException, ConfigurationException {
+		return null;
 	}
 }

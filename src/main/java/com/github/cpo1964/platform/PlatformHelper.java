@@ -37,16 +37,16 @@ public class PlatformHelper implements PlatformInterface {
 
 	/** The platform. */
 	static PlatformInterface platform;
-	
+
 	/** The driver. */
 	static Object driver;
-	
+
 	/** The value. */
 	protected static String value;
 
 	/** The ok. */
 	protected boolean ok;
-	
+
 	/** The iteration. */
 	private static int iteration = 0;
 
@@ -109,24 +109,14 @@ public class PlatformHelper implements PlatformInterface {
 	}
 
 	/** The PLATFORM_SELENIUM. */
-	protected static final String PLATFORM_SELENIUM = "Selenium";
-	
-	/**
-	 * Sets the up platform.
-	 *
-	 * @param value the new up platform
-	 * @throws ConfigurationException the configuration exception
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	protected static void commonSetup(String value) throws ConfigurationException, IOException {
-		if (PLATFORM_SELENIUM.equalsIgnoreCase(value)) {
-			platform = new SeleniumHelper();
-			platform.commonSetup();
-		} else {
-			throw new ConfigurationException();
-		}
+	public static final String PLATFORM_SELENIUM = "Selenium";
+
+	@Override
+	public void setTestPlatformProperties(String value) throws IOException {
+		// TODO Auto-generated method stub
+
 	}
-	
+
 	// END - place to expand platform specific features
 
 	// web api stuff ==========================================================
@@ -137,10 +127,10 @@ public class PlatformHelper implements PlatformInterface {
 	 * @return the object
 	 */
 	public Object setupDriver() {
-		setDriver(platform.setupDriver()); 
+		setDriver(platform.setupDriver());
 		return getDriver();
 	}
-	
+
 	/**
 	 * Driver switch to default content.
 	 */
@@ -155,7 +145,7 @@ public class PlatformHelper implements PlatformInterface {
 	 * @return true, if successful
 	 */
 	public boolean driverSwitchToIFrame(String name) {
-		return platform.driverSwitchToIFrame(name);	
+		return platform.driverSwitchToIFrame(name);
 	}
 
 	/**
@@ -182,7 +172,7 @@ public class PlatformHelper implements PlatformInterface {
 	 * @param url the url
 	 */
 	public void driverGet(String url) {
-		platform.driverGet(url);	
+		platform.driverGet(url);
 	}
 
 	/**
@@ -200,9 +190,10 @@ public class PlatformHelper implements PlatformInterface {
 	public void click(String locatorDelegate) {
 		try {
 			if (isRunStatus()) {
-				platform.click(locatorDelegate);	
+				platform.click(locatorDelegate);
 			}
 		} catch (Exception e) {
+			log.error("setRunStatus(false) at CLICK '" + locatorDelegate + "'");
 			setRunStatus(false);
 		}
 	}
@@ -215,9 +206,10 @@ public class PlatformHelper implements PlatformInterface {
 	public void clickByXpath(String xpath) {
 		try {
 			if (isRunStatus()) {
-				platform.clickByXpath(xpath);	
+				platform.clickByXpath(xpath);
 			}
 		} catch (Exception e) {
+			log.error("setRunStatus(false) at CLICK '" + xpath + "'");
 			setRunStatus(false);
 		}
 	}
@@ -226,7 +218,7 @@ public class PlatformHelper implements PlatformInterface {
 	 * Input.
 	 *
 	 * @param locatorDelegate the locator delegate
-	 * @param value the value
+	 * @param value           the value
 	 */
 	public void input(String locatorDelegate, String value) {
 		try {
@@ -234,6 +226,7 @@ public class PlatformHelper implements PlatformInterface {
 				platform.input(locatorDelegate, value);
 			}
 		} catch (Exception e) {
+			log.error("setRunStatus(false) at INPUT '" + locatorDelegate + "'");
 			setRunStatus(false);
 		}
 	}
@@ -242,7 +235,7 @@ public class PlatformHelper implements PlatformInterface {
 	 * Input by xpath.
 	 *
 	 * @param xpath the xpath
-	 * @param type the class name
+	 * @param type  the class name
 	 * @param value the value
 	 */
 	public void inputByXpath(String xpath, String type, String value) {
@@ -251,6 +244,7 @@ public class PlatformHelper implements PlatformInterface {
 				platform.inputByXpath(xpath, type, value);
 			}
 		} catch (Exception e) {
+			log.error("setRunStatus(false) at INPUT '" + xpath + "'");
 			setRunStatus(false);
 		}
 	}
@@ -264,9 +258,10 @@ public class PlatformHelper implements PlatformInterface {
 	public String output(String locatorDelegate) {
 		try {
 			if (isRunStatus()) {
-				return platform.output(locatorDelegate);	
+				return platform.output(locatorDelegate);
 			}
 		} catch (Exception e) {
+			log.error("setRunStatus(false) at OUTPUT '" + locatorDelegate + "'");
 			setRunStatus(false);
 		}
 		return "";
@@ -286,7 +281,7 @@ public class PlatformHelper implements PlatformInterface {
 	/**
 	 * Validate.
 	 *
-	 * @param condition the condition
+	 * @param condition   the condition
 	 * @param description the description
 	 * @return true, if successful
 	 */
@@ -296,6 +291,7 @@ public class PlatformHelper implements PlatformInterface {
 				return platform.validate(condition, description);
 			}
 		} catch (Exception e) {
+			log.error("setRunStatus(false) at VALIDATE '" + description + "'");
 			setRunStatus(false);
 		}
 		return false;
@@ -310,25 +306,7 @@ public class PlatformHelper implements PlatformInterface {
 	public boolean exists(String locatorDelegate) {
 		try {
 			if (isRunStatus()) {
-				return platform.exists(locatorDelegate);	
-			}
-		} catch (Exception e) {
-			setRunStatus(false);
-		}
-		return false;
-	}
-	
-	/**
-	 * Exists.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @param timeout the timeout
-	 * @return true, if successful
-	 */
-	public boolean exists(String locatorDelegate, int timeout) {
-		try {
-			if (isRunStatus()) {
-				return platform.exists(locatorDelegate, timeout);	
+				return platform.exists(locatorDelegate);
 			}
 		} catch (Exception e) {
 			setRunStatus(false);
@@ -340,19 +318,31 @@ public class PlatformHelper implements PlatformInterface {
 	 * Exists.
 	 *
 	 * @param locatorDelegate the locator delegate
-	 * @param reportFailed the report failed
-	 * @param timeout the timeout
+	 * @param timeout         the timeout
 	 * @return true, if successful
 	 */
-	public boolean exists(String locatorDelegate, boolean reportFailed, long timeout) {
+	public boolean exists(String locatorDelegate, int timeout) {
 		try {
 			if (isRunStatus()) {
-				return platform.exists(locatorDelegate, reportFailed, timeout);	
+				return platform.exists(locatorDelegate, timeout);
 			}
 		} catch (Exception e) {
+			log.error("setRunStatus(false) at EXISTS '" + locatorDelegate + "'");
 			setRunStatus(false);
 		}
 		return false;
+	}
+
+	/**
+	 * Exists.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param reportFailed    the report failed
+	 * @param timeout         the timeout
+	 * @return true, if successful
+	 */
+	public boolean exists(String locatorDelegate, boolean reportFailed, long timeout) {
+		return platform.exists(locatorDelegate, reportFailed, timeout);
 	}
 
 	/**
@@ -362,34 +352,28 @@ public class PlatformHelper implements PlatformInterface {
 	 * @return true, if successful
 	 */
 	public boolean existsByXpath(String xpath) {
-		try {
-			if (isRunStatus()) {
-				return existsByXpath(xpath, false);	
-			}
-		} catch (Exception e) {
-			setRunStatus(false);
-		}
-		return false;
+		return existsByXpath(xpath, false);
 	}
-	
+
 	/**
 	 * Exists by xpath.
 	 *
-	 * @param xpath the xpath
+	 * @param xpath        the xpath
 	 * @param reportFailed the report failed
 	 * @return true, if successful
 	 */
 	public boolean existsByXpath(String xpath, boolean reportFailed) {
 		try {
 			if (isRunStatus()) {
-				return platform.existsByXpath(xpath, reportFailed);	
+				return platform.existsByXpath(xpath, reportFailed);
 			}
 		} catch (Exception e) {
+			log.error("setRunStatus(false) at EXISTS '" + xpath + "'");
 			setRunStatus(false);
 		}
 		return false;
 	}
-	
+
 	// report stuff ===========================================================
 
 	/**
@@ -435,7 +419,14 @@ public class PlatformHelper implements PlatformInterface {
 	 * @param msg the msg
 	 */
 	public void reportTestFail(String msg) {
-		platform.reportTestFail(msg);
+		try {
+			if (isRunStatus()) {
+				platform.reportTestFail(msg);
+			}
+		} catch (Exception e) {
+			log.error("setRunStatus(false) at reportTestFail '" + msg + "'");
+			setRunStatus(false);
+		}
 	}
 
 	/**
@@ -444,7 +435,14 @@ public class PlatformHelper implements PlatformInterface {
 	 * @param msg the msg
 	 */
 	public void reportCreateStep(String msg) {
-		platform.reportCreateStep(msg);
+		try {
+			if (isRunStatus()) {
+				platform.reportCreateStep(msg);
+			}
+		} catch (Exception e) {
+			log.error("setRunStatus(false) at reportCreateStep '" + msg + "'");
+			setRunStatus(false);
+		}
 	}
 
 	/**
@@ -518,21 +516,12 @@ public class PlatformHelper implements PlatformInterface {
 	 * @return the testdata
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public static List<Object[]> getTestdata(String simpleName) throws IOException {
-		File file = platform.getTestDataFile();
+	public static List<Object[]> getTestdata(String testDataPath, String simpleName) throws IOException {
+		File file = new File(testDataPath + File.separator + TESTDATA_XLS);
 		ExcelHelper xl = new ExcelHelper(file, simpleName);
 		return xl.getData();
 	}
 
-	/**
-	 * Gets the test data file.
-	 *
-	 * @return the test data file
-	 */
-	public File getTestDataFile() {
-		return platform.getTestDataFile();	
-	}
-	
 	/**
 	 * Test platform properties get.
 	 *
@@ -542,9 +531,9 @@ public class PlatformHelper implements PlatformInterface {
 	protected static String testPlatformPropertiesGet(String key) {
 		String url = (String) PlatformInterface.testPlatformProperties.get(key);
 		platform.reportTestInfo("Starting app: " + url);
-		return url;	
+		return url;
 	}
-	
+
 	/**
 	 * Checks if is skipped.
 	 *
@@ -555,7 +544,7 @@ public class PlatformHelper implements PlatformInterface {
 		if (value == null || value.isEmpty()) {
 			value = "false";
 		}
-		String[] values = {"true", "ok", "on"};
+		String[] values = { "true", "ok", "on" };
 		return Arrays.stream(values).anyMatch(value.toLowerCase()::equals);
 	}
 
@@ -563,7 +552,7 @@ public class PlatformHelper implements PlatformInterface {
 	 * Click.
 	 *
 	 * @param locatorDelegate the locator delegate
-	 * @param clickAction the value
+	 * @param clickAction     the value
 	 */
 	@Override
 	public void click(String locatorDelegate, String clickAction) {
@@ -580,7 +569,7 @@ public class PlatformHelper implements PlatformInterface {
 	 * Click.
 	 *
 	 * @param locatorDelegate the locator delegate
-	 * @param timeout the timeout
+	 * @param timeout         the timeout
 	 */
 	@Override
 	public void click(String locatorDelegate, long timeout) {
@@ -597,8 +586,8 @@ public class PlatformHelper implements PlatformInterface {
 	 * Click.
 	 *
 	 * @param locatorDelegate the locator delegate
-	 * @param clickAction the action
-	 * @param timeout the timeout
+	 * @param clickAction     the action
+	 * @param timeout         the timeout
 	 */
 	@Override
 	public void click(String locatorDelegate, String clickAction, long timeout) {
@@ -614,7 +603,7 @@ public class PlatformHelper implements PlatformInterface {
 	/**
 	 * Click by xpath.
 	 *
-	 * @param xpath the xpath
+	 * @param xpath       the xpath
 	 * @param clickAction the value
 	 */
 	@Override
@@ -631,9 +620,9 @@ public class PlatformHelper implements PlatformInterface {
 	/**
 	 * Click by xpath.
 	 *
-	 * @param xpath the xpath
+	 * @param xpath       the xpath
 	 * @param clickAction the value
-	 * @param timeout the timeout
+	 * @param timeout     the timeout
 	 */
 	@Override
 	public void clickByXpath(String xpath, String clickAction, long timeout) {
@@ -650,7 +639,7 @@ public class PlatformHelper implements PlatformInterface {
 	 * Drag and drop.
 	 *
 	 * @param locatorFrom the locator from
-	 * @param locatorTo the locator to
+	 * @param locatorTo   the locator to
 	 */
 	@Override
 	public void dragAndDrop(String locatorFrom, String locatorTo) {
@@ -661,7 +650,7 @@ public class PlatformHelper implements PlatformInterface {
 	 * Drag and drop by xpath.
 	 *
 	 * @param xpathFrom the xpath from
-	 * @param xpathTo the xpath to
+	 * @param xpathTo   the xpath to
 	 */
 	@Override
 	public void dragAndDropByXpath(String xpathFrom, String xpathTo) {
@@ -669,44 +658,22 @@ public class PlatformHelper implements PlatformInterface {
 	}
 
 	/**
-	 * Gets the mandant.
-	 *
-	 * @return the mandant
-	 */
-	@Override
-	public String getMandant() {
-		return platform.getMandant();
-	}
-
-	/**
-	 * Gets the test environment.
-	 *
-	 * @return the test environment
-	 */
-	@Override
-	public String getTestEnvironment() {
-		return platform.getTestEnvironment();
-	}
-
-	/**
-	 * Gets the produkt.
-	 *
-	 * @return the produkt
-	 */
-	@Override
-	public String getProdukt() {
-		return platform.getProdukt();
-	}
-
-	/**
 	 * Common setup.
 	 *
+	 * @param platformDelegate the platform delegate
+	 * @param testDataPath     the test data path
 	 * @return the platform interface
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException            Signals that an I/O exception has occurred.
+	 * @throws ConfigurationException the configuration exception
 	 */
 	@Override
-	public PlatformInterface commonSetup() throws IOException {
-		return platform.commonSetup();
+	public PlatformInterface commonSetup(String platformDelegate, String testDataPath) throws ConfigurationException {
+		if (PLATFORM_SELENIUM.equalsIgnoreCase(platformDelegate)) {
+			platform = new SeleniumHelper();
+		} else {
+			throw new ConfigurationException();
+		}
+		return platform;
 	}
 
 	/**
@@ -759,14 +726,14 @@ public class PlatformHelper implements PlatformInterface {
 	public void waitUntilFullyLoaded(long timeoutSeconds) throws IOException {
 		platform.waitUntilFullyLoaded(timeoutSeconds);
 	}
-	
+
 	/**
 	 * Scroll to bottom.
 	 */
 	public void scrollToBottom() {
 		((JavascriptExecutor) driver).executeScript("window.scrollBy(0,document.body.scrollHeight)", "");
 	}
-	
+
 	/**
 	 * Wait.
 	 *
@@ -776,9 +743,9 @@ public class PlatformHelper implements PlatformInterface {
 		try {
 			Thread.sleep(milliseconds);
 		} catch (InterruptedException e) {
-			Thread .currentThread().interrupt();
+			Thread.currentThread().interrupt();
 		}
-		
+
 	}
 
 }

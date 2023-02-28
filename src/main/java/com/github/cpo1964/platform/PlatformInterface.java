@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
+import javax.naming.ConfigurationException;
+
 import com.github.cpo1964.report.ReportInterface;
 
 /**
@@ -110,8 +112,8 @@ public interface PlatformInterface extends ReportInterface {
 	/** The Constant MANDANT. */
 	public static final String MANDANTKEY = "mandant";
 
-	/** The Constant TEST_PLATFORM_PROPERTIES. */
-	public static final String TEST_PLATFORM_PROPERTIES = "test-platform.properties";
+	/** The Constant ZONEKEY. */
+	public static final String ZONEKEY = "zone";
 	
 	/** The Constant TESTDATA_XLS. */
 	public static final String TESTDATA_XLS = "Testdata.xls";
@@ -134,7 +136,7 @@ public interface PlatformInterface extends ReportInterface {
 	 * @return the platform interface
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	PlatformInterface commonSetup() throws IOException;
+	PlatformInterface commonSetup(String platformDelegate, String testDataPath) throws IOException, ConfigurationException;
 
 	/**
 	 * Common teardown.
@@ -427,34 +429,6 @@ public interface PlatformInterface extends ReportInterface {
 	// other stuff
 
 	/**
-	 * Gets the mandant.
-	 *
-	 * @return the mandant
-	 */
-	String getMandant();
-	
-	/**
-	 * Gets the test environment.
-	 *
-	 * @return the test environment
-	 */
-	String getTestEnvironment();
-
-	/**
-	 * Gets the produkt.
-	 *
-	 * @return the produkt
-	 */
-	String getProdukt();
-	
-	/**
-	 * Gets the test data file.
-	 *
-	 * @return the test data file
-	 */
-	File getTestDataFile();
-	
-	/**
 	 * Wait until fully loaded.
 	 *
 	 * @param timeoutSeconds the timeout seconds
@@ -462,4 +436,11 @@ public interface PlatformInterface extends ReportInterface {
 	 */
 	void waitUntilFullyLoaded(long timeoutSeconds) throws IOException;
 
+	/**
+	 * Sets the test platform properties.
+	 *
+	 * @param value the new test platform properties
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	void setTestPlatformProperties(String value) throws IOException;
 }
