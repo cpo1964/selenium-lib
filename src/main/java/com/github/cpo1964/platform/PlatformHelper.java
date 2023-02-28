@@ -158,9 +158,9 @@ public class PlatformHelper implements PlatformInterface {
 	}
 
 	/**
-	 * Driver implicitly wait.
+	 * Sets the driver implicitly wait timout seconds.
 	 *
-	 * @param value the value
+	 * @param value the new driver implicitly wait timout seconds
 	 */
 	public void setDriverImplicitlyWaitTimoutSeconds(long value) {
 		platform.setDriverImplicitlyWaitTimoutSeconds(value);
@@ -512,6 +512,7 @@ public class PlatformHelper implements PlatformInterface {
 	/**
 	 * Gets the testdata.
 	 *
+	 * @param testDataPath the test data path
 	 * @param simpleName the simple name
 	 * @return the testdata
 	 * @throws IOException Signals that an I/O exception has occurred.
@@ -661,9 +662,8 @@ public class PlatformHelper implements PlatformInterface {
 	 * Common setup.
 	 *
 	 * @param platformDelegate the platform delegate
-	 * @param testDataPath     the test data path
+	 * @param testDataPath the test data path
 	 * @return the platform interface
-	 * @throws IOException            Signals that an I/O exception has occurred.
 	 * @throws ConfigurationException the configuration exception
 	 */
 	@Override

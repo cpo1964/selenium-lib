@@ -133,8 +133,11 @@ public interface PlatformInterface extends ReportInterface {
 	/**
 	 * Common setup.
 	 *
+	 * @param platformDelegate the platform delegate
+	 * @param testDataPath the test data path
 	 * @return the platform interface
 	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ConfigurationException the configuration exception
 	 */
 	PlatformInterface commonSetup(String platformDelegate, String testDataPath) throws IOException, ConfigurationException;
 
