@@ -269,47 +269,47 @@ public interface PlatformInterface extends ReportInterface {
 	 * see: https://www.w3schools.com/html/html_form_input_types.asp
 	 * 
 	 * possible types:
-	 *     <input type="radio">
-	 *     <input type="checkbox">
-	 *     <input type="number">
-	 *     <input type="file">
-	 *     <input type="range"> // vulgo 'slider'
-	 *     <input type="text">
+	 *     input type="radio"
+	 *     input type="checkbox"
+	 *     input type="number"
+	 *     input type="file"
+	 *     input type="range" // vulgo 'slider'
+	 *     input type="text"
 	 *     
 	 *     text fields with value validation:
-	 *     <input type="email"> // text field with email validation
-	 *     <input type="password"> // text field with hidden input
-	 *     <input type="tel"> // text field with tel validation
-	 *     <input type="date"> // text field with date validation
-	 *     <input type="datetime-local"> // text field with datetime-local validation
-	 *     <input type="time"> // text field with time validation
-	 *     <input type="month"> // text field with month validation
-	 *     <input type="week"> // text field with week validation
-	 *     <input type="url"> // text field with url validation
+	 *     input type="email" // text field with email validation
+	 *     input type="password" // text field with hidden input
+	 *     input type="tel" // text field with tel validation
+	 *     input type="date" // text field with date validation
+	 *     input type="datetime-local" // text field with datetime-local validation
+	 *     input type="time" // text field with time validation
+	 *     input type="month" // text field with month validation
+	 *     input type="week" // text field with week validation
+	 *     input type="url" // text field with url validation
 	 *     
-	 *     <input type="color"> 
+	 *     input type="color" 
 	 *     		is used for input fields that should contain a color.
 	 *     		Depending on browser support, a color picker can show up in the input field.
 	 *     
-	 *     <input type="hidden">
+	 *     input type="hidden"
 	 *     		defines a hidden input field (not visible to a user).
-	 *     		not clickable => should not be supported by this method 'input'
+	 *     		not clickable - should not be supported by this method 'input'
 	 *     
-	 *     <input type="button"> 
+	 *     input type="button" 
 	 *     		defines a button, value = text at button
-	 *     		default used as click weblement => should not be supported by this method 'input'
-	 *     <input type="image">
+	 *     		default used as click weblement - should not be supported by this method 'input'
+	 *     input type="image"
 	 *     		used as submit button
-	 *     		default used as click weblement => should not be supported by this method 'input'
-	 *     <input type="submit">
+	 *     		default used as click weblement - should not be supported by this method 'input'
+	 *     input type="submit"
 	 *     		used as submit button
-	 *     		default used as click weblement => should not be supported by this method 'input'
-	 *     <input type="reset">
+	 *     		default used as click weblement - should not be supported by this method 'input'
+	 *     input type="reset"
 	 *     		defines a reset button that will reset all form values to their default values
-	 *     		default used as click weblement => should not be supported by this method 'input'
-	 *     <input type="search">
+	 *     		default used as click weblement - should not be supported by this method 'input'
+	 *     input type="search"
 	 *     		is used for search fields (a search field behaves like a regular text field).
-	 *     		default used as click weblement => should not be supported by this method 'input'
+	 *     		default used as click weblement - should not be supported by this method 'input'
 	 *
 	 * @param locatorDelegate the locator delegate
 	 * @param value the value

@@ -145,7 +145,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	/**
 	 * Sets the web element.
 	 *
-	 * @param webElement the new web element
+	 * @param webEl the new web element
 	 */
 	public static void setWebElement(WebElement webEl) {
 		webElement = webEl;
@@ -684,12 +684,12 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * Input.
 	 * 
 	 * supported types:
-	 *     <input type="text">
-	 *     <input type="radio">
-	 *     <input type="number">
-	 *     <input type="file">
-	 *     <input type="checkbox">
-	 *     <input type="range"> // vulgo 'slider'
+	 *     input type="text
+	 *     input type="radio
+	 *     input type="number
+	 *     input type="file
+	 *     input type="checkbox
+	 *     input type="range // vulgo 'slider'
 	 *
 	 * @param xpath the xpath
 	 * @param className the class name
