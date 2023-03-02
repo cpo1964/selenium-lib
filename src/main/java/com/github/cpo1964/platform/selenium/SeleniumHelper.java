@@ -15,10 +15,8 @@ package com.github.cpo1964.platform.selenium;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -52,13 +50,14 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.github.cpo1964.platform.PlatformInterface;
 import com.github.cpo1964.report.extent.ExtentHelper;
+import com.github.cpo1964.utils.CommonHelper;
+import com.github.cpo1964.utils.ExcelHelper;
 
 /**
  * The Class SeleniumHelper.
  */
-public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
+public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 
 	/** The logger. */
 	static Logger logSelenium = LogManager.getLogger(SeleniumHelper.class.getSimpleName());
@@ -77,6 +76,9 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 
 	/** The failed. */
 	private boolean failed;
+
+	/** The value. */
+	protected static String value;
 
 	/** The driver. */
 	private static RemoteWebDriver driver;
@@ -99,6 +101,55 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	/** The driver loaded. */
 	private static boolean driverLoaded = false;
 	
+	/** The ok. */
+	protected boolean ok;
+
+	/** The test platform properties. */
+	public static final Properties testPlatformProperties = new Properties();
+
+	/** The iteration. */
+	private static int iteration = 0;
+
+	/** The run status. */
+	private static boolean runStatus = true;
+
+	/**
+	 * Gets the iteration.
+	 *
+	 * @return the iteration
+	 */
+	public static int getIteration() {
+		return iteration;
+	}
+
+	/**
+	 * Sets the iteration.
+	 *
+	 * @param value the new iteration
+	 */
+	public static void setIteration(int value) {
+		iteration = value;
+	}
+
+	/**
+	 * Checks if is run status.
+	 *
+	 * @return true, if is run status
+	 */
+	public static boolean isRunStatus() {
+		return runStatus;
+	}
+
+	/**
+	 * Sets the run status.
+	 *
+	 * @param value the new run status
+	 */
+	public static void setRunStatus(boolean value) {
+		logSelenium.info("setRunStatus: " + value);
+		runStatus = value;
+	}
+
 	/**
 	 * Checks if is failed.
 	 *
@@ -451,19 +502,30 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	public boolean existsByXpath(String xpath, long timeout) {
 		setWebElement(null);
 		long oldTimeout = getDriverImplicitlyWaitTimoutSeconds();
-		setDriverImplicitlyWaitTimoutSeconds(3);
-		getByXpath(xpath, timeout);
+		setDriverImplicitlyWaitTimoutSeconds(timeout);
+		setWebElement(getByXpath(xpath, timeout));
 		setDriverImplicitlyWaitTimoutSeconds(oldTimeout);
 		return getWebElement() != null;
 	}
 
-	private static void getByXpath(String xpath, long timeout) {
+	/**
+	 * Gets the by xpath.
+	 *
+	 * @param xpath the xpath
+	 * @param timeout the timeout
+	 * @return the WebElement
+	 */
+	private static WebElement getByXpath(String xpath, long timeout) {
+		WebElement webEl = null;
 		List<WebElement> webEls = getDriver().findElements(By.xpath(xpath));
+		// one or more Webelements found in ImplicitlyWaitTimout
 		if (!webEls.isEmpty()) {
-			setWebElement(webEls.get(0));
+			webEl = webEls.get(0);
+			// wait timeout for first Webelement to be clickable
 			WebDriverWait wa = new WebDriverWait(getDriver(), Duration.ofSeconds(timeout));
-			setWebElement(wa.until(ExpectedConditions.elementToBeClickable(getWebElement())));
+			wa.until(ExpectedConditions.elementToBeClickable(webEl));
 		}
+		return webEl;
 	}
 
 	/**
@@ -549,9 +611,9 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		boolean exists = existsByXpath(xpath, timeout);
 		if (!exists)  {
 			if (reportFailed) {
-				reportStepFail("<b>EXISTS  </b>s by xpath $(\"" + xpath + "\") - false");
+				reportStepFail("<b>EXISTS  </b> by xpath $(\"" + xpath + "\") - false");
 			} else {
-				reportStepPass("<b>EXISTS  </b>s by xpath $(\"" + xpath + "\") - false");
+				reportStepPass("<b>EXISTS  </b> by xpath $(\"" + xpath + "\") - false");
 			}
 			return false;
 		}
@@ -582,41 +644,40 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	public void clickByXpath(String xpath, String clickAction) {
 		setClicksCount(getClicksCount() + 1);
 		getByXpath(xpath, getDriverImplicitlyWaitTimoutSeconds());
-		setWebElement(waitUntilClickable(getWebElement(), getDriverImplicitlyWaitTimoutSeconds()));
 		if (getWebElement() != null && getWebElement().isEnabled()) {
-			if (CLICKKEY.equals(clickAction)) {
+			if (SeleniumStrings.CLICKKEY.equals(clickAction)) {
 				Actions actions = new Actions(getDriver());
 				actions.moveToElement(getWebElement()).click().build().perform();
 			} else {
 				// The user-facing API for emulating complex user gestures. 
 				// Use this class rather than using the Keyboard or Mouse directly
 				Actions action = new Actions(getDriver());
-				if (RIGHTCLICK.equals(clickAction)) {
+				if (SeleniumStrings.RIGHTCLICK.equals(clickAction)) {
 					// context-click at middle of the given element
 					action.contextClick(getWebElement()).perform();
-				} else if (ALTCLICK.equals(clickAction)) {
+				} else if (SeleniumStrings.ALTCLICK.equals(clickAction)) {
 					action
 			        .keyDown(Keys.ALT)
 			        .click(getWebElement())
 			        .keyUp(Keys.ALT)
 			        .perform();
-				} else if (CONTROLCLICK.equals(clickAction)) {
+				} else if (SeleniumStrings.CONTROLCLICK.equals(clickAction)) {
 					action
 			        .keyDown(Keys.CONTROL)
 			        .click(getWebElement())
 			        .keyUp(Keys.CONTROL)
 			        .perform();
-				} else if (DOUBLECLICK.equals(clickAction)) {
+				} else if (SeleniumStrings.DOUBLECLICK.equals(clickAction)) {
 					action.doubleClick(getWebElement()).perform();
-				} else if (LONGCLICK.equals(clickAction)) {
+				} else if (SeleniumStrings.LONGCLICK.equals(clickAction)) {
 					// Clicks (without releasing) in the middle of the given element
 					action.clickAndHold(getWebElement()).perform();
 					wait(2000);
 					// Releases the depressed left mouse button, in the middle of the given element
 					action.release(getWebElement()).perform();
-				} else if (MOUSEOVER.equals(clickAction)) {
+				} else if (SeleniumStrings.MOUSEOVER.equals(clickAction)) {
 					action.moveToElement(getWebElement()).build().perform();
-				} else if (SHIFTCLICK.equals(clickAction)) {
+				} else if (SeleniumStrings.SHIFTCLICK.equals(clickAction)) {
 					action
 			        .keyDown(Keys.SHIFT)
 			        .click(getWebElement())
@@ -638,7 +699,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	@Override
 	public void clickByXpath(String xpath) {
-		clickByXpath(xpath, CLICKKEY);
+		clickByXpath(xpath, SeleniumStrings.CLICKKEY);
 	}
 
 	/**
@@ -659,7 +720,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @param locatorDelegate the locator delegate
 	 */
 	public void click(String locatorDelegate) {
-		click(locatorDelegate, CLICKKEY);
+		click(locatorDelegate, SeleniumStrings.CLICKKEY);
 	}
 
 	/**
@@ -682,7 +743,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 */
 	@Override
 	public void click(String locatorDelegate, long timeout) {
-		click(locatorDelegate, CLICKKEY, timeout);
+		click(locatorDelegate, SeleniumStrings.CLICKKEY, timeout);
 	}
 
 	/**
@@ -706,7 +767,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 		setWebElement(null);
 		try {
 			if (className != null) {
-				getByXpath(xpath, 30);
+				setWebElement(getByXpath(xpath, 30));
 			} 
 			if (getWebElement() == null) {
 					logSecret(xpath + "(unknown) -> not done ", getSecretString(value, secret), secret);
@@ -718,21 +779,21 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 					}
 					return;
 			}
-			if (EDITFIELD.equalsIgnoreCase(className)
-					|| NUMERICFIELD.equalsIgnoreCase(className)
-					|| SLIDER.equalsIgnoreCase(className) // type='range'
-					|| FILEFIELD.equalsIgnoreCase(className)) {
+			if (SeleniumStrings.EDITFIELD.equalsIgnoreCase(className)
+					|| SeleniumStrings.NUMERICFIELD.equalsIgnoreCase(className)
+					|| SeleniumStrings.SLIDER.equalsIgnoreCase(className) // type='range'
+					|| SeleniumStrings.FILEFIELD.equalsIgnoreCase(className)) {
 				Actions actions = new Actions(getDriver());
 				actions.moveToElement(getWebElement()).click().build().perform();
 				getWebElement().clear();
 				getWebElement().sendKeys(value);
 				reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + getSecretString(value, secret) + "'");
 				logSecret(xpath, value, secret);
-			} else  if (LISTBOX.equalsIgnoreCase(className)) {
+			} else  if (SeleniumStrings.LISTBOX.equalsIgnoreCase(className)) {
 				new Select(getWebElement()).selectByVisibleText(value);
 				reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + value + "'");
-			} else if (CHECKBOX.equalsIgnoreCase(className)
-					|| RADIOBUTTON.equalsIgnoreCase(className)) {
+			} else if (SeleniumStrings.CHECKBOX.equalsIgnoreCase(className)
+					|| SeleniumStrings.RADIOBUTTON.equalsIgnoreCase(className)) {
 				if (getWebElement().isSelected() && "OFF".equalsIgnoreCase(value) ||
 						!getWebElement().isSelected() && "ON".equalsIgnoreCase(value)) {
 					getWebElement().click();
@@ -740,7 +801,7 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 				} else {
 					throw new NotFoundException(BOLD_INPUT_BY_XPATH + xpath + "\"), value not found: '" + value + "'");
 				}
-			} else if (RADIOGROUP.equalsIgnoreCase(className)) {
+			} else if (SeleniumStrings.RADIOGROUP.equalsIgnoreCase(className)) {
 				int option = Integer.parseInt(value);
 				List<WebElement> radios = getDriver().findElements(By.xpath(xpath));
 				if (option > 0 && option <= radios.size()) {
@@ -934,75 +995,31 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	}
 
 	/**
-	 * Wait.
-	 *
-	 * @param milliseconds the milliseconds
-	 */
-	public void wait(int milliseconds) {
-		try {
-			Thread.sleep(milliseconds);
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-		}
-	}
-
-	/**
 	 * Gets the locator.
 	 *
 	 * @param locatorDelegate the locator delegate
 	 * @return the locator
 	 */
 	public String getLocator(String locatorDelegate) {
-		String[] locatorDelegateSplit = locatorDelegate.split("\\.");
+		String[] locatorDelegateSplit = locatorDelegate.split(File.pathSeparator);
 		if (locatorDelegateSplit.length != 3) {
-			String errMsg = "locatorDelegate must match pattern 'classname.locatortype.locatorDelegate': '" + locatorDelegate + "'";
+			String errMsg = "locatorDelegate must match pattern 'classname" + 
+					File.pathSeparator + "locatortype" + File.pathSeparator + "locatorDelegate': '" + locatorDelegate + "'";
 			reportStepFail(errMsg);
 			throw new NotFoundException(errMsg );
 		}
 		String cn = locatorDelegateSplit[0];
 		String key = locatorDelegateSplit[2];
 		Class<?> c = null;
-		c = getClassByQualifiedName("at.cpo.selenium.common.pageobjects." + cn);
-		return getResourcePropertyValueByKey(c, key);
-	}
+		c = getClassByQualifiedName(cn);
+		if (c == null) {
+			throw new NotFoundException("class not found: " + cn);
+		}
+		String locator = CommonHelper.getClassPropertyValueByKey(c, key);
+		logSelenium.debug("Found value '" + (!key.equals("password") ? value : "*****") + 
+				"' by key '" + key + "' from file '" + cn + ".properties'");
 
-	/**
-	 * Gets the resource property value by key.
-	 *
-	 * @param propHolder the prop holder
-	 * @param key        the key
-	 * @return the resource property value by key
-	 */
-	public String getResourcePropertyValueByKey(final Class<?> propHolder, String key) {
-		String propertiesFileDestination = propHolder.getSimpleName() + ".properties";
-		InputStream stream = propHolder.getResourceAsStream(propertiesFileDestination);
-		if (stream == null) {
-			URL url = propHolder.getClassLoader().getResource(propertiesFileDestination);
-			if (url != null) {
-				try (InputStream streamOpen = url.openStream()) {
-					stream = streamOpen;
-				} catch (IOException e1) {
-					throw new UnsupportedOperationException("Can not find property file: " + propertiesFileDestination);
-				}
-			} else {
-				throw new UnsupportedOperationException("Can not find property file: " + propertiesFileDestination);
-			}
-		}
-		Properties prop = new Properties();
-		try {
-			prop.load(stream);
-		} catch (IOException e) {
-			throw new UnsupportedOperationException("Can not open property file: " + propertiesFileDestination);
-		}
-
-		String value = prop.getProperty(key);
-		if (value == null || value.isEmpty()) {
-			throw new IllegalArgumentException("Property \"" + key + "\" from file " + propertiesFileDestination
-					+ " does not exists or is empty!");
-		}
-		logSelenium.debug(() -> "Found value '" + (!key.equals("password") ? value : "*****") + 
-				"' by key '" + key + "' from file '" + propertiesFileDestination + "'");
-		return value;
+		return locator;
 	}
 
 	/**
@@ -1011,20 +1028,24 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	 * @return Das Testdaten Excel als File.
 	 */
 	public File getTestDataFile() {
-		return new File(getTestDataPath() + File.separator + TESTDATA_XLS);
+		return new File(getTestDataPath() + File.separator + SeleniumStrings.TESTDATA_XLS);
 	}
 
 	/**
-	 * Sets the test platform properties.
+	 * Gets the test platform properties.
 	 *
-	 * @param filePath the new test platform properties
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param filePath the file path
+	 * @return the test platform properties
 	 */
 	@Override
-	public void setTestPlatformProperties(String filePath) throws IOException {
-		try (Reader inStream = new InputStreamReader(new FileInputStream(new File(filePath)))) {
-			testPlatformProperties.load(inStream);
+	public Properties getTestPlatformProperties(String filePath) {
+		if (SeleniumHelper.testPlatformProperties == null || SeleniumHelper.testPlatformProperties.isEmpty()) {
+			try (Reader inStream = new InputStreamReader(new FileInputStream(new File(filePath)))) {
+				SeleniumHelper.testPlatformProperties.load(inStream);
+			} catch (IOException e) {
+			}
 		}
+		return SeleniumHelper.testPlatformProperties;
 	}
 
 	/**
@@ -1047,6 +1068,20 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	@Override
 	public void commonTeardown() throws IOException {
 		throw new UnsupportedOperationException("Not implemented, yet");
+	}
+
+	/**
+	 * Report step pass screenshot.
+	 */
+	public void reportStepPassScreenshot() {
+		reportStepPassScreenshot(screenshotFile());
+	}
+
+	/**
+	 * Report step fail screenshot.
+	 */
+	public void reportStepFailScreenshot() {
+		reportStepFailScreenshot(screenshotFile());
 	}
 
 	/**
@@ -1085,14 +1120,182 @@ public class SeleniumHelper extends ExtentHelper implements PlatformInterface {
 	/**
 	 * Common setup.
 	 *
-	 * @param platformDelegate the platform delegate
 	 * @param testDataPath the test data path
 	 * @return the platform interface
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 * @throws ConfigurationException the configuration exception
 	 */
+	public SeleniumInterface commonSetup(String testDataPath)
+			throws IOException, ConfigurationException {
+		return commonSetup(null, testDataPath);
+	}
+
+	/**
+	 * Scroll to bottom.
+	 */
+	public void scrollToBottom() {
+		((JavascriptExecutor) driver).executeScript("window.scrollBy(0,document.body.scrollHeight)", "");
+	}
+
+	/**
+	 * Wait.
+	 *
+	 * @param milliseconds the milliseconds
+	 */
+	public static void wait(int milliseconds) {
+		try {
+			Thread.sleep(milliseconds);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
+	}
+
+	/**
+	 * Gets the edits the field locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the edits the field locator
+	 */
+	public String getEditFieldLocator(String locatorDelegate) {
+		return this.getClass().getName() + File.pathSeparator + SeleniumStrings.EDITFIELD + File.pathSeparator + locatorDelegate;
+	}
+
+	/**
+	 * Gets the button locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the button locator
+	 */
+	public String getButtonLocator(String locatorDelegate) {
+		return this.getClass().getName() + File.pathSeparator + SeleniumStrings.BUTTON + File.pathSeparator + locatorDelegate;
+	}
+
+	/**
+	 * Gets the text locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the text locator
+	 */
+	public String getTextLocator(String locatorDelegate) {
+		return this.getClass().getName() + File.pathSeparator + SeleniumStrings.TEXT + File.pathSeparator + locatorDelegate;
+	}
+
+	/**
+	 * Gets the listbox locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the listbox locator
+	 */
+	public String getListboxLocator(String locatorDelegate) {
+		return this.getClass().getName() + File.pathSeparator + SeleniumStrings.LISTBOX + File.pathSeparator + locatorDelegate;
+	}
+
+	/**
+	 * Gets the radiogroup locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the radiogroup locator
+	 */
+	public String getRadiogroupLocator(String locatorDelegate) {
+		return this.getClass().getName() + File.pathSeparator + SeleniumStrings.RADIOGROUP + File.pathSeparator + locatorDelegate;
+	}
+
+	/**
+	 * Gets the radiobutton locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the radiobutton locator
+	 */
+	public String getRadiobuttonLocator(String locatorDelegate) {
+		return this.getClass().getName() + File.pathSeparator + SeleniumStrings.RADIOBUTTON + File.pathSeparator + locatorDelegate;
+	}
+
+	/**
+	 * Gets the checkbox locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the checkbox locator
+	 */
+	public String getCheckboxLocator(String locatorDelegate) {
+		return this.getClass().getName() + File.pathSeparator + SeleniumStrings.CHECKBOX + File.pathSeparator + locatorDelegate;
+	}
+
+	/**
+	 * Gets the numericfield locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the numericfield locator
+	 */
+	public String getNumericfieldLocator(String locatorDelegate) {
+		return this.getClass().getName() + File.pathSeparator + SeleniumStrings.NUMERICFIELD + File.pathSeparator + locatorDelegate;
+	}
+
+	/**
+	 * Gets the filefield locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the filefield locator
+	 */
+	public String getFilefieldLocator(String locatorDelegate) {
+		return this.getClass().getName() + File.pathSeparator + SeleniumStrings.FILEFIELD + File.pathSeparator + locatorDelegate;
+	}
+
+	/**
+	 * Gets the slider locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the slider locator
+	 */
+	public String getSliderLocator(String locatorDelegate) {
+		return this.getClass().getName() + File.pathSeparator + SeleniumStrings.SLIDER + File.pathSeparator + locatorDelegate;
+	}
+
+	/**
+	 * Gets the link locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the link locator
+	 */
+	public String getLinkLocator(String locatorDelegate) {
+		return this.getClass().getName() + File.pathSeparator + SeleniumStrings.LINK + File.pathSeparator + locatorDelegate;
+	}
+
+	/**
+	 * Test platform properties get.
+	 *
+	 * @param key the key
+	 * @return the string
+	 */
+	protected static String testPlatformPropertiesGet(String key) {
+		String value = testPlatformProperties.getProperty(key); 
+		return value;
+	}
+
+	/**
+	 * Gets the testdata.
+	 *
+	 * @param testDataPath the test data path
+	 * @param simpleName the simple name
+	 * @return the testdata
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public static List<Object[]> getTestdata(String testDataPath, String simpleName) throws IOException {
+		File file = new File(testDataPath + File.separator + SeleniumStrings.TESTDATA_XLS);
+		ExcelHelper xl = new ExcelHelper(file, simpleName);
+		return xl.getData();
+	}
+
+	/**
+	 * Common setup.
+	 *
+	 * @param platformDelegate the platform delegate
+	 * @param testDataPath the test data path
+	 * @return the selenium interface
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ConfigurationException the configuration exception
+	 */
 	@Override
-	public PlatformInterface commonSetup(String platformDelegate, String testDataPath)
+	public SeleniumInterface commonSetup(String platformDelegate, String testDataPath)
 			throws IOException, ConfigurationException {
 		return null;
 	}
