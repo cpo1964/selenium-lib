@@ -340,7 +340,6 @@ public interface SeleniumInterface extends ReportInterface {
 	 *
 	 * @param value the value
 	 * @return the test platform properties
-	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	Properties getTestPlatformProperties(String value);
 
