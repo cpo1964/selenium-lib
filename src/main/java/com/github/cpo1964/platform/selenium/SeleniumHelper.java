@@ -841,10 +841,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	private void input(String locatorDelegate, String value, boolean b) {
 		String xpath = getLocator(locatorDelegate); // expected: a xpath from the property file
 		String className = "";
-		String[] descParts = locatorDelegate.split("\\.");
-		if (descParts.length == 3) {
-			className = descParts[1];
-		}
+		String[] descParts = locatorDelegate.split(File.pathSeparator);
+		className = descParts[1];
 		inputByXpath(xpath, className, value, b);
 	}
 	
