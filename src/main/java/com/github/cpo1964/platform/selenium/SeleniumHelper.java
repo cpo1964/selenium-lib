@@ -495,6 +495,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 
 	/**
 	 * Exists by xpath.
+	 * 
+	 * the searched webelement must be unique
 	 *
 	 * @param xpath the xpath
 	 * @param timeout the timeout
@@ -503,27 +505,38 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	@Override
 	public boolean existsByXpath(String xpath, long timeout) {
 		setWebElement(null);
-		long oldTimeout = getDriverImplicitlyWaitTimoutSeconds();
-		setDriverImplicitlyWaitTimoutSeconds(timeout);
 		setWebElement(getByXpath(xpath, timeout));
-		setDriverImplicitlyWaitTimoutSeconds(oldTimeout);
 		return getWebElement() != null;
 	}
 
-	private static WebElement getByXpath(String xpath) {
+	private WebElement getByXpath(String xpath) {
 		return getByXpath(xpath, getDriver().manage().timeouts().getImplicitWaitTimeout().toMillis());
 	}
 	/**
-	 * Gets the by xpath.
+	 * Gets a unique webelement by xpath.
 	 *
 	 * @param xpath the xpath
 	 * @param timeout the timeout
 	 * @return the WebElement
 	 */
-	private static WebElement getByXpath(String xpath, long timeout) {
+	private WebElement getByXpath(String xpath, long timeout) {
 		WebElement webEl = null;
+		long oldTimeout = getDriverImplicitlyWaitTimoutSeconds();
+		setDriverImplicitlyWaitTimoutSeconds(timeout);
+		/*
+		 * Find all elements within the current page using the given mechanism.
+		 * This method is affected by the 'implicit wait' times in force at the time of execution. 
+		 * When implicitly waiting, this method will return as soon 
+		 * as there are more than 0 items in the found collection, 
+		 * or will return an empty list if the timeout is reached. 
+		 */
 		List<WebElement> webEls = getDriver().findElements(By.xpath(xpath));
-		// one or more Webelements found in ImplicitlyWaitTimout
+		setDriverImplicitlyWaitTimoutSeconds(oldTimeout);
+		// the searched webelement must be unique
+		if (webEls.size() > 1) {
+			throw new NonUniqueResultException("more then 1 webelement found with xpath: " + xpath);
+		}
+		// one Webelements found in ImplicitlyWaitTimout
 		if (!webEls.isEmpty()) {
 			webEl = webEls.get(0);
 		}
@@ -631,6 +644,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 
 	/**
 	 * Exists by xpath.
+	 * 
+	 * the searched webelement must be unique
 	 *
 	 * @param xpath the xpath
 	 * @return true, if successful
@@ -642,6 +657,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 
 	/**
 	 * Exists.
+	 * 
+	 * the searched webelement must be unique
 	 *
 	 * @param locatorDelegate the locator delegate
 	 * @param reportFailed    the reportFailed
@@ -655,6 +672,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 
 	/**
 	 * Exists.
+	 * 
+	 * the searched webelement must be unique
 	 *
 	 * @param locatorDelegate the locator delegate
 	 * @return true, if successful
@@ -666,6 +685,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 
 	/**
 	 * Exists.
+	 * 
+	 * the searched webelement must be unique
 	 *
 	 * @param locatorDelegate the locator delegate
 	 * @param reportFailed the report failed
@@ -680,6 +701,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 
 	/**
 	 * Exists.
+	 * 
+	 * the searched webelement must be unique
 	 *
 	 * @param locatorDelegate the locator delegate
 	 * @param timeout the timeout
@@ -693,6 +716,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 
 	/**
 	 * Exists.
+	 * 
+	 * the searched webelement must be unique
 	 *
 	 * @param xpath the xpath
 	 * @param reportFailed    the reportFailed
@@ -705,6 +730,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	
 	/**
 	 * Exists by xpath.
+	 * 
+	 * the searched webelement must be unique
 	 *
 	 * @param xpath the xpath
 	 * @param reportFailed the report failed
