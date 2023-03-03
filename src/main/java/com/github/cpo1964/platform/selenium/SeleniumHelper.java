@@ -508,6 +508,9 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		return getWebElement() != null;
 	}
 
+	private static WebElement getByXpath(String xpath) {
+		return getByXpath(xpath, getDriver().manage().timeouts().getImplicitWaitTimeout().toMillis());
+	}
 	/**
 	 * Gets the by xpath.
 	 *
@@ -521,11 +524,102 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		// one or more Webelements found in ImplicitlyWaitTimout
 		if (!webEls.isEmpty()) {
 			webEl = webEls.get(0);
-			// wait timeout for first Webelement to be clickable
-			WebDriverWait wa = new WebDriverWait(getDriver(), Duration.ofSeconds(timeout));
-			wa.until(ExpectedConditions.elementToBeClickable(webEl));
 		}
 		return webEl;
+	}
+
+	/**
+	 * Checks if is clickable.
+	 * 
+	 * An expectation for checking an element is visible and enabled such that you can click it.
+	 *
+	 * @param xpath the xpath
+	 * @param timeout the timeout
+	 * @return true, if is clickable
+	 */
+	public boolean isClickableByXpath(String xpath, long timeout) {
+		WebElement webEl = getByXpath(xpath, timeout);
+		if (webEl == null) {
+			return false;
+		}
+		// wait timeout for first Webelement to be clickable
+		WebDriverWait wa = new WebDriverWait(getDriver(), Duration.ofSeconds(timeout));
+		wa.until(ExpectedConditions.elementToBeClickable(webEl));
+		return webEl.isEnabled();
+	}
+
+	/**
+	 * Checks if is clickable by xpath.
+	 *
+	 * An expectation for checking an element is visible and enabled such that you can click it.
+	 * Uses default timeout
+	 *
+	 * @param xpath the xpath
+	 * @return true, if is clickable by xpath
+	 */
+	public boolean isClickableByXpath(String xpath) {
+		return isClickableByXpath(xpath, getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds());
+	}
+
+	/**
+	 * Checks if is clickable.
+	 * 
+	 * An expectation for checking an element is visible and enabled such that you can click it.
+	 *
+	 * @param xpath the xpath
+	 * @return true, if is clickable
+	 */
+	public boolean isClickable(String locatorDelegate, long timeout) {
+		String xpath = getLocator(locatorDelegate);
+		return isClickable(xpath, getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds());
+	}
+
+	/**
+	 * Checks if is clickable.
+	 *
+	 * An expectation for checking an element is visible and enabled such that you can click it.
+	 * Uses default timeout
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return true, if is clickable
+	 */
+	public boolean isClickable(String locatorDelegate) {
+		return isClickable(locatorDelegate, getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds());
+	}
+
+	/**
+	 * Checks if is displayed.
+	 * 
+	 * An expectation for checking that an element is present on the DOM of a page and visible.
+	 * Visibility means that the element is not only displayed but also has a height and width that isgreater than 0.
+	 *
+	 * @param xpath the xpath
+	 * @param timeout the timeout
+	 * @return true, if is displayed
+	 */
+	public boolean isDisplayed(String xpath, long timeout) {
+		// wait timeout for first Webelement to be clickable
+		WebDriverWait wa = new WebDriverWait(getDriver(), Duration.ofSeconds(timeout));
+		WebElement webEl = wa.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
+		if (webEl == null) {
+			return false;
+		}
+		return webEl.isDisplayed();
+	}
+
+	/**
+	 * Checks if is selected.
+	 * 
+	 * An expectation for checking if the given element is selected.
+	 *
+	 * @param xpath the xpath
+	 * @param timeout the timeout
+	 * @return true, if is selected
+	 */
+	public boolean isSelected(String xpath, long timeout) {
+		// wait timeout for first Webelement to be clickable
+		WebDriverWait wa = new WebDriverWait(getDriver(), Duration.ofSeconds(timeout));
+		return wa.until(ExpectedConditions.elementToBeSelected(By.xpath(xpath)));
 	}
 
 	/**
@@ -643,8 +737,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	@Override
 	public void clickByXpath(String xpath, String clickAction) {
 		setClicksCount(getClicksCount() + 1);
-		getByXpath(xpath, getDriverImplicitlyWaitTimoutSeconds());
-		if (getWebElement() != null && getWebElement().isEnabled()) {
+		setWebElement(getByXpath(xpath));
+		if (isClickableByXpath(xpath)) {
 			if (SeleniumStrings.CLICKKEY.equals(clickAction)) {
 				Actions actions = new Actions(getDriver());
 				actions.moveToElement(getWebElement()).click().build().perform();
@@ -758,42 +852,41 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 *     input type="range // vulgo 'slider'
 	 *
 	 * @param xpath the xpath
-	 * @param className the class name
+	 * @param type the class name
 	 * @param value           the value
 	 * @param secret          the secret
 	 */
-	public void inputByXpath(String xpath, String className, String value, boolean secret) {
+	public void inputByXpath(String xpath, String type, String value, boolean secret) {
 		setInputsCount(getInputsCount() + 1);
 		setWebElement(null);
 		try {
-			if (className != null) {
+			if (type != null) {
 				setWebElement(getByXpath(xpath, 30));
-			} 
-			if (getWebElement() == null) {
+			} else {
 					logSecret(xpath + "(unknown) -> not done ", getSecretString(value, secret), secret);
 					try {
 						reportStepFailScreenshot(screenshotFile());
 					} catch (WebDriverException ew) {
-						reportStepFail("type of webelement unknown: '" + className + "'");
-						throw new NotFoundException("type of webelement unknown: '" + className + "'");
+						reportStepFail("type of webelement unknown: '" + type + "'");
+						throw new NotFoundException("type of webelement unknown: '" + type + "'");
 					}
 					return;
 			}
-			if (SeleniumStrings.EDITFIELD.equalsIgnoreCase(className)
-					|| SeleniumStrings.NUMERICFIELD.equalsIgnoreCase(className)
-					|| SeleniumStrings.SLIDER.equalsIgnoreCase(className) // type='range'
-					|| SeleniumStrings.FILEFIELD.equalsIgnoreCase(className)) {
+			if (SeleniumStrings.EDITFIELD.equalsIgnoreCase(type)
+					|| SeleniumStrings.NUMERICFIELD.equalsIgnoreCase(type)
+					|| SeleniumStrings.SLIDER.equalsIgnoreCase(type) // type='range'
+					|| SeleniumStrings.FILEFIELD.equalsIgnoreCase(type)) {
 				Actions actions = new Actions(getDriver());
 				actions.moveToElement(getWebElement()).click().build().perform();
 				getWebElement().clear();
 				getWebElement().sendKeys(value);
 				reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + getSecretString(value, secret) + "'");
 				logSecret(xpath, value, secret);
-			} else  if (SeleniumStrings.LISTBOX.equalsIgnoreCase(className)) {
+			} else  if (SeleniumStrings.LISTBOX.equalsIgnoreCase(type)) {
 				new Select(getWebElement()).selectByVisibleText(value);
 				reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + value + "'");
-			} else if (SeleniumStrings.CHECKBOX.equalsIgnoreCase(className)
-					|| SeleniumStrings.RADIOBUTTON.equalsIgnoreCase(className)) {
+			} else if (SeleniumStrings.CHECKBOX.equalsIgnoreCase(type)
+					|| SeleniumStrings.RADIOBUTTON.equalsIgnoreCase(type)) {
 				if (getWebElement().isSelected() && "OFF".equalsIgnoreCase(value) ||
 						!getWebElement().isSelected() && "ON".equalsIgnoreCase(value)) {
 					getWebElement().click();
@@ -801,7 +894,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 				} else {
 					throw new NotFoundException(BOLD_INPUT_BY_XPATH + xpath + "\"), value not found: '" + value + "'");
 				}
-			} else if (SeleniumStrings.RADIOGROUP.equalsIgnoreCase(className)) {
+			} else if (SeleniumStrings.RADIOGROUP.equalsIgnoreCase(type)) {
 				int option = Integer.parseInt(value);
 				List<WebElement> radios = getDriver().findElements(By.xpath(xpath));
 				if (option > 0 && option <= radios.size()) {
@@ -811,11 +904,11 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 					throw new NotFoundException(BOLD_INPUT_BY_XPATH + xpath + "\"), value not found: '" + value + "'");
 				}
 			} else {
-				throw new NotFoundException("type of webelement unknown: '" + className + "'");
+				throw new NotFoundException("type of webelement unknown: '" + type + "'");
 			}
 		} catch (IOException e) {
-			reportStepFail(getNode().addScreenCaptureFromPath(screenshotFile()) + 
-					"<b>INPUT   </b> (" + xpath + ", '" + getSecretString(value, secret) + ")'");
+			reportStepFailScreenshot(screenshotFile());
+			reportStepFail("<b>INPUT   </b> (" + xpath + ", '" + getSecretString(value, secret) + ")'");
 		}
 	}
 
