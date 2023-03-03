@@ -874,7 +874,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		setInputsCount(getInputsCount() + 1);
 		setWebElement(null);
 		try {
-			if (type != null) {
+			if (type != null && isClickableByXpath(xpath)) {
 				setWebElement(getByXpath(xpath, 30));
 			} else {
 					logSecret(xpath + "(unknown) -> not done ", CommonHelper.getSecretString(value), secret);
@@ -949,7 +949,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 */
 	@Override
 	public void input(String locatorDelegate, String value, boolean secret) {
-		String xpath = getLocator(locatorDelegate); // expected: a xpath from the property file
+		String xpath = getLocator(locatorDelegate);
 		String type = "";
 		String[] descParts = locatorDelegate.split(File.pathSeparator);
 		type = descParts[1];
@@ -1097,10 +1097,10 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		if (c == null) {
 			throw new NotFoundException("class not found: " + cn);
 		}
+		// expected: a xpath from the property file
 		String locator = CommonHelper.getClassPropertyValueByKey(c, key);
 		logSelenium.debug("Found value '" + (!key.equals("password") ? value : "*****") + 
 				"' by key '" + key + "' from file '" + cn + ".properties'");
-
 		return locator;
 	}
 
