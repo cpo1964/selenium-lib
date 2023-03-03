@@ -392,6 +392,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 *
 	 * @return the object
 	 */
+	@Override
 	public Object setupDriver() {
 		// supress all java.util.logging messages
 		java.util.logging.LogManager.getLogManager().reset();
@@ -499,6 +500,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param timeout the timeout
 	 * @return true, if successful
 	 */
+	@Override
 	public boolean existsByXpath(String xpath, long timeout) {
 		setWebElement(null);
 		long oldTimeout = getDriverImplicitlyWaitTimoutSeconds();
@@ -537,6 +539,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param timeout the timeout
 	 * @return true, if is clickable
 	 */
+	@Override
 	public boolean isClickableByXpath(String xpath, long timeout) {
 		WebElement webEl = getByXpath(xpath, timeout);
 		if (webEl == null) {
@@ -557,6 +560,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param xpath the xpath
 	 * @return true, if is clickable by xpath
 	 */
+	@Override
 	public boolean isClickableByXpath(String xpath) {
 		return isClickableByXpath(xpath, getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds());
 	}
@@ -569,6 +573,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param xpath the xpath
 	 * @return true, if is clickable
 	 */
+	@Override
 	public boolean isClickable(String locatorDelegate, long timeout) {
 		String xpath = getLocator(locatorDelegate);
 		return isClickable(xpath, getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds());
@@ -583,6 +588,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return true, if is clickable
 	 */
+	@Override
 	public boolean isClickable(String locatorDelegate) {
 		return isClickable(locatorDelegate, getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds());
 	}
@@ -597,6 +603,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param timeout the timeout
 	 * @return true, if is displayed
 	 */
+	@Override
 	public boolean isDisplayed(String xpath, long timeout) {
 		// wait timeout for first Webelement to be clickable
 		WebDriverWait wa = new WebDriverWait(getDriver(), Duration.ofSeconds(timeout));
@@ -616,6 +623,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param timeout the timeout
 	 * @return true, if is selected
 	 */
+	@Override
 	public boolean isSelected(String xpath, long timeout) {
 		// wait timeout for first Webelement to be clickable
 		WebDriverWait wa = new WebDriverWait(getDriver(), Duration.ofSeconds(timeout));
@@ -640,6 +648,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param reportFailed    the reportFailed
 	 * @return true, if successful
 	 */
+	@Override
 	public boolean exists(String locatorDelegate, boolean reportFailed) {
 		String xpath = getLocator(locatorDelegate);
 		return existsByXpath(xpath, reportFailed);
@@ -651,6 +660,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return true, if successful
 	 */
+	@Override
 	public boolean exists(String locatorDelegate) {
 		return exists(locatorDelegate, false);
 	}
@@ -676,6 +686,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param timeout the timeout
 	 * @return true, if successful
 	 */
+	@Override
 	public boolean exists(String locatorDelegate, int timeout) {
 		return exists(locatorDelegate, false, timeout);
 	}
@@ -688,6 +699,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param reportFailed    the reportFailed
 	 * @return true, if successful
 	 */
+	@Override
 	public boolean existsByXpath(String xpath, boolean reportFailed) {
 		return existsByXpath(xpath, reportFailed, getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds());
 	}
@@ -700,6 +712,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param timeout the timeout
 	 * @return true, if successful
 	 */
+	@Override
 	public boolean existsByXpath(String xpath, boolean reportFailed, long timeout) {
 		setExistsCount(getExistsCount() + 1);
 		boolean exists = existsByXpath(xpath, timeout);
@@ -813,6 +826,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 *
 	 * @param locatorDelegate the locator delegate
 	 */
+	@Override
 	public void click(String locatorDelegate) {
 		click(locatorDelegate, SeleniumStrings.CLICKKEY);
 	}
@@ -824,6 +838,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param action the action
 	 * @param timeout the timeout
 	 */
+	@Override
 	public void click(String locatorDelegate, String action, long timeout) {
 		String xpath = getLocator(locatorDelegate);
 		clickByXpath(xpath, action, timeout);
@@ -863,7 +878,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 			if (type != null) {
 				setWebElement(getByXpath(xpath, 30));
 			} else {
-					logSecret(xpath + "(unknown) -> not done ", getSecretString(value, secret), secret);
+					logSecret(xpath + "(unknown) -> not done ", CommonHelper.getSecretString(value), secret);
 					try {
 						reportStepFailScreenshot(screenshotFile());
 					} catch (WebDriverException ew) {
@@ -880,7 +895,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 				actions.moveToElement(getWebElement()).click().build().perform();
 				getWebElement().clear();
 				getWebElement().sendKeys(value);
-				reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + getSecretString(value, secret) + "'");
+				reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + CommonHelper.getSecretString(value) + "'");
 				logSecret(xpath, value, secret);
 			} else  if (SeleniumStrings.LISTBOX.equalsIgnoreCase(type)) {
 				new Select(getWebElement()).selectByVisibleText(value);
@@ -908,7 +923,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 			}
 		} catch (IOException e) {
 			reportStepFailScreenshot(screenshotFile());
-			reportStepFail("<b>INPUT   </b> (" + xpath + ", '" + getSecretString(value, secret) + ")'");
+			reportStepFail("<b>INPUT   </b> (" + xpath + ", '" + CommonHelper.getSecretString(value) + ")'");
 		}
 	}
 
@@ -920,23 +935,26 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param value the value
 	 */
 	@Override
-	public void inputByXpath(String xpath, String className, String value) {
-		inputByXpath(xpath, className, value, false);
+	public void inputByXpath(String xpath, String type, String value) {
+		inputByXpath(xpath, type, value, false);
 	}
 
 	/**
 	 * Input.
+	 * 
+	 * If secret=true the input value will be masked in report like '*****'
 	 *
 	 * @param locatorDelegate the locator delegate
 	 * @param value the value
-	 * @param b the b
+	 * @param secret the secret
 	 */
-	private void input(String locatorDelegate, String value, boolean b) {
+	@Override
+	public void input(String locatorDelegate, String value, boolean secret) {
 		String xpath = getLocator(locatorDelegate); // expected: a xpath from the property file
-		String className = "";
+		String type = "";
 		String[] descParts = locatorDelegate.split(File.pathSeparator);
-		className = descParts[1];
-		inputByXpath(xpath, className, value, b);
+		type = descParts[1];
+		inputByXpath(xpath, type, value, secret);
 	}
 	
 	/**
@@ -945,6 +963,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @param value           the value
 	 */
+	@Override
 	public void input(String locatorDelegate, String value) {
 		input(locatorDelegate, value, false);
 	}
@@ -970,6 +989,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the string
 	 */
+	@Override
 	public String output(String locatorDelegate) {
 		String xpath = getLocator(locatorDelegate);
 		return outputByXpath(xpath);
@@ -1029,34 +1049,20 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 
 	/**
 	 * Log secret.
+	 * 
+	 * If secret==true the masked value will be logged
 	 *
 	 * @param locatorDelegate the locator delegate
 	 * @param value  the value
 	 * @param secret the secret
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	protected void logSecret(String locatorDelegate, String value, boolean secret) throws IOException {
-		String text = getSecretString(value, secret);
-		logSelenium.debug(() -> "<b>input</b> by xpath $(\"" + locatorDelegate + "\"), value=" + text);
-	}
-
-	/**
-	 * Gets the secret string.
-	 *
-	 * @param value  the value
-	 * @param secret the secret
-	 * @return the secret string
-	 */
-	public String getSecretString(String value, boolean secret) {
-		StringBuilder bld = new StringBuilder();
+	private void logSecret(String locatorDelegate, String value, boolean secret) throws IOException {
+		String text = value;
 		if (secret) {
-			for (int i = 1; i < value.length(); i++) {
-				bld.append("*");
-			}
-			return bld.toString();
-		} else {
-			return value;
+			text = CommonHelper.getSecretString(value);
 		}
+		logSelenium.debug("<b>input</b> by xpath $(\"" + locatorDelegate + "\"), value=" + text);
 	}
 
 	/**
@@ -1064,25 +1070,11 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 *
 	 * @param timeoutSeconds the timeout seconds
 	 */
-	public static void waitUntilFullyLoaded(int timeoutSeconds) {
+	@Override
+	public void waitUntilFullyLoaded(int timeoutSeconds) {
 		WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(timeoutSeconds));
 		wait.until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState")
 				.equals("complete"));
-	}
-
-	/**
-	 * Wait until webelement is clickable.
-	 *
-	 * @param webEl          the web el
-	 * @param timeout the timeout seconds
-	 * @return the web element
-	 */
-	public static WebElement waitUntilClickable(WebElement webEl, long timeout) {
-		if (webEl != null) {
-			WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(timeout));
-			return wait.until(ExpectedConditions.elementToBeClickable(webEl));
-		}
-		return null;
 	}
 
 	/**
@@ -1091,7 +1083,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the locator
 	 */
-	public String getLocator(String locatorDelegate) {
+	private String getLocator(String locatorDelegate) {
 		String[] locatorDelegateSplit = locatorDelegate.split(File.pathSeparator);
 		if (locatorDelegateSplit.length != 3) {
 			String errMsg = "locatorDelegate must match pattern 'classname" + 
@@ -1111,15 +1103,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 				"' by key '" + key + "' from file '" + cn + ".properties'");
 
 		return locator;
-	}
-
-	/**
-	 * Gibt das jeweilige Testdaten Excel zurück.
-	 *
-	 * @return Das Testdaten Excel als File.
-	 */
-	public File getTestDataFile() {
-		return new File(getTestDataPath() + File.separator + SeleniumStrings.TESTDATA_XLS);
 	}
 
 	/**
@@ -1164,6 +1147,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	/**
 	 * Report step pass screenshot.
 	 */
+	@Override
 	public void reportStepPassScreenshot() {
 		reportStepPassScreenshot(screenshotFile());
 	}
@@ -1171,6 +1155,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	/**
 	 * Report step fail screenshot.
 	 */
+	@Override
 	public void reportStepFailScreenshot() {
 		reportStepFailScreenshot(screenshotFile());
 	}
@@ -1181,6 +1166,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 *
 	 * @return the string
 	 */
+	@Override
 	public String screenshotFile() {
 		long time = new Date().getTime();
 		File source = ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.FILE);
@@ -1202,38 +1188,30 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 *
 	 * @return the string
 	 */
-	public static String screenshotBase64() {
+	@Override
+	public String screenshotBase64() {
 		String scnShot = getDriver().getScreenshotAs(OutputType.BASE64);
 		return "data:image/jpg;base64, " + scnShot;
 
 	}
 
 	/**
-	 * Common setup.
-	 *
-	 * @param testDataPath the test data path
-	 * @return the platform interface
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws ConfigurationException the configuration exception
-	 */
-	public SeleniumInterface commonSetup(String testDataPath)
-			throws IOException, ConfigurationException {
-		return commonSetup(null, testDataPath);
-	}
-
-	/**
 	 * Scroll to bottom.
 	 */
+	@Override
 	public void scrollToBottom() {
 		((JavascriptExecutor) driver).executeScript("window.scrollBy(0,document.body.scrollHeight)", "");
 	}
 
 	/**
 	 * Wait.
+	 * 
+	 * Waits the given milliseconds
 	 *
 	 * @param milliseconds the milliseconds
 	 */
-	public static void wait(int milliseconds) {
+	@Override
+	public void wait(int milliseconds) {
 		try {
 			Thread.sleep(milliseconds);
 		} catch (InterruptedException e) {
@@ -1247,6 +1225,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the edits the field locator
 	 */
+	@Override
 	public String getEditFieldLocator(String locatorDelegate) {
 		return this.getClass().getName() + File.pathSeparator + SeleniumStrings.EDITFIELD + File.pathSeparator + locatorDelegate;
 	}
@@ -1257,6 +1236,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the button locator
 	 */
+	@Override
 	public String getButtonLocator(String locatorDelegate) {
 		return this.getClass().getName() + File.pathSeparator + SeleniumStrings.BUTTON + File.pathSeparator + locatorDelegate;
 	}
@@ -1267,6 +1247,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the text locator
 	 */
+	@Override
 	public String getTextLocator(String locatorDelegate) {
 		return this.getClass().getName() + File.pathSeparator + SeleniumStrings.TEXT + File.pathSeparator + locatorDelegate;
 	}
@@ -1277,6 +1258,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the listbox locator
 	 */
+	@Override
 	public String getListboxLocator(String locatorDelegate) {
 		return this.getClass().getName() + File.pathSeparator + SeleniumStrings.LISTBOX + File.pathSeparator + locatorDelegate;
 	}
@@ -1287,6 +1269,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the radiogroup locator
 	 */
+	@Override
 	public String getRadiogroupLocator(String locatorDelegate) {
 		return this.getClass().getName() + File.pathSeparator + SeleniumStrings.RADIOGROUP + File.pathSeparator + locatorDelegate;
 	}
@@ -1297,6 +1280,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the radiobutton locator
 	 */
+	@Override
 	public String getRadiobuttonLocator(String locatorDelegate) {
 		return this.getClass().getName() + File.pathSeparator + SeleniumStrings.RADIOBUTTON + File.pathSeparator + locatorDelegate;
 	}
@@ -1307,6 +1291,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the checkbox locator
 	 */
+	@Override
 	public String getCheckboxLocator(String locatorDelegate) {
 		return this.getClass().getName() + File.pathSeparator + SeleniumStrings.CHECKBOX + File.pathSeparator + locatorDelegate;
 	}
@@ -1317,6 +1302,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the numericfield locator
 	 */
+	@Override
 	public String getNumericfieldLocator(String locatorDelegate) {
 		return this.getClass().getName() + File.pathSeparator + SeleniumStrings.NUMERICFIELD + File.pathSeparator + locatorDelegate;
 	}
@@ -1327,6 +1313,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the filefield locator
 	 */
+	@Override
 	public String getFilefieldLocator(String locatorDelegate) {
 		return this.getClass().getName() + File.pathSeparator + SeleniumStrings.FILEFIELD + File.pathSeparator + locatorDelegate;
 	}
@@ -1337,6 +1324,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the slider locator
 	 */
+	@Override
 	public String getSliderLocator(String locatorDelegate) {
 		return this.getClass().getName() + File.pathSeparator + SeleniumStrings.SLIDER + File.pathSeparator + locatorDelegate;
 	}
@@ -1347,6 +1335,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the link locator
 	 */
+	@Override
 	public String getLinkLocator(String locatorDelegate) {
 		return this.getClass().getName() + File.pathSeparator + SeleniumStrings.LINK + File.pathSeparator + locatorDelegate;
 	}

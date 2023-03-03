@@ -74,5 +74,20 @@ public class CommonHelper {
 		return Arrays.stream(values).anyMatch(value.toLowerCase()::equals);
 	}
 
+	/**
+	 * Gets the secret string.
+	 *
+	 * @param value  the value
+	 * @param secret the secret
+	 * @return the secret string
+	 */
+	public static String getSecretString(String value) {
+		StringBuilder bld = new StringBuilder();
+			for (int i = 1; i < value.length(); i++) {
+				bld.append("*");
+			}
+			return bld.toString();
+	}
+
 
 }

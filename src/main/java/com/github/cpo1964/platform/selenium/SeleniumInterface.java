@@ -343,4 +343,233 @@ public interface SeleniumInterface extends ReportInterface {
 	 */
 	Properties getTestPlatformProperties(String value);
 
+	/**
+	 * Exists by xpath.
+	 *
+	 * @param xpath the xpath
+	 * @param timeout the timeout
+	 * @return true, if successful
+	 */
+	boolean existsByXpath(String xpath, long timeout);
+
+	/**
+	 * Checks if is clickable.
+	 * 
+	 * An expectation for checking an element is visible and enabled such that you can click it.
+	 *
+	 * @param xpath the xpath
+	 * @param timeout the timeout
+	 * @return true, if is clickable
+	 */
+	boolean isClickableByXpath(String xpath, long timeout);
+
+	/**
+	 * Checks if is clickable by xpath.
+	 *
+	 * An expectation for checking an element is visible and enabled such that you can click it.
+	 * Uses default timeout
+	 *
+	 * @param xpath the xpath
+	 * @return true, if is clickable by xpath
+	 */
+	boolean isClickableByXpath(String xpath);
+
+	/**
+	 * Checks if is clickable.
+	 * 
+	 * An expectation for checking an element is visible and enabled such that you can click it.
+	 *
+	 * @param xpath the xpath
+	 * @return true, if is clickable
+	 */
+	boolean isClickable(String locatorDelegate, long timeout);
+
+	/**
+	 * Checks if is clickable.
+	 *
+	 * An expectation for checking an element is visible and enabled such that you can click it.
+	 * Uses default timeout
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return true, if is clickable
+	 */
+	boolean isClickable(String locatorDelegate);
+
+	/**
+	 * Checks if is displayed.
+	 * 
+	 * An expectation for checking that an element is present on the DOM of a page and visible.
+	 * Visibility means that the element is not only displayed but also has a height and width that isgreater than 0.
+	 *
+	 * @param xpath the xpath
+	 * @param timeout the timeout
+	 * @return true, if is displayed
+	 */
+	boolean isDisplayed(String xpath, long timeout);
+
+	/**
+	 * Checks if is selected.
+	 * 
+	 * An expectation for checking if the given element is selected.
+	 *
+	 * @param xpath the xpath
+	 * @param timeout the timeout
+	 * @return true, if is selected
+	 */
+	boolean isSelected(String xpath, long timeout);
+
+	/**
+	 * Exists.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param reportFailed    the reportFailed
+	 * @return true, if successful
+	 */
+	boolean exists(String locatorDelegate, boolean reportFailed);
+
+	/**
+	 * Exists by xpath.
+	 *
+	 * @param xpath the xpath
+	 * @param reportFailed the report failed
+	 * @param timeout the timeout
+	 * @return true, if successful
+	 */
+	boolean existsByXpath(String xpath, boolean reportFailed, long timeout);
+
+	/**
+	 * Input.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param value the value
+	 * @param secret the secret
+	 */
+	void input(String locatorDelegate, String value, boolean secret);
+
+	/**
+	 * Wait until fully loaded.
+	 *
+	 * @param timeoutSeconds the timeout seconds
+	 */
+	void waitUntilFullyLoaded(int timeoutSeconds);
+
+	/**
+	 * Report step pass screenshot.
+	 */
+	void reportStepPassScreenshot();
+
+	/**
+	 * Report step fail screenshot.
+	 */
+	void reportStepFailScreenshot();
+
+	/**
+	 * Screenshot base 64.
+	 *
+	 * @return the string
+	 */
+	String screenshotBase64();
+
+	/**
+	 * Scroll to bottom.
+	 */
+	void scrollToBottom();
+
+	/**
+	 * Wait.
+	 * 
+	 * Waits the given milliseconds
+	 *
+	 * @param milliseconds the milliseconds
+	 */
+	void wait(int milliseconds);
+
+	/**
+	 * Gets the link locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the link locator
+	 */
+	String getLinkLocator(String locatorDelegate);
+
+	/**
+	 * Gets the slider locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the slider locator
+	 */
+	String getSliderLocator(String locatorDelegate);
+
+	/**
+	 * Gets the filefield locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the filefield locator
+	 */
+	String getFilefieldLocator(String locatorDelegate);
+
+	/**
+	 * Gets the numericfield locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the numericfield locator
+	 */
+	String getNumericfieldLocator(String locatorDelegate);
+
+	/**
+	 * Gets the checkbox locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the checkbox locator
+	 */
+	String getCheckboxLocator(String locatorDelegate);
+
+	/**
+	 * Gets the radiobutton locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the radiobutton locator
+	 */
+	String getRadiobuttonLocator(String locatorDelegate);
+
+	/**
+	 * Gets the radiogroup locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the radiogroup locator
+	 */
+	String getRadiogroupLocator(String locatorDelegate);
+
+	/**
+	 * Gets the listbox locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the listbox locator
+	 */
+	String getListboxLocator(String locatorDelegate);
+
+	/**
+	 * Gets the text locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the text locator
+	 */
+	String getTextLocator(String locatorDelegate);
+
+	/**
+	 * Gets the button locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the button locator
+	 */
+	String getButtonLocator(String locatorDelegate);
+
+	/**
+	 * Gets the edits the field locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the edits the field locator
+	 */
+	String getEditFieldLocator(String locatorDelegate);
+
 }
