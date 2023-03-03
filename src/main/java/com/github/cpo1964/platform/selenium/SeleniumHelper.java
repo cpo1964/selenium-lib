@@ -567,10 +567,9 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 
 	/**
 	 * Checks if is clickable.
-	 * 
-	 * An expectation for checking an element is visible and enabled such that you can click it.
 	 *
-	 * @param xpath the xpath
+	 * @param locatorDelegate the locator delegate
+	 * @param timeout the timeout
 	 * @return true, if is clickable
 	 */
 	@Override
@@ -931,7 +930,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * Input by xpath.
 	 *
 	 * @param xpath the xpath
-	 * @param className the class name
+	 * @param type the type
 	 * @param value the value
 	 */
 	@Override

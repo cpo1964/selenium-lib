@@ -379,7 +379,8 @@ public interface SeleniumInterface extends ReportInterface {
 	 * 
 	 * An expectation for checking an element is visible and enabled such that you can click it.
 	 *
-	 * @param xpath the xpath
+	 * @param locatorDelegate the locator delegate
+	 * @param timeout the timeout
 	 * @return true, if is clickable
 	 */
 	boolean isClickable(String locatorDelegate, long timeout);
