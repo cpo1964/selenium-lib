@@ -162,10 +162,10 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	/**
 	 * Sets the failed.
 	 *
-	 * @param failed the new failed
+	 * @param value the new value
 	 */
-	public void setFailed(boolean failed) {
-		this.failed = failed;
+	public void setFailed(boolean value) {
+		failed = value;
 	}
 
 	/**
@@ -370,7 +370,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 */
 	@Override
 	public long getDriverImplicitlyWaitTimoutSeconds() {
-		return getDriver().manage().timeouts().getImplicitWaitTimeout().toMillis();
+		return getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds();
 	}
 
 	/**
@@ -380,7 +380,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 */
 	@Override
 	public void setDriverImplicitlyWaitTimoutSeconds(long value) {
-		getDriver().manage().timeouts().implicitlyWait(Duration.ofMillis(value));
+		getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(value));
 	}
 
 	/**
@@ -493,25 +493,10 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		}
 	}
 
-	/**
-	 * Exists by xpath.
-	 * 
-	 * the searched webelement must be unique
-	 *
-	 * @param xpath the xpath
-	 * @param timeout the timeout
-	 * @return true, if successful
-	 */
-	@Override
-	public boolean existsByXpath(String xpath, long timeout) {
-		setWebElement(null);
-		setWebElement(getByXpath(xpath, timeout));
-		return getWebElement() != null;
+	private WebElement getByXpath(String xpath) {
+		return getByXpath(xpath, getDriver().manage().timeouts().getImplicitWaitTimeout().toMillis()/1000);
 	}
 
-	private WebElement getByXpath(String xpath) {
-		return getByXpath(xpath, getDriver().manage().timeouts().getImplicitWaitTimeout().toMillis());
-	}
 	/**
 	 * Gets a unique webelement by xpath.
 	 *
@@ -522,7 +507,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	private WebElement getByXpath(String xpath, long timeout) {
 		WebElement webEl = null;
 		long oldTimeout = getDriverImplicitlyWaitTimoutSeconds();
-		setDriverImplicitlyWaitTimoutSeconds(timeout);
+		setDriverImplicitlyWaitTimoutSeconds(1);
 		/*
 		 * Find all elements within the current page using the given mechanism.
 		 * This method is affected by the 'implicit wait' times in force at the time of execution. 
@@ -531,6 +516,15 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		 * or will return an empty list if the timeout is reached. 
 		 */
 		List<WebElement> webEls = getDriver().findElements(By.xpath(xpath));
+		int i = 0;
+		while (webEls.size() == 0 && i < timeout) {
+			webEls = getDriver().findElements(By.xpath(xpath));
+			wait(1000);
+			i++;
+		}
+		if (i > 1) {
+			logSelenium.info("waited " + i + " seconds for '" + xpath +"'");
+		}
 		setDriverImplicitlyWaitTimoutSeconds(oldTimeout);
 		// the searched webelement must be unique
 		if (webEls.size() > 1) {
@@ -560,8 +554,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		}
 		// wait timeout for first Webelement to be clickable
 		WebDriverWait wa = new WebDriverWait(getDriver(), Duration.ofSeconds(timeout));
-		wa.until(ExpectedConditions.elementToBeClickable(webEl));
-		return webEl.isEnabled();
+		webEl = wa.until(ExpectedConditions.elementToBeClickable(webEl));
+		return webEl != null;
 	}
 
 	/**
@@ -639,7 +633,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	public boolean isSelected(String xpath, long timeout) {
 		// wait timeout for first Webelement to be clickable
 		WebDriverWait wa = new WebDriverWait(getDriver(), Duration.ofSeconds(timeout));
-		return wa.until(ExpectedConditions.elementToBeSelected(By.xpath(xpath)));
+		ok = wa.until(ExpectedConditions.elementToBeSelected(By.xpath(xpath)));
+		return ok;
 	}
 
 	/**
@@ -652,7 +647,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 */
 	@Override
 	public boolean existsByXpath(String xpath) {
-		return existsByXpath(xpath, getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds());
+		return existsByXpath(xpath, true, getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds());
 	}
 
 	/**
@@ -709,7 +704,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @return true, if successful
 	 */
 	@Override
-	public boolean exists(String locatorDelegate, int timeout) {
+	public boolean exists(String locatorDelegate, long timeout) {
 		return exists(locatorDelegate, false, timeout);
 	}
 
@@ -741,7 +736,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	@Override
 	public boolean existsByXpath(String xpath, boolean reportFailed, long timeout) {
 		setExistsCount(getExistsCount() + 1);
-		boolean exists = existsByXpath(xpath, timeout);
+		setWebElement(getByXpath(xpath, timeout));
+		boolean exists = getWebElement() != null;
 		if (!exists)  {
 			if (reportFailed) {
 				reportStepFail("<b>EXISTS  </b> by xpath $(\"" + xpath + "\") - false");
@@ -752,6 +748,20 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		}
 		reportStepPass("<b>EXISTS  </b> by xpath $(\"" + xpath + "\") - true");
 		return exists;
+	}
+
+	/**
+	 * Exists by xpath.
+	 *
+	 * the searched webelement must be unique
+	 *
+	 * @param xpath the xpath
+	 * @param timeout the timeout
+	 * @return true, if successful
+	 */
+	@Override
+	public boolean existsByXpath(String xpath, long timeout) {
+		return existsByXpath(xpath, true , timeout);
 	}
 
 	/**
@@ -776,8 +786,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	@Override
 	public void clickByXpath(String xpath, String clickAction) {
 		setClicksCount(getClicksCount() + 1);
-		setWebElement(getByXpath(xpath));
-		if (isClickableByXpath(xpath)) {
+		setWebElement(getByXpath(xpath,1));
+		if (isClickableByXpath(xpath, 1)) {
 			if (SeleniumStrings.CLICKKEY.equals(clickAction)) {
 				Actions actions = new Actions(getDriver());
 				actions.moveToElement(getWebElement()).click().build().perform();
@@ -1033,6 +1043,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		if (condition) {
 			reportStepPass("<b>VALIDATE</b> '" + description + "' - " + condition);
 		} else {
+			setRunStatus(false);
 			reportStepFail("<b>VALIDATE</b> '" + description + "' - " + condition);
 			try {
 				reportStepFailScreenshot(screenshotFile());

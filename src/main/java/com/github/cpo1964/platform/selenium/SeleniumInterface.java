@@ -264,7 +264,7 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @param timeout the timeout
 	 * @return true, if successful
 	 */
-	boolean exists(String locatorDelegate, int timeout);
+	boolean exists(String locatorDelegate, long timeout);
 
 	/**
 	 * Exists.

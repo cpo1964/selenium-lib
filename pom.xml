@@ -19,7 +19,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.cpo1964</groupId>
 	<artifactId>selenium-lib</artifactId>
-	<version>1.0.5</version>
+	<version>1.0.6</version>
 	<packaging>jar</packaging>
 	<name>${project.name}</name>
 	<description>A fine tuned function library based on selenium webdriver api</description>
@@ -73,6 +73,11 @@
 				<artifactId>license-maven-plugin</artifactId>
 				<version>4.2.rc2</version>
 				<configuration>
+					<properties>
+						<owner>Christian Pöcksteiner</owner>
+						<year>${project.inceptionYear}</year>
+						<email>christian.poecksteiner@aon.at</email>
+					</properties>
 					<inlineHeader>
 						<![CDATA[
 Copyright (C) ${year} ${owner} (${email})
@@ -87,11 +92,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ]]>
 					</inlineHeader>
-					<properties>
-						<owner>Christian Pöcksteiner</owner>
-						<year>${project.inceptionYear}</year>
-						<email>christian.poecksteiner@aon.at</email>
-					</properties>
 					<excludes>
 						<exclude>src/test/resources/**</exclude>
 						<exclude>**/release-pom.xml</exclude>
@@ -170,18 +170,13 @@ limitations under the License.
 		<developerConnection>scm:git:ssh://github.com:cpo1964/selenium-lib.git</developerConnection>
 		<url>https://github.com/cpo1964/selenium-lib</url>
 	</scm>
-	<developers>
-		<developer>
-			<name>Christian Pöcksteiner</name>
-			<email>christian.poecksteiner@aon.at</email>
-			<organization>com.github.cpo1964</organization>
-			<organizationUrl>http://github.com/cpo1964/</organizationUrl>
-		</developer>
-	</developers>
 	<properties>
 		<project.name>selenium-lib</project.name>
+		<owner>com.github.cpo1964</owner>
+		<email>christian.poecksteiner@aon.at</email>
 		<organizationName></organizationName>
 		<project.inceptionYear>2023</project.inceptionYear>
+		<year>2023</year>
 		<license.dir>${basedir}</license.dir>
 		<webdrivermanager.version>5.3.2</webdrivermanager.version>
 		<selenium-java.version>4.7.2</selenium-java.version>
@@ -197,6 +192,14 @@ limitations under the License.
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
+	<developers>
+		<developer>
+			<name>Christian Pöcksteiner</name>
+			<email>christian.poecksteiner@aon.at</email>
+			<organization>com.github.cpo1964</organization>
+			<organizationUrl>http://github.com/cpo1964/</organizationUrl>
+		</developer>
+	</developers>
 	<dependencies>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
