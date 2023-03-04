@@ -914,7 +914,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 			if (type != null && isClickableByXpath(xpath)) {
 				setWebElement(getByXpath(xpath, 30));
 			} else {
-					logSecret(xpath + "(unknown) -> not done ", CommonHelper.getSecretString(value), secret);
+					logSecret(xpath + "(unknown) -> not done ", CommonHelper.getSecretString(value, secret), secret);
 					try {
 						reportStepFailScreenshot(screenshotFile());
 					} catch (WebDriverException ew) {
@@ -931,7 +931,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 				actions.moveToElement(getWebElement()).click().build().perform();
 				getWebElement().clear();
 				getWebElement().sendKeys(value);
-				reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + CommonHelper.getSecretString(value) + "'");
+				reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + CommonHelper.getSecretString(value, secret) + "'");
 				logSecret(xpath, value, secret);
 			} else  if (SeleniumStrings.LISTBOX.equalsIgnoreCase(type)) {
 				new Select(getWebElement()).selectByVisibleText(value);
@@ -959,7 +959,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 			}
 		} catch (IOException e) {
 			reportStepFailScreenshot(screenshotFile());
-			reportStepFail("<b>INPUT   </b> (" + xpath + ", '" + CommonHelper.getSecretString(value) + ")'");
+			reportStepFail("<b>INPUT   </b> (" + xpath + ", '" + CommonHelper.getSecretString(value, secret) + ")'");
 		}
 	}
 
@@ -1048,7 +1048,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 			try {
 				reportStepFailScreenshot(screenshotFile());
 			} catch (WebDriverException e) {
-				reportStepFail("<b>VALIDATE</b> '" + description + "' - " + condition);
+				reportStepFail("screenshotFile failed");
 			}
 		}
 		return condition;
@@ -1097,7 +1097,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	private void logSecret(String locatorDelegate, String value, boolean secret) throws IOException {
 		String text = value;
 		if (secret) {
-			text = CommonHelper.getSecretString(value);
+			text = CommonHelper.getSecretString(value, secret);
 		}
 		logSelenium.debug("<b>input</b> by xpath $(\"" + locatorDelegate + "\"), value=" + text);
 	}

@@ -80,7 +80,7 @@ public class CommonHelper {
 	 * @param value the value
 	 * @return the secret string
 	 */
-	public static String getSecretString(String value) {
+	public static String getSecretString(String value, boolean secret) {
 		StringBuilder bld = new StringBuilder();
 			for (int i = 1; i < value.length(); i++) {
 				bld.append("*");
