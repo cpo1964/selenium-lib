@@ -22,12 +22,12 @@ import java.util.Properties;
  * The Class CommonHelper.
  */
 public class CommonHelper {
-	
+
 	/**
 	 * Gets the class property value by key.
 	 *
 	 * @param propHolder the prop holder
-	 * @param key the key
+	 * @param key        the key
 	 * @return the class property value by key
 	 */
 	public static String getClassPropertyValueByKey(final Class<?> propHolder, String key) {
@@ -77,6 +77,7 @@ public class CommonHelper {
 	/**
 	 * Gets the secret string.
 	 *
+	 * @param value  the value
 	 * @param secret the value
 	 * @return the secret string
 	 */
