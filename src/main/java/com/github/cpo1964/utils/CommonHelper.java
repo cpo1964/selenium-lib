@@ -77,7 +77,7 @@ public class CommonHelper {
 	/**
 	 * Gets the secret string.
 	 *
-	 * @param value the value
+	 * @param secret the value
 	 * @return the secret string
 	 */
 	public static String getSecretString(String value, boolean secret) {
