@@ -19,7 +19,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.cpo1964</groupId>
 	<artifactId>selenium-lib</artifactId>
-	<version>1.0.8</version>
+	<version>1.0.9</version>
 	<packaging>jar</packaging>
 	<name>${project.name}</name>
 	<description>A fine tuned function library based on selenium webdriver api</description>
@@ -174,7 +174,7 @@ limitations under the License.
 		<project.name>selenium-lib</project.name>
 		<owner>com.github.cpo1964</owner>
 		<email>christian.poecksteiner@aon.at</email>
-		<organizationName></organizationName>
+		<organizationName>com.github.cpo1964</organizationName>
 		<project.inceptionYear>2023</project.inceptionYear>
 		<year>2023</year>
 		<license.dir>${basedir}</license.dir>
