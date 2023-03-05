@@ -50,5 +50,5 @@ public enum ClickActions {
     /**
      * Shiftclick click actions.
      */
-    SHIFTCLICK;
+    SHIFTCLICK
 }

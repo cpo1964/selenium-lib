@@ -12,32 +12,12 @@
  */
 package com.github.cpo1964.platform.selenium;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.time.Duration;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
-
-import javax.naming.ConfigurationException;
-
+import com.github.cpo1964.report.extent.ExtentHelper;
+import com.github.cpo1964.utils.CommonHelper;
+import com.github.cpo1964.utils.ExcelHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.NotFoundException;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxBinary;
@@ -51,9 +31,14 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.github.cpo1964.report.extent.ExtentHelper;
-import com.github.cpo1964.utils.CommonHelper;
-import com.github.cpo1964.utils.ExcelHelper;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.Duration;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * The Class SeleniumHelper.
@@ -283,7 +268,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      * @return true, if is driver loaded
      */
     public static boolean isDriverLoaded() {
-        return driverLoaded;
+        return !driverLoaded;
     }
 
     /**
@@ -447,13 +432,13 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 
         if ("chrome".equalsIgnoreCase(getBrowser())) {
             setupChromeDriver();
-            if (!isDriverLoaded()) {
+            if (isDriverLoaded()) {
                 logSelenium.info(() -> "using local chromedriver: " + System.getProperty("webdriver.chrome.driver") + System.lineSeparator());
                 setDriverLoaded(true);
             }
         } else if ("firefox".equalsIgnoreCase(getBrowser())) {
             setupFirefoxDriver();
-            if (!isDriverLoaded()) {
+            if (isDriverLoaded()) {
                 logSelenium.info(() -> "using local geckodriver: " + System.getProperty("webdriver.gecko.driver") + System.lineSeparator());
                 setDriverLoaded(true);
             }
@@ -466,11 +451,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      * Setup chrome driver.
      */
     private static void setupChromeDriver() {
-
-//		System.setProperty("webdriver.chrome.silentLogging", "true");
-//		System.setProperty("webdriver.chrome.verboseLogging", "false");
-//		System.setProperty("webdriver.chrome.silentOutput", "true");
-
         if (getDriver() == null) {
             if (getProxyUser() != null && !getProxyUser().isEmpty()) {
                 io.github.bonigarcia.wdm.WebDriverManager.chromedriver().proxyUser(getProxyUser()).proxyPass(getProxyPass()).proxy(getProxy()).setup();
@@ -478,12 +458,10 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
                 io.github.bonigarcia.wdm.WebDriverManager.chromedriver().setup();
             }
         }
-
         ChromeOptions chromeOptions = new ChromeOptions();
         if ("true".equalsIgnoreCase(System.getProperty("headless"))) {
             chromeOptions.setHeadless(true);
         }
-
         // start chrome with empty tab
         setDriver(new ChromeDriver(chromeOptions));
     }
@@ -536,12 +514,9 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      * @param platformDelegate the platform delegate
      * @param testDataPath     the test data path
      * @return the selenium interface
-     * @throws IOException            Signals that an I/O exception has occurred.
-     * @throws ConfigurationException the configuration exception
      */
     @Override
-    public SeleniumInterface commonSetup(String platformDelegate, String testDataPath)
-            throws IOException, ConfigurationException {
+    public SeleniumInterface commonSetup(String platformDelegate, String testDataPath) {
         return null;
     }
 
@@ -1044,7 +1019,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     @Override
     public void input(String locatorDelegate, String value, boolean secret) {
         String xpath = getLocator(locatorDelegate);
-        String type = "";
+        String type;
         String[] descParts = locatorDelegate.split(File.pathSeparator);
         type = descParts[1];
         inputByXpath(xpath, type, value, secret);
@@ -1098,10 +1073,10 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     @Override
     public boolean validate(boolean condition, String description) {
         if (condition) {
-            reportStepPass("<b>VALIDATE</b> '" + description + "' - " + condition);
+            reportStepPass("<b>VALIDATE</b> '" + description + "' - " + true);
         } else {
             setRunStatus(false);
-            reportStepFail("<b>VALIDATE</b> '" + description + "' - " + condition);
+            reportStepFail("<b>VALIDATE</b> '" + description + "' - " + false);
             try {
                 reportStepFailScreenshot(screenshotFile());
             } catch (WebDriverException e) {
@@ -1154,7 +1129,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     private void logSecret(String locatorDelegate, String value, boolean secret) throws IOException {
         String text = value;
         if (secret) {
-            text = CommonHelper.getSecretString(value, secret);
+            text = CommonHelper.getSecretString(value, true);
         }
         logSelenium.debug("<b>input</b> by xpath $(\"" + locatorDelegate + "\"), value=" + text);
     }
@@ -1187,8 +1162,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
         }
         String cn = locatorDelegateSplit[0];
         String key = locatorDelegateSplit[2];
-        Class<?> c = null;
-        c = getClassByQualifiedName(cn);
+        Class<?> c = getClassByQualifiedName(cn);
         if (c == null) {
             throw new NotFoundException("class not found: " + cn);
         }
@@ -1207,10 +1181,11 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      */
     @Override
     public Properties getTestPlatformProperties(String filePath) {
-        if (SeleniumHelper.testPlatformProperties == null || SeleniumHelper.testPlatformProperties.isEmpty()) {
-            try (Reader inStream = new InputStreamReader(new FileInputStream(new File(filePath)))) {
+        if (SeleniumHelper.testPlatformProperties.isEmpty()) {
+            try (Reader inStream = new InputStreamReader(new FileInputStream(filePath))) {
                 SeleniumHelper.testPlatformProperties.load(inStream);
             } catch (IOException e) {
+                logSelenium.debug(e.getMessage());
             }
         }
         return SeleniumHelper.testPlatformProperties;
@@ -1220,10 +1195,9 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      * Wait until fully loaded.
      *
      * @param timeoutSeconds the timeout seconds
-     * @throws IOException Signals that an I/O exception has occurred.
      */
     @Override
-    public void waitUntilFullyLoaded(long timeoutSeconds) throws IOException {
+    public void waitUntilFullyLoaded(long timeoutSeconds) {
         WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(timeoutSeconds));
         wait.until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState")).equals("complete");
     }
@@ -1231,10 +1205,9 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     /**
      * Common teardown.
      *
-     * @throws IOException Signals that an I/O exception has occurred.
      */
     @Override
-    public void commonTeardown() throws IOException {
+    public void commonTeardown() {
         throw new UnsupportedOperationException("Not implemented, yet");
     }
 
@@ -1264,7 +1237,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     public String screenshotFile() {
         long time = new Date().getTime();
         File source = ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.FILE);
-        String snapshotsDir = Paths.get("").toAbsolutePath().toString() + File.separator + "RunResults" + File.separator
+        String snapshotsDir = Paths.get("").toAbsolutePath() + File.separator + "RunResults" + File.separator
                 + "Resources" + File.separator + "Snapshots";
         try {
             Files.createDirectories(Paths.get(snapshotsDir));
@@ -1441,8 +1414,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      * @return the string
      */
     protected static String testPlatformPropertiesGet(String key) {
-        String value = testPlatformProperties.getProperty(key);
-        return value;
+        return testPlatformProperties.getProperty(key);
     }
 
     /**
@@ -1471,7 +1443,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     @Override
     public boolean waitUntilBy(By locator, WebelementState state, long timeout, boolean report) {
         setWaitCount(WaitCount() + 1);
-        WebElement webEl = null;
+        WebElement webEl;
         if (locator.getClass().equals(By.ByXPath.class)) {
             webEl = getWebelementByXpath(locator, timeout);
         } else {

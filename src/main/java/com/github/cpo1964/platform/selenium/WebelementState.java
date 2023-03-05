@@ -43,5 +43,5 @@ public enum WebelementState {
     /**
      * Not found webelement state.
      */
-    NotFound;
+    NotFound
 }

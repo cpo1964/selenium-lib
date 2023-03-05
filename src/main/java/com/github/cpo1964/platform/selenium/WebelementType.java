@@ -63,5 +63,5 @@ public enum WebelementType {
     /**
      * Text webelement type.
      */
-    TEXT;
+    TEXT
 }

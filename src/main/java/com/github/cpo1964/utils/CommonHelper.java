@@ -71,7 +71,7 @@ public class CommonHelper {
 			value = "false";
 		}
 		String[] values = { "true", "ok", "on" };
-		return Arrays.stream(values).anyMatch(value.toLowerCase()::equals);
+		return Arrays.asList(values).contains(value.toLowerCase());
 	}
 
 	/**

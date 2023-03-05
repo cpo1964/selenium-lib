@@ -13,7 +13,6 @@
 package com.github.cpo1964.platform.selenium;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Properties;
 
 import javax.naming.ConfigurationException;
