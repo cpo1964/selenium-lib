@@ -81,6 +81,9 @@ public class CommonHelper {
 	 * @return the secret string
 	 */
 	public static String getSecretString(String value, boolean secret) {
+		if (!secret) {
+			return value;
+		}
 		StringBuilder bld = new StringBuilder();
 			for (int i = 1; i < value.length(); i++) {
 				bld.append("*");
