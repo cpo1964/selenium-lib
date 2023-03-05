@@ -1,84 +1,34 @@
+/*
+ * Copyright (C) 2023 Christian Pöcksteiner (christian.poecksteiner@aon.at)
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *         https://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.github.cpo1964.platform.selenium;
 
 import java.io.File;
 
 public class SeleniumStrings {
 
-	// definitions of standard webelement types
-	// use this values for element definitions in page objects
-	
-	/** The Constant EDITFIELD. */
-	public static final String EDITFIELD = "EditField";
-
-	/** The Constant LISTBOX. */
-	public static final String LISTBOX = "ListBox";
-
-	/** The Constant RADIOGROUP. */
-	public static final String RADIOGROUP = "RadioGroup";
-
-	/** The Constant RADIOBUTTON. */
-	public static final String RADIOBUTTON = "RadioButton";
-
-	/** The Constant CHECKBOX. */
-	public static final String CHECKBOX = "CheckBox";
-
-	/** The Constant NUMERICFIELD. */
-	public static final String NUMERICFIELD = "NumericField";
-
-	/** The Constant FILEFIELD. */
-	public static final String FILEFIELD = "FileField";
-
-	/** The Constant SLIDER. */
-	public static final String SLIDER = "Slider";
-
-	/** The Constant BUTTON. */
-	public static final String BUTTON = "Button";
-
-	/** The Constant LINK. */
-	public static final String LINK = "Link";
-
-	/** The Constant TEXT. */
-	public static final String TEXT = "Text";
-	
 	// values for the verify action
 	
-	/** The Constant EDITABLE. */
-	public static final String EDITABLE = "Editable";
-
-	/** The Constant ENABLED. */
-	public static final String ENABLED = "Enabled";
-
-	/** The Constant EXISTS. */
-	public static final String EXISTSKEY = "Exists";
-
-	/** The Constant VISIBLE. */
-	public static final String VISIBLE = "Visible";
-
-	// values for the click action
-
-	/** The Constant ALTCLICK. */
-	public static final String ALTCLICK = "left click while holding the Alt key down";
-
-	/** The Constant CLICK. */
-	public static final String CLICKKEY = "click with the left mouse button";
-
-	/** The Constant CONTROLCLICK. */
-	public static final String CONTROLCLICK = "left click while holding the Ctrl key down";
-
-	/** The Constant DOUBLECLICK. */
-	public static final String DOUBLECLICK = "double click with the left mouse button";
-
-	/** The Constant LONGCLICK. */
-	public static final String LONGCLICK = "click with the left mouse button which lasts for two seconds";
-	
-	/** The Constant MOUSEOVER. */
-	public static final String MOUSEOVER = "moves the mouse pointer over the control";
-
-	/** The Constant RIGHTCLICK. */
-	public static final String RIGHTCLICK = "click with the right mouse button";
-
-	/** The Constant SHIFTCLICK. */
-	public static final String SHIFTCLICK = "left click while holding the Shift key down";
+//	/** The Constant EDITABLE. */
+//	public static final String EDITABLE = "Editable";
+//
+//	/** The Constant ENABLED. */
+//	public static final String ENABLED = "Enabled";
+//
+//	/** The Constant EXISTS. */
+//	public static final String EXISTSKEY = "Exists";
+//
+//	/** The Constant VISIBLE. */
+//	public static final String VISIBLE = "Visible";
 
 	// platform stuff
 	

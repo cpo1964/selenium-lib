@@ -13,33 +13,42 @@
 package com.github.cpo1964.platform.selenium;
 
 /**
- * The type Non unique result exception.
+ * The enum Click actions.
+ *
+ * values for the click action
  */
-public class NonUniqueResultException extends RuntimeException {
-	private static final long serialVersionUID = -1757423191400510323L;
+public enum ClickActions {
 
-	/**
-	 * Instantiates a new Non unique result exception.
-	 */
-	public NonUniqueResultException() {
-		super("Only one result is allowed for fetchOne calls");
-	}
-
-	/**
-	 * Instantiates a new Non unique result exception.
-	 *
-	 * @param message the message
-	 */
-	public NonUniqueResultException(String message) {
-		super(message);
-	}
-
-	/**
-	 * Instantiates a new Non unique result exception.
-	 *
-	 * @param e the e
-	 */
-	public NonUniqueResultException(Exception e) {
-		super(e);
-	}
+    /**
+     * Altclick click actions.
+     */
+    ALTCLICK,
+    /**
+     * Clickkey click actions.
+     */
+    CLICKKEY,
+    /**
+     * Controlclick click actions.
+     */
+    CONTROLCLICK,
+    /**
+     * Doubleclick click actions.
+     */
+    DOUBLECLICK,
+    /**
+     * Longclick click actions.
+     */
+    LONGCLICK,
+    /**
+     * Mouseover click actions.
+     */
+    MOUSEOVER,
+    /**
+     * Rightclick click actions.
+     */
+    RIGHTCLICK,
+    /**
+     * Shiftclick click actions.
+     */
+    SHIFTCLICK;
 }

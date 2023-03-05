@@ -13,33 +13,35 @@
 package com.github.cpo1964.platform.selenium;
 
 /**
- * The type Non unique result exception.
+ * The enum Webelement state.
  */
-public class NonUniqueResultException extends RuntimeException {
-	private static final long serialVersionUID = -1757423191400510323L;
-
-	/**
-	 * Instantiates a new Non unique result exception.
-	 */
-	public NonUniqueResultException() {
-		super("Only one result is allowed for fetchOne calls");
-	}
-
-	/**
-	 * Instantiates a new Non unique result exception.
-	 *
-	 * @param message the message
-	 */
-	public NonUniqueResultException(String message) {
-		super(message);
-	}
-
-	/**
-	 * Instantiates a new Non unique result exception.
-	 *
-	 * @param e the e
-	 */
-	public NonUniqueResultException(Exception e) {
-		super(e);
-	}
+public enum WebelementState {
+    /**
+     * Displayed webelement state.
+     */
+    Displayed,
+    /**
+     * Hidden webelement state.
+     */
+    Hidden,
+    /**
+     * Selected webelement state.
+     */
+    Selected,
+    /**
+     * Un selected webelement state.
+     */
+    UnSelected,
+    /**
+     * Enabled webelement state.
+     */
+    Enabled,
+    /**
+     * Disabled webelement state.
+     */
+    Disabled,
+    /**
+     * Not found webelement state.
+     */
+    NotFound;
 }

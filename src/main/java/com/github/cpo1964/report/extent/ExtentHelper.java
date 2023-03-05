@@ -36,7 +36,7 @@ import com.github.cpo1964.report.ReportInterface;
 public class ExtentHelper implements ReportInterface {
 
 	/** The exists count. */
-	private static int existsCount;
+	private static int waitCount;
 
 	/** The clicks count. */
 	private static int clicksCount;
@@ -59,12 +59,12 @@ public class ExtentHelper implements ReportInterface {
 	/** The getReport(). */
 	private static ExtentReports report = ExtentHelper.prepareExtentReport();
 
-	public static int getExistsCount() {
-		return existsCount;
+	public static int WaitCount() {
+		return waitCount;
 	}
 
-	public static void setExistsCount(int value) {
-		ExtentHelper.existsCount = value;
+	public static void setWaitCount(int value) {
+		ExtentHelper.waitCount = value;
 	}
 
 	public static int getClicksCount() {
@@ -209,7 +209,7 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	@Override
 	public void reportCreateTest(String msg) {
-		setExistsCount(0);
+		setWaitCount(0);
 		setClicksCount(0);
 		setInputsCount(0);
 		setOutputsCount(0);
@@ -233,7 +233,7 @@ public class ExtentHelper implements ReportInterface {
 			msg = msg.replace("<br>", "");
 			logExtent.info(msg);
 		}
-		String countMsg = "# Actions ####################<br>" + "exists: " + getExistsCount() + "<br>" + "clicks: "
+		String countMsg = "# Actions ####################<br>" + "exists: " + WaitCount() + "<br>" + "clicks: "
 				+ getClicksCount() + "<br>" + "inputs: " + getInputsCount() + "<br>" + "outputs: " + getOutputsCount()
 				+ "<br>";
 		getTest().log(Status.INFO, countMsg);

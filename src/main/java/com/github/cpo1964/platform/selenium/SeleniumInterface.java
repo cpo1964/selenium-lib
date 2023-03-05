@@ -13,26 +13,26 @@
 package com.github.cpo1964.platform.selenium;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 
 import javax.naming.ConfigurationException;
 
 import com.github.cpo1964.report.ReportInterface;
+import org.openqa.selenium.By;
 
 /**
  * The Interface EnvironmentInterface.
  */
 public interface SeleniumInterface extends ReportInterface {
-	
-
 
 	/**
 	 * Common setup.
 	 *
 	 * @param platformDelegate the platform delegate
-	 * @param testDataPath the test data path
+	 * @param testDataPath     the test data path
 	 * @return the platform interface
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException            Signals that an I/O exception has occurred.
 	 * @throws ConfigurationException the configuration exception
 	 */
 	SeleniumInterface commonSetup(String platformDelegate, String testDataPath) throws IOException, ConfigurationException;
@@ -50,7 +50,7 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @return the object
 	 */
 	Object setupDriver();
-	
+
 	/**
 	 * Gets the driver implicitly wait timout seconds.
 	 *
@@ -67,14 +67,14 @@ public interface SeleniumInterface extends ReportInterface {
 
 	/**
 	 * Driver switch to default content.
-	 * 
+	 * <p>
 	 * Selects either the first frame on the page, or the main document when a page contains iframes.
 	 */
 	void driverSwitchToDefaultContent();
-	
+
 	/**
 	 * Driver switch to I frame.
-	 * 
+	 * <p>
 	 * Send future commands to iFrame
 	 *
 	 * @param name the name
@@ -96,12 +96,12 @@ public interface SeleniumInterface extends ReportInterface {
 
 	/**
 	 * Click at the webelement referenced by locatorDelegate
-	 * 
+	 * <p>
 	 * see: https://www.w3schools.com/jsref/event_onclick.asp
-	 * 
+	 * <p>
 	 * The onclick event occurs when the user clicks on an HTML element.
 	 * onclick is a DOM Level 2 (2001) feature
-	 * 
+	 * <p>
 	 * same behaviour as click(locatorDelegate, CLICK)
 	 *
 	 * @param locatorDelegate the locator defined by a delegate
@@ -110,16 +110,16 @@ public interface SeleniumInterface extends ReportInterface {
 
 	/**
 	 * Click at the webelement referenced by locatorDelegate
-	 * 
+	 * <p>
 	 * see: https://www.w3schools.com/jsref/event_onclick.asp
-	 * 
+	 * <p>
 	 * The onclick event occurs when the user clicks on an HTML element.
 	 * onclick is a DOM Level 2 (2001) feature
-	 *
+	 * <p>
 	 * see: values for the click action (defined above)
 	 *
 	 * @param locatorDelegate the locator defined by a delegate
-	 * @param clickAction the click action
+	 * @param clickAction     the click action
 	 */
 	void click(String locatorDelegate, String clickAction);
 
@@ -127,7 +127,7 @@ public interface SeleniumInterface extends ReportInterface {
 	 * Click.
 	 *
 	 * @param locatorDelegate the locator delegate
-	 * @param timeout the timeout
+	 * @param timeout         the timeout
 	 */
 	void click(String locatorDelegate, long timeout);
 
@@ -135,8 +135,8 @@ public interface SeleniumInterface extends ReportInterface {
 	 * Click.
 	 *
 	 * @param locatorDelegate the locator delegate
-	 * @param clickAction the action
-	 * @param timeout the timeout
+	 * @param clickAction     the action
+	 * @param timeout         the timeout
 	 */
 	void click(String locatorDelegate, String clickAction, long timeout);
 
@@ -150,7 +150,7 @@ public interface SeleniumInterface extends ReportInterface {
 	/**
 	 * Click by xpath.
 	 *
-	 * @param xpath the xpath
+	 * @param xpath       the xpath
 	 * @param clickAction the value
 	 */
 	void clickByXpath(String xpath, String clickAction);
@@ -158,81 +158,81 @@ public interface SeleniumInterface extends ReportInterface {
 	/**
 	 * Click by xpath.
 	 *
-	 * @param xpath the xpath
+	 * @param xpath       the xpath
 	 * @param clickAction the value
-	 * @param timeout the timeout
+	 * @param timeout     the timeout
 	 */
 	void clickByXpath(String xpath, String clickAction, long timeout);
 
 	/**
 	 * Input at the webelement referenced by locatorDelegate
-	 * 
+	 * <p>
 	 * see: https://www.w3schools.com/html/html_form_input_types.asp
-	 * 
+	 * <p>
 	 * possible types:
-	 *     input type="radio"
-	 *     input type="checkbox"
-	 *     input type="number"
-	 *     input type="file"
-	 *     input type="range" // vulgo 'slider'
-	 *     input type="text"
-	 *     
-	 *     text fields with value validation:
-	 *     input type="email" // text field with email validation
-	 *     input type="password" // text field with hidden input
-	 *     input type="tel" // text field with tel validation
-	 *     input type="date" // text field with date validation
-	 *     input type="datetime-local" // text field with datetime-local validation
-	 *     input type="time" // text field with time validation
-	 *     input type="month" // text field with month validation
-	 *     input type="week" // text field with week validation
-	 *     input type="url" // text field with url validation
-	 *     
-	 *     input type="color" 
-	 *     		is used for input fields that should contain a color.
-	 *     		Depending on browser support, a color picker can show up in the input field.
-	 *     
-	 *     input type="hidden"
-	 *     		defines a hidden input field (not visible to a user).
-	 *     		not clickable - should not be supported by this method 'input'
-	 *     
-	 *     input type="button" 
-	 *     		defines a button, value = text at button
-	 *     		default used as click weblement - should not be supported by this method 'input'
-	 *     input type="image"
-	 *     		used as submit button
-	 *     		default used as click weblement - should not be supported by this method 'input'
-	 *     input type="submit"
-	 *     		used as submit button
-	 *     		default used as click weblement - should not be supported by this method 'input'
-	 *     input type="reset"
-	 *     		defines a reset button that will reset all form values to their default values
-	 *     		default used as click weblement - should not be supported by this method 'input'
-	 *     input type="search"
-	 *     		is used for search fields (a search field behaves like a regular text field).
-	 *     		default used as click weblement - should not be supported by this method 'input'
+	 * input type="radio"
+	 * input type="checkbox"
+	 * input type="number"
+	 * input type="file"
+	 * input type="range" // vulgo 'slider'
+	 * input type="text"
+	 * <p>
+	 * text fields with value validation:
+	 * input type="email" // text field with email validation
+	 * input type="password" // text field with hidden input
+	 * input type="tel" // text field with tel validation
+	 * input type="date" // text field with date validation
+	 * input type="datetime-local" // text field with datetime-local validation
+	 * input type="time" // text field with time validation
+	 * input type="month" // text field with month validation
+	 * input type="week" // text field with week validation
+	 * input type="url" // text field with url validation
+	 * <p>
+	 * input type="color"
+	 * is used for input fields that should contain a color.
+	 * Depending on browser support, a color picker can show up in the input field.
+	 * <p>
+	 * input type="hidden"
+	 * defines a hidden input field (not visible to a user).
+	 * not clickable - should not be supported by this method 'input'
+	 * <p>
+	 * input type="button"
+	 * defines a button, value = text at button
+	 * default used as click weblement - should not be supported by this method 'input'
+	 * input type="image"
+	 * used as submit button
+	 * default used as click weblement - should not be supported by this method 'input'
+	 * input type="submit"
+	 * used as submit button
+	 * default used as click weblement - should not be supported by this method 'input'
+	 * input type="reset"
+	 * defines a reset button that will reset all form values to their default values
+	 * default used as click weblement - should not be supported by this method 'input'
+	 * input type="search"
+	 * is used for search fields (a search field behaves like a regular text field).
+	 * default used as click weblement - should not be supported by this method 'input'
 	 *
 	 * @param locatorDelegate the locator delegate
-	 * @param value the value
+	 * @param value           the value
 	 */
 	void input(String locatorDelegate, String value);
 
 	/**
 	 * Input by xpath.
 	 *
-	 * @param xpath the xpath
+	 * @param xpath     the xpath
 	 * @param className the class name
-	 * @param value the value
+	 * @param value     the value
 	 */
 	void inputByXpath(String xpath, String className, String value);
 
 	/**
 	 * Output from the webelement referenced by locatorDelegate
-	 * 
+	 * <p>
 	 * see: https://www.w3schools.com/jsref/prop_node_textcontent.asp
-	 * 
+	 * <p>
 	 * element.textContent is a DOM Level 3 (2004) feature.
-	 * 
+	 * <p>
 	 * The textContent property sets or returns the text content of the specified node, and all its descendants.
 	 * eg by text = element.textContent;
 	 *
@@ -240,7 +240,7 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @return the string
 	 */
 	String output(String locatorDelegate);
-	
+
 	/**
 	 * Output by xpath.
 	 *
@@ -248,65 +248,22 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @return the string
 	 */
 	String outputByXpath(String xpath);
-	
-	/**
-	 * Exists - check if webelement referenced by locatorDelegate exists.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @return true, if successful
-	 */
-	boolean exists(String locatorDelegate);
 
-	/**
-	 * Exists.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @param timeout the timeout
-	 * @return true, if successful
-	 */
-	boolean exists(String locatorDelegate, long timeout);
-
-	/**
-	 * Exists.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @param reportFailed the report failed
-	 * @param timeout the timeout
-	 * @return true, if successful
-	 */
-	boolean exists(String locatorDelegate, boolean reportFailed, long timeout);
-
-	/**
-	 * Exists by xpath.
-	 *
-	 * @param xpath the xpath
-	 * @return true, if successful
-	 */
-	boolean existsByXpath(String xpath);
-
-	/**
-	 * Exists by xpath.
-	 *
-	 * @param xpath the xpath
-	 * @param reportFailed the report failed
-	 * @return true, if successful
-	 */
-	boolean existsByXpath(String xpath, boolean reportFailed);
 
 	/**
 	 * Validate.
 	 *
-	 * @param condition the condition
+	 * @param condition   the condition
 	 * @param description the description
 	 * @return true, if successful
 	 */
 	boolean validate(boolean condition, String description);
-	
+
 	/**
 	 * Drag and drop.
 	 *
 	 * @param locatorFrom the locator from
-	 * @param locatorTo the locator to
+	 * @param locatorTo   the locator to
 	 */
 	void dragAndDrop(String locatorFrom, String locatorTo);
 
@@ -314,7 +271,7 @@ public interface SeleniumInterface extends ReportInterface {
 	 * Drag and drop by xpath.
 	 *
 	 * @param xpathFrom the xpath from
-	 * @param xpathTo the xpath to
+	 * @param xpathTo   the xpath to
 	 */
 	void dragAndDropByXpath(String xpathFrom, String xpathTo);
 
@@ -344,20 +301,11 @@ public interface SeleniumInterface extends ReportInterface {
 	Properties getTestPlatformProperties(String value);
 
 	/**
-	 * Exists by xpath.
-	 *
-	 * @param xpath the xpath
-	 * @param timeout the timeout
-	 * @return true, if successful
-	 */
-	boolean existsByXpath(String xpath, long timeout);
-
-	/**
 	 * Checks if is clickable.
-	 * 
+	 * <p>
 	 * An expectation for checking an element is visible and enabled such that you can click it.
 	 *
-	 * @param xpath the xpath
+	 * @param xpath   the xpath
 	 * @param timeout the timeout
 	 * @return true, if is clickable
 	 */
@@ -365,7 +313,7 @@ public interface SeleniumInterface extends ReportInterface {
 
 	/**
 	 * Checks if is clickable by xpath.
-	 *
+	 * <p>
 	 * An expectation for checking an element is visible and enabled such that you can click it.
 	 * Uses default timeout
 	 *
@@ -376,18 +324,18 @@ public interface SeleniumInterface extends ReportInterface {
 
 	/**
 	 * Checks if is clickable.
-	 * 
+	 * <p>
 	 * An expectation for checking an element is visible and enabled such that you can click it.
 	 *
 	 * @param locatorDelegate the locator delegate
-	 * @param timeout the timeout
+	 * @param timeout         the timeout
 	 * @return true, if is clickable
 	 */
 	boolean isClickable(String locatorDelegate, long timeout);
 
 	/**
 	 * Checks if is clickable.
-	 *
+	 * <p>
 	 * An expectation for checking an element is visible and enabled such that you can click it.
 	 * Uses default timeout
 	 *
@@ -398,11 +346,11 @@ public interface SeleniumInterface extends ReportInterface {
 
 	/**
 	 * Checks if is displayed.
-	 * 
+	 * <p>
 	 * An expectation for checking that an element is present on the DOM of a page and visible.
 	 * Visibility means that the element is not only displayed but also has a height and width that isgreater than 0.
 	 *
-	 * @param xpath the xpath
+	 * @param xpath   the xpath
 	 * @param timeout the timeout
 	 * @return true, if is displayed
 	 */
@@ -410,40 +358,21 @@ public interface SeleniumInterface extends ReportInterface {
 
 	/**
 	 * Checks if is selected.
-	 * 
+	 * <p>
 	 * An expectation for checking if the given element is selected.
 	 *
-	 * @param xpath the xpath
+	 * @param xpath   the xpath
 	 * @param timeout the timeout
 	 * @return true, if is selected
 	 */
 	boolean isSelected(String xpath, long timeout);
 
 	/**
-	 * Exists.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @param reportFailed    the reportFailed
-	 * @return true, if successful
-	 */
-	boolean exists(String locatorDelegate, boolean reportFailed);
-
-	/**
-	 * Exists by xpath.
-	 *
-	 * @param xpath the xpath
-	 * @param reportFailed the report failed
-	 * @param timeout the timeout
-	 * @return true, if successful
-	 */
-	boolean existsByXpath(String xpath, boolean reportFailed, long timeout);
-
-	/**
 	 * Input.
 	 *
 	 * @param locatorDelegate the locator delegate
-	 * @param value the value
-	 * @param secret the secret
+	 * @param value           the value
+	 * @param secret          the secret
 	 */
 	void input(String locatorDelegate, String value, boolean secret);
 
@@ -478,7 +407,7 @@ public interface SeleniumInterface extends ReportInterface {
 
 	/**
 	 * Wait.
-	 * 
+	 * <p>
 	 * Waits the given milliseconds
 	 *
 	 * @param milliseconds the milliseconds
@@ -573,4 +502,67 @@ public interface SeleniumInterface extends ReportInterface {
 	 */
 	String getEditFieldLocator(String locatorDelegate);
 
+	/**
+	 * Wait until locator reaches state.
+	 *
+	 * @param locator the locator
+	 * @param state   the state
+	 * @param timeout the timeout
+	 * @param report  the report
+	 * @return the boolean
+	 */
+	boolean waitUntilBy(By locator, WebelementState state, long timeout, boolean report);
+
+	/**
+	 * Wait until locator reaches state.
+	 * Uses default timeout
+	 *
+	 * @param locator the locator
+	 * @param state   the state
+	 * @param report  the report
+	 * @return the boolean
+	 */
+	boolean waitUntilBy(By locator, WebelementState state, boolean report);
+
+	/**
+	 * Wait until locator reaches state.
+	 * Uses default timeout
+	 *
+	 * @param locator the locator
+	 * @param state   the state
+	 * @return the boolean
+	 */
+	boolean waitUntilBy(By locator, WebelementState state);
+
+	/**
+	 * Wait until locator reaches state.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param state           the state
+	 * @param timeout         the timeout
+	 * @param report          the report
+	 * @return the boolean
+	 */
+	boolean waitUntil(String locatorDelegate, WebelementState state, long timeout, boolean report);
+
+	/**
+	 * Wait until locator reaches state.
+	 * Uses default timeout
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param state           the state
+	 * @param report          the report
+	 * @return the boolean
+	 */
+	boolean waitUntil(String locatorDelegate, WebelementState state, boolean report);
+
+	/**
+	 * Wait until locator reaches state.
+	 * Uses default timeout
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param state           the state
+	 * @return the boolean
+	 */
+	boolean waitUntil(String locatorDelegate, WebelementState state);
 }
