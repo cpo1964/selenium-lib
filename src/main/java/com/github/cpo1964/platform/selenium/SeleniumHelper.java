@@ -12,12 +12,32 @@
  */
 package com.github.cpo1964.platform.selenium;
 
-import com.github.cpo1964.report.extent.ExtentHelper;
-import com.github.cpo1964.utils.CommonHelper;
-import com.github.cpo1964.utils.ExcelHelper;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.Duration;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.NotFoundException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxBinary;
@@ -26,20 +46,16 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.MoveTargetOutOfBoundsException;
+import org.openqa.selenium.remote.Browser;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.time.Duration;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
+import com.github.cpo1964.report.extent.ExtentHelper;
+import com.github.cpo1964.utils.CommonHelper;
+import com.github.cpo1964.utils.ExcelHelper;
 
 /**
  * The Class SeleniumHelper.
@@ -812,6 +828,12 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
         clickByXpath(xpath, clickAction);
     }
 
+    public WebElement waitForElementToBeRefreshedAndClickable(By by) {
+        return new WebDriverWait(getDriver(), Duration.ofMillis(30000))
+                .until(ExpectedConditions.refreshed(
+                        ExpectedConditions.elementToBeClickable(by)));
+    }
+
     /**
      * Click by xpath.
      *
@@ -822,13 +844,16 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     public void clickByXpath(String xpath, String clickAction) {
         setClicksCount(getClicksCount() + 1);
         setWebElement(null);
+        waitForElementToBeRefreshedAndClickable(By.xpath(xpath));
         if (waitUntilBy(By.xpath(xpath), WebelementState.Enabled)) {
             setWebElement(getWebelementByXpath(By.xpath(xpath)));
             if (ClickActions.CLICKKEY.name().equals(clickAction)) {
                 Actions actions = new Actions(getDriver());
                 try {
 					actions.moveToElement(getWebElement()).click().build().perform();
-				} catch (MoveTargetOutOfBoundsException e) {
+				} catch (MoveTargetOutOfBoundsException | StaleElementReferenceException e) {
+					waitUntilFullyLoaded(getDriverImplicitlyWaitTimoutSeconds());
+					getWebelementByXpath(By.xpath(xpath));
 					getWebElement().click();
 				}
             } else {
@@ -1482,22 +1507,22 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
             if (state.equals(WebelementState.Enabled)) {
                 try {
                     final WebElement el = webEl;
-                    ok = wa.until((ExpectedCondition<Boolean>) driver -> el.isEnabled());
+                    ok = wa.until(ExpectedConditions.refreshed((ExpectedCondition<Boolean>) driver -> el.isEnabled()));
                 } catch (Exception e) {
                     ok = false;
                 }
             } else if (state.equals(WebelementState.Disabled)) {
-                ok = wa.until(ExpectedConditions.invisibilityOf(webEl));
+                ok = wa.until(ExpectedConditions.refreshed(ExpectedConditions.invisibilityOf(webEl)));
             } else if (state.equals(WebelementState.Displayed)) {
-                ok = wa.until(ExpectedConditions.visibilityOf(webEl)) != null;
+                ok = wa.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOf(webEl))) != null;
             } else if (state.equals(WebelementState.Hidden)) {
-                ok = wa.until(ExpectedConditions.invisibilityOf(webEl));
+                ok = wa.until(ExpectedConditions.refreshed(ExpectedConditions.invisibilityOf(webEl)));
             } else if (state.equals(WebelementState.Selected)) {
-                ok = wa.until(ExpectedConditions.elementToBeSelected(webEl));
+                ok = wa.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeSelected(webEl)));
             } else if (state.equals(WebelementState.UnSelected)) {
                 try {
                     final WebElement el = webEl;
-                    ok = wa.until((ExpectedCondition<Boolean>) driver -> !el.isSelected());
+                    ok = wa.until(ExpectedConditions.refreshed((ExpectedCondition<Boolean>) driver -> !el.isSelected()));
                 } catch (Exception e) {
                     ok = false;
                 }
