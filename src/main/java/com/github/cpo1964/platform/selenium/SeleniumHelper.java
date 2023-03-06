@@ -459,6 +459,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
                 setDriverLoaded(true);
             }
         }
+        getDriver().manage().window().maximize();
         return getDriver();
     }
 
@@ -989,8 +990,12 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
                     || WebelementType.NUMERICFIELD.name().equalsIgnoreCase(type)
                     || WebelementType.SLIDER.name().equalsIgnoreCase(type) // type='range'
                     || WebelementType.FILEFIELD.name().equalsIgnoreCase(type)) {
-                Actions actions = new Actions(getDriver());
-                actions.moveToElement(getWebElement()).click().build().perform();
+                try {
+	            	Actions actions = new Actions(getDriver());
+	                actions.moveToElement(getWebElement()).click().build().perform();
+				} catch (MoveTargetOutOfBoundsException | StaleElementReferenceException e) {
+                    getWebElement().click();
+                }
                 getWebElement().clear();
                 getWebElement().sendKeys(value);
                 reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + CommonHelper.getSecretString(value, secret) + "'");
@@ -1002,7 +1007,12 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
                     || WebelementType.RADIOBUTTON.name().equalsIgnoreCase(type)) {
                 if (getWebElement().isSelected() && "OFF".equalsIgnoreCase(value) ||
                         !getWebElement().isSelected() && "ON".equalsIgnoreCase(value)) {
-                    getWebElement().click();
+                    try {
+    	            	Actions actions = new Actions(getDriver());
+    	                actions.moveToElement(getWebElement()).click().build().perform();
+    				} catch (MoveTargetOutOfBoundsException | StaleElementReferenceException e) {
+                        getWebElement().click();
+                    }
                     reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + value + "'");
                 } else {
                     setRunStatus(false);
