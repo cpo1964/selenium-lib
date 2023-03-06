@@ -233,7 +233,7 @@ public class ExtentHelper implements ReportInterface {
 			msg = msg.replace("<br>", "");
 			logExtent.info(msg);
 		}
-		String countMsg = "# Actions ####################<br>" + "exists: " + WaitCount() + "<br>" + "clicks: "
+		String countMsg = "# Actions ####################<br>" + "waits: " + WaitCount() + "<br>" + "clicks: "
 				+ getClicksCount() + "<br>" + "inputs: " + getInputsCount() + "<br>" + "outputs: " + getOutputsCount()
 				+ "<br>";
 		getTest().log(Status.INFO, countMsg);
