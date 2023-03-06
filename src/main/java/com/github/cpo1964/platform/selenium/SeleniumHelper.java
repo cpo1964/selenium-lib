@@ -35,7 +35,6 @@ import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -46,9 +45,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.MoveTargetOutOfBoundsException;
-import org.openqa.selenium.remote.Browser;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -185,7 +182,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      * @param value the new run status
      */
     public static void setRunStatus(boolean value) {
-        if (value == false) {
+        if (!value) {
             logSelenium.info("setRunStatus: " + false);
         }
         runStatus = value;
@@ -1507,7 +1504,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
             if (state.equals(WebelementState.Enabled)) {
                 try {
                     final WebElement el = webEl;
-                    ok = wa.until(ExpectedConditions.refreshed((ExpectedCondition<Boolean>) driver -> el.isEnabled()));
+                    ok = wa.until(ExpectedConditions.refreshed(driver -> el.isEnabled()));
                 } catch (Exception e) {
                     ok = false;
                 }
@@ -1522,7 +1519,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
             } else if (state.equals(WebelementState.UnSelected)) {
                 try {
                     final WebElement el = webEl;
-                    ok = wa.until(ExpectedConditions.refreshed((ExpectedCondition<Boolean>) driver -> !el.isSelected()));
+                    ok = wa.until(ExpectedConditions.refreshed(driver -> !el.isSelected()));
                 } catch (Exception e) {
                     ok = false;
                 }
