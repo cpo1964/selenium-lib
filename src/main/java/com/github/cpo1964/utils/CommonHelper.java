@@ -54,8 +54,8 @@ public class CommonHelper {
 
 		String value = prop.getProperty(key);
 		if (value == null || value.isEmpty()) {
-			throw new IllegalArgumentException("Property '" + key + "' from file " + propertiesFileDestination
-					+ " does not exists or is empty!");
+			throw new IllegalArgumentException(
+					"Property '" + key + "' from file " + propertiesFileDestination + " does not exists or is empty!");
 		}
 		return value;
 	}
@@ -86,11 +86,10 @@ public class CommonHelper {
 			return value;
 		}
 		StringBuilder bld = new StringBuilder();
-			for (int i = 1; i < value.length(); i++) {
-				bld.append("*");
-			}
-			return bld.toString();
+		for (int i = 1; i < value.length(); i++) {
+			bld.append("*");
+		}
+		return bld.toString();
 	}
-
 
 }

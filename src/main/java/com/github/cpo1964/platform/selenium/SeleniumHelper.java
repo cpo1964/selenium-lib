@@ -990,15 +990,15 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
                 }
                 return;
             }
+        	Actions actions = new Actions(getDriver());
             if (WebelementType.EDITFIELD.name().equalsIgnoreCase(type)
                     || WebelementType.NUMERICFIELD.name().equalsIgnoreCase(type)
                     || WebelementType.SLIDER.name().equalsIgnoreCase(type) // type='range'
                     || WebelementType.FILEFIELD.name().equalsIgnoreCase(type)) {
                 try {
-	            	Actions actions = new Actions(getDriver());
-	                actions.moveToElement(getWebElement()).click().build().perform();
-				} catch (MoveTargetOutOfBoundsException | StaleElementReferenceException e) {
                     getWebElement().click();
+				} catch (Exception e) {
+	                actions.moveToElement(getWebElement()).click().build().perform();
                 }
                 getWebElement().clear();
                 getWebElement().sendKeys(value);
@@ -1012,10 +1012,9 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
                 if (getWebElement().isSelected() && "OFF".equalsIgnoreCase(value) ||
                         !getWebElement().isSelected() && "ON".equalsIgnoreCase(value)) {
                     try {
-    	            	Actions actions = new Actions(getDriver());
-    	                actions.moveToElement(getWebElement()).click().build().perform();
-    				} catch (MoveTargetOutOfBoundsException | StaleElementReferenceException e) {
                         getWebElement().click();
+    				} catch (Exception e) {
+    	                actions.moveToElement(getWebElement()).click().build().perform();
                     }
                     reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + value + "'");
                 } else {
@@ -1036,7 +1035,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
                 setRunStatus(false);
                 throw new NotFoundException("type of webelement unknown: '" + type + "'");
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             setRunStatus(false);
             reportStepFailScreenshot(screenshotFile());
             reportStepFail("<b>INPUT   </b> (" + type + " - " + xpath + ", '" + CommonHelper.getSecretString(value, secret) + ")'");
@@ -1174,9 +1173,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      * @param locatorDelegate the locator delegate
      * @param value           the value
      * @param secret          the secret
-     * @throws IOException Signals that an I/O exception has occurred.
      */
-    private void logSecret(String locatorDelegate, String value, boolean secret) throws IOException {
+    private void logSecret(String locatorDelegate, String value, boolean secret) {
         String text = value;
         if (secret) {
             text = CommonHelper.getSecretString(value, true);
