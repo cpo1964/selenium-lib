@@ -25,6 +25,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.interactions.MoveTargetOutOfBoundsException;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -825,7 +826,11 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
             setWebElement(getWebelementByXpath(By.xpath(xpath)));
             if (ClickActions.CLICKKEY.name().equals(clickAction)) {
                 Actions actions = new Actions(getDriver());
-                actions.moveToElement(getWebElement()).click().build().perform();
+                try {
+					actions.moveToElement(getWebElement()).click().build().perform();
+				} catch (MoveTargetOutOfBoundsException e) {
+					getWebElement().click();
+				}
             } else {
                 // The user-facing API for emulating complex user gestures.
                 // Use this class rather than using the Keyboard or Mouse directly
@@ -834,17 +839,27 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
                     // context-click at middle of the given element
                     action.contextClick(getWebElement()).perform();
                 } else if (ClickActions.ALTCLICK.name().equals(clickAction)) {
-                    action
-                            .keyDown(Keys.ALT)
-                            .click(getWebElement())
-                            .keyUp(Keys.ALT)
-                            .perform();
+                    try {
+						action.keyDown(Keys.ALT)
+						      .click(getWebElement())
+						      .keyUp(Keys.ALT)
+						      .perform();
+					} catch (MoveTargetOutOfBoundsException e) {
+						action.keyDown(Keys.ALT);
+						getWebElement().click();
+						action.keyUp(Keys.ALT);
+					}
                 } else if (ClickActions.CONTROLCLICK.name().equals(clickAction)) {
-                    action
-                            .keyDown(Keys.CONTROL)
-                            .click(getWebElement())
-                            .keyUp(Keys.CONTROL)
-                            .perform();
+                    try {
+						action.keyDown(Keys.CONTROL)
+						      .click(getWebElement())
+						      .keyUp(Keys.CONTROL)
+						      .perform();
+					} catch (MoveTargetOutOfBoundsException e) {
+						action.keyDown(Keys.CONTROL);
+						getWebElement().click();
+						action.keyUp(Keys.CONTROL);
+					}
                 } else if (ClickActions.DOUBLECLICK.name().equals(clickAction)) {
                     action.doubleClick(getWebElement()).perform();
                 } else if (ClickActions.LONGCLICK.name().equals(clickAction)) {
@@ -856,11 +871,16 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
                 } else if (ClickActions.MOUSEOVER.name().equals(clickAction)) {
                     action.moveToElement(getWebElement()).build().perform();
                 } else if (ClickActions.SHIFTCLICK.name().equals(clickAction)) {
-                    action
-                            .keyDown(Keys.SHIFT)
-                            .click(getWebElement())
-                            .keyUp(Keys.SHIFT)
-                            .perform();
+                    try {
+						action.keyDown(Keys.SHIFT)
+						      .click(getWebElement())
+						      .keyUp(Keys.SHIFT)
+						      .perform();
+					} catch (MoveTargetOutOfBoundsException e) {
+						action.keyDown(Keys.SHIFT);
+						getWebElement().click();
+						action.keyUp(Keys.SHIFT);
+					}
                 }
             }
             reportStepPass("<b>CLICK   </b> by xpath $(\"" + xpath + "\")");
