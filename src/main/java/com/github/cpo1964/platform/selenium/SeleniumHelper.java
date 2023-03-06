@@ -459,7 +459,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
                 setDriverLoaded(true);
             }
         }
-        setDriverImplicitlyWaitTimoutSeconds(30);
         return getDriver();
     }
 
@@ -536,10 +535,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
         return null;
     }
 
-    private WebElement getWebelementByXpath(By xpath) {
-        return getWebelementByXpath(xpath, getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds());
-    }
-
     /**
      * Gets a unique webelement by xpath.
      *
@@ -547,7 +542,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      * @param timeout the timeout
      * @return the WebElement
      */
-    private WebElement getWebelementByXpath(By xpath, long timeout) {
+    @SuppressWarnings("unused")
+	private WebElement getWebelementByXpath(By xpath, long timeout) {
         WebElement webEl = null;
         long oldTimeout = getDriverImplicitlyWaitTimoutSeconds();
         setDriverImplicitlyWaitTimoutSeconds(1);
@@ -825,12 +821,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
         clickByXpath(xpath, clickAction);
     }
 
-    public WebElement waitForElementToBeRefreshedAndClickable(By by) {
-        return new WebDriverWait(getDriver(), Duration.ofMillis(30000))
-                .until(ExpectedConditions.refreshed(
-                        ExpectedConditions.elementToBeClickable(by)));
-    }
-
     /**
      * Click by xpath.
      *
@@ -841,16 +831,12 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     public void clickByXpath(String xpath, String clickAction) {
         setClicksCount(getClicksCount() + 1);
         setWebElement(null);
-        waitForElementToBeRefreshedAndClickable(By.xpath(xpath));
         if (waitUntilBy(By.xpath(xpath), WebelementState.Enabled)) {
-            setWebElement(getWebelementByXpath(By.xpath(xpath)));
             if (ClickActions.CLICKKEY.name().equals(clickAction)) {
                 Actions actions = new Actions(getDriver());
                 try {
 					actions.moveToElement(getWebElement()).click().build().perform();
 				} catch (MoveTargetOutOfBoundsException | StaleElementReferenceException e) {
-					waitUntilFullyLoaded(getDriverImplicitlyWaitTimoutSeconds());
-					getWebelementByXpath(By.xpath(xpath));
 					getWebElement().click();
 				}
             } else {
@@ -909,7 +895,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
         } else {
             setRunStatus(false);
             reportStepFailScreenshot(screenshotFile());
-            throw new NoSuchElementException("CLICK   by xpath $(" + xpath + ") failed");
+            throw new NoSuchElementException("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed");
         }
     }
 
@@ -987,11 +973,9 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      */
     public void inputByXpath(String xpath, String type, String value, boolean secret) {
         setInputsCount(getInputsCount() + 1);
-        setWebElement(null);
         try {
-            if (type != null && waitUntilBy(By.xpath(xpath), WebelementState.Enabled)) {
-                setWebElement(getWebelementByXpath(By.xpath(xpath)));
-            } else {
+        	ok = waitUntilBy(By.xpath(xpath), WebelementState.Enabled);
+            if (type == null || !ok ) {
                 logSecret(xpath + "(unknown) -> not done ", CommonHelper.getSecretString(value, secret), secret);
                 try {
                     reportStepFailScreenshot(screenshotFile());
@@ -1242,17 +1226,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     }
 
     /**
-     * Wait until fully loaded.
-     *
-     * @param timeoutSeconds the timeout seconds
-     */
-    @Override
-    public void waitUntilFullyLoaded(long timeoutSeconds) {
-        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(timeoutSeconds));
-        wait.until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState")).equals("complete");
-    }
-
-    /**
      * Common teardown.
      *
      */
@@ -1493,14 +1466,9 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     @Override
     public boolean waitUntilBy(By locator, WebelementState state, long timeout, boolean report) {
         setWaitCount(WaitCount() + 1);
-        WebElement webEl;
-        if (locator.getClass().equals(By.ByXPath.class)) {
-            webEl = getWebelementByXpath(locator, timeout);
-        } else {
-            webEl = getWebElement().findElement(locator);
-        }
+        WebDriverWait wa = new WebDriverWait(getDriver(), Duration.ofSeconds(timeout));
+        WebElement webEl = wa.until(ExpectedConditions.refreshed(ExpectedConditions.presenceOfElementLocated(locator)));
         if (webEl != null) {
-            WebDriverWait wa = new WebDriverWait(getDriver(), Duration.ofSeconds(timeout));
             if (state.equals(WebelementState.Enabled)) {
                 try {
                     final WebElement el = webEl;
@@ -1605,6 +1573,23 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     public boolean waitUntil(String locatorDelegate, WebelementState state) {
         return waitUntilBy(By.xpath(getLocator(locatorDelegate)), state,
                 getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds(), false);
+    }
+
+//    public WebElement waitForElementToBeRefreshedAndClickable(By by) {
+//        return new WebDriverWait(getDriver(), Duration.ofMillis(30000))
+//                .until(ExpectedConditions.refreshed(
+//                        ExpectedConditions.elementToBeClickable(by)));
+//    }
+
+    /**
+     * Wait until fully loaded.
+     *
+     * @param timeoutSeconds the timeout seconds
+     */
+    @Override
+    public void waitUntilFullyLoaded(long timeoutSeconds) {
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(timeoutSeconds));
+        wait.until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState")).equals("complete");
     }
 
 }
