@@ -885,6 +885,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
             }
             reportStepPass("<b>CLICK   </b> by xpath $(\"" + xpath + "\")");
         } else {
+            setRunStatus(false);
             reportStepFailScreenshot(screenshotFile());
             throw new NoSuchElementException("CLICK   by xpath $(" + xpath + ") failed");
         }
@@ -998,6 +999,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
                     getWebElement().click();
                     reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + value + "'");
                 } else {
+                    setRunStatus(false);
                     throw new NotFoundException(BOLD_INPUT_BY_XPATH + xpath + "\"), value not found: '" + value + "'");
                 }
             } else if (WebelementType.RADIOGROUP.name().equalsIgnoreCase(type)) {
@@ -1007,12 +1009,15 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
                     radios.get(option - 1).click();
                     reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + value + "'");
                 } else {
+                    setRunStatus(false);
                     throw new NotFoundException(BOLD_INPUT_BY_XPATH + xpath + "\"), value not found: '" + value + "'");
                 }
             } else {
+                setRunStatus(false);
                 throw new NotFoundException("type of webelement unknown: '" + type + "'");
             }
         } catch (IOException e) {
+            setRunStatus(false);
             reportStepFailScreenshot(screenshotFile());
             reportStepFail("<b>INPUT   </b> (" + xpath + ", '" + CommonHelper.getSecretString(value, secret) + ")'");
         }
