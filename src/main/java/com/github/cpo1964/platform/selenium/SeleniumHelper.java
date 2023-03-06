@@ -835,6 +835,9 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      */
     @Override
     public void clickByXpath(String xpath, String clickAction) {
+    	if (!isRunStatus()) {
+    		return;
+    	}
         setClicksCount(getClicksCount() + 1);
         setWebElement(null);
         if (waitUntilBy(By.xpath(xpath), WebelementState.Enabled)) {
@@ -843,7 +846,13 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
                 try {
 					actions.moveToElement(getWebElement()).click().build().perform();
 				} catch (MoveTargetOutOfBoundsException | StaleElementReferenceException e) {
-					getWebElement().click();
+					try {
+						getWebElement().click();
+					} catch (Exception e1) {
+			            reportStepFail("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed");
+			            setRunStatus(false);
+			            return;
+					}
 				}
             } else {
                 // The user-facing API for emulating complex user gestures.
@@ -871,7 +880,13 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 						      .perform();
 					} catch (MoveTargetOutOfBoundsException e) {
 						action.keyDown(Keys.CONTROL);
-						getWebElement().click();
+						try {
+							getWebElement().click();
+						} catch (Exception e1) {
+				            reportStepFail("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed");
+				            setRunStatus(false);
+				            return;
+						}
 						action.keyUp(Keys.CONTROL);
 					}
                 } else if (ClickActions.DOUBLECLICK.name().equals(clickAction)) {
@@ -900,6 +915,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
             reportStepPass("<b>CLICK   </b> by xpath $(\"" + xpath + "\")");
         } else {
             setRunStatus(false);
+            reportStepFail("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed");
             reportStepFailScreenshot(screenshotFile());
             throw new NoSuchElementException("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed");
         }
@@ -978,6 +994,9 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      * @param secret the secret
      */
     public void inputByXpath(String xpath, String type, String value, boolean secret) {
+    	if (!isRunStatus()) {
+    		return;
+    	}
         setInputsCount(getInputsCount() + 1);
         try {
         	ok = waitUntilBy(By.xpath(xpath), WebelementState.Enabled);
@@ -1089,8 +1108,11 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      */
     @Override
     public String outputByXpath(String xpath) {
-        setOutputsCount(getOutputsCount() + 1);
         String output = "";
+    	if (!isRunStatus()) {
+    		return output;
+    	}
+        setOutputsCount(getOutputsCount() + 1);
     	if (waitUntilBy(By.xpath(xpath), WebelementState.Displayed)) {
             output = getWebElement().getAttribute("textContent");
             reportStepPass("<b>OUTPUT   </b> by xpath $(\"" + xpath + "\")<br>text: '" + output + "'");
@@ -1122,6 +1144,9 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      */
     @Override
     public boolean validate(boolean condition, String description) {
+    	if (!isRunStatus()) {
+    		return false;
+    	}
         if (condition) {
             reportStepPass("<b>VALIDATE</b> '" + description + "' - " + true);
         } else {
