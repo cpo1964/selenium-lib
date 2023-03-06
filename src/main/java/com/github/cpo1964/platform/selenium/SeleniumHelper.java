@@ -135,6 +135,13 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     protected boolean ok;
 
     /**
+     * The global timeout
+     * 
+     * used for TODO
+     */
+	private long timeout = 30;
+
+    /**
      * The test platform properties.
      */
     public static final Properties testPlatformProperties = new Properties();
@@ -408,7 +415,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      */
     @Override
     public long getDriverImplicitlyWaitTimoutSeconds() {
-        return getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds();
+        return timeout;
     }
 
     /**
@@ -418,7 +425,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      */
     @Override
     public void setDriverImplicitlyWaitTimoutSeconds(long value) {
-        getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(value));
+        timeout = value;
     }
 
     /**
@@ -547,7 +554,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	private WebElement getWebelementByXpath(By xpath, long timeout) {
         WebElement webEl = null;
         long oldTimeout = getDriverImplicitlyWaitTimoutSeconds();
-        setDriverImplicitlyWaitTimoutSeconds(1);
         /*
          * Find all elements within the current page using the given mechanism.
          * This method is affected by the 'implicit wait' times in force at the time of execution.
@@ -565,7 +571,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
         if (i > 1) {
             logSelenium.info("waited " + i + " seconds for '" + xpath + "'");
         }
-        setDriverImplicitlyWaitTimoutSeconds(oldTimeout);
         // the searched webelement must be unique
         if (webEls.size() > 1) {
             setRunStatus(false);
@@ -603,7 +608,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      */
     @Override
     public boolean isClickableByXpath(String xpath) {
-        return isClickableByXpath(xpath, getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds());
+        return isClickableByXpath(xpath, getDriverImplicitlyWaitTimoutSeconds());
     }
 
     /**
@@ -615,8 +620,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      */
     @Override
     public boolean isClickable(String locatorDelegate, long timeout) {
-        String xpath = getLocator(locatorDelegate);
-        return isClickableByXpath(xpath, timeout);
+        return isClickableByXpath(getLocator(locatorDelegate), timeout);
     }
 
     /**
@@ -630,7 +634,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      */
     @Override
     public boolean isClickable(String locatorDelegate) {
-        return isClickable(locatorDelegate, getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds());
+        return isClickable(locatorDelegate, getDriverImplicitlyWaitTimoutSeconds());
     }
 
     /**
@@ -702,7 +706,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     @Deprecated
     public boolean existsByXpath(String xpath) {
         return waitUntilBy(By.xpath(xpath), WebelementState.Displayed,
-                getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds(), false);
+                getDriverImplicitlyWaitTimoutSeconds(), false);
     }
 
     /**
@@ -720,7 +724,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     @Deprecated
     public boolean existsByXpath(String xpath, boolean report) {
         return waitUntilBy(By.xpath(xpath), WebelementState.Displayed,
-                getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds(), report);
+                getDriverImplicitlyWaitTimoutSeconds(), report);
     }
 
     /**
@@ -738,7 +742,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     @Deprecated
     public boolean existsByXpath(String xpath, long timeout) {
         return waitUntilBy(By.xpath(xpath), WebelementState.Displayed,
-                getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds(), false);
+                getDriverImplicitlyWaitTimoutSeconds(), false);
     }
 
     /**
@@ -790,7 +794,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     @Deprecated
     public boolean exists(String locatorDelegate, boolean report) {
         return waitUntilBy(By.xpath(getLocator(locatorDelegate)), WebelementState.Displayed,
-                getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds(), report);
+                getDriverImplicitlyWaitTimoutSeconds(), report);
     }
 
     /**
@@ -807,7 +811,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     @Deprecated
     public boolean exists(String locatorDelegate) {
         return waitUntilBy(By.xpath(getLocator(locatorDelegate)), WebelementState.Displayed,
-                getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds(), false);
+                getDriverImplicitlyWaitTimoutSeconds(), false);
     }
 
     /**
@@ -1062,11 +1066,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      */
     @Override
     public void input(String locatorDelegate, String value, boolean secret) {
-        String xpath = getLocator(locatorDelegate);
-        String type;
         String[] descParts = locatorDelegate.split(File.pathSeparator);
-        type = descParts[1];
-        inputByXpath(xpath, type, value, secret);
+        inputByXpath(getLocator(locatorDelegate), descParts[1], value, secret);
     }
 
     /**
@@ -1089,9 +1090,15 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     @Override
     public String outputByXpath(String xpath) {
         setOutputsCount(getOutputsCount() + 1);
-        setWebElement(getDriver().findElement(By.xpath(xpath)));
-        String output = getWebElement().getAttribute("textContent");
-        reportStepPass("<b>OUTPUT   </b> by xpath $(\"" + xpath + "\")<br>text: '" + output + "'");
+        String output = "";
+    	if (waitUntilBy(By.xpath(xpath), WebelementState.Displayed)) {
+            output = getWebElement().getAttribute("textContent");
+            reportStepPass("<b>OUTPUT   </b> by xpath $(\"" + xpath + "\")<br>text: '" + output + "'");
+    	} else {
+            setRunStatus(false);
+            reportStepFailScreenshot(screenshotFile());
+            reportStepFail("<b>OUTPUT   </b> (" + xpath + ", '" + CommonHelper.getSecretString(value, false) + ")'");
+    	}
         return output;
     }
 
@@ -1103,8 +1110,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      */
     @Override
     public String output(String locatorDelegate) {
-        String xpath = getLocator(locatorDelegate);
-        return outputByXpath(xpath);
+        return outputByXpath(getLocator(locatorDelegate));
     }
 
     /**
@@ -1526,7 +1532,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      */
     @Override
     public boolean waitUntilBy(By locator, WebelementState state, boolean report) {
-        return waitUntilBy(locator, state, getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds(), report);
+        return waitUntilBy(locator, state, getDriverImplicitlyWaitTimoutSeconds(), report);
     }
 
     /**
@@ -1539,7 +1545,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      */
     @Override
     public boolean waitUntilBy(By locator, WebelementState state) {
-        return waitUntilBy(locator, state, getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds(), false);
+        return waitUntilBy(locator, state, getDriverImplicitlyWaitTimoutSeconds(), false);
     }
 
     /**
@@ -1568,7 +1574,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     @Override
     public boolean waitUntil(String locatorDelegate, WebelementState state, boolean report) {
         return waitUntilBy(By.xpath(getLocator(locatorDelegate)), state,
-                getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds(), report);
+                getDriverImplicitlyWaitTimoutSeconds(), report);
     }
 
     /**
@@ -1582,7 +1588,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     @Override
     public boolean waitUntil(String locatorDelegate, WebelementState state) {
         return waitUntilBy(By.xpath(getLocator(locatorDelegate)), state,
-                getDriver().manage().timeouts().getImplicitWaitTimeout().getSeconds(), false);
+                getDriverImplicitlyWaitTimoutSeconds(), false);
     }
 
 //    public WebElement waitForElementToBeRefreshedAndClickable(By by) {
