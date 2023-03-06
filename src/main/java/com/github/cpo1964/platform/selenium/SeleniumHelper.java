@@ -980,12 +980,12 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
         setInputsCount(getInputsCount() + 1);
         try {
         	ok = waitUntilBy(By.xpath(xpath), WebelementState.Enabled);
-            if (type == null || !ok ) {
+            if (!ok  || getWebElement() == null || type == null) {
                 logSecret(xpath + "(unknown) -> not done ", CommonHelper.getSecretString(value, secret), secret);
                 try {
                     reportStepFailScreenshot(screenshotFile());
                 } catch (WebDriverException ew) {
-                    reportStepFail("type of webelement unknown: '" + type + "'");
+                    reportStepFail("<b>INPUT   </b> (" + type + " - " + xpath + ", '" + CommonHelper.getSecretString(value, secret) + ")'");
                     throw new NotFoundException("type of webelement unknown: '" + type + "'");
                 }
                 return;
@@ -1039,7 +1039,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
         } catch (IOException e) {
             setRunStatus(false);
             reportStepFailScreenshot(screenshotFile());
-            reportStepFail("<b>INPUT   </b> (" + xpath + ", '" + CommonHelper.getSecretString(value, secret) + ")'");
+            reportStepFail("<b>INPUT   </b> (" + type + " - " + xpath + ", '" + CommonHelper.getSecretString(value, secret) + ")'");
         }
     }
 
@@ -1485,6 +1485,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
         WebDriverWait wa = new WebDriverWait(getDriver(), Duration.ofSeconds(timeout));
         WebElement webEl = wa.until(ExpectedConditions.refreshed(ExpectedConditions.presenceOfElementLocated(locator)));
         if (webEl != null) {
+        	setWebElement(webEl);
             if (state.equals(WebelementState.Enabled)) {
                 try {
                     final WebElement el = webEl;
