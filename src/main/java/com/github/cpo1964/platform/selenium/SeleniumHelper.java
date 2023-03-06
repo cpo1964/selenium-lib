@@ -35,6 +35,7 @@ import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -1481,7 +1482,13 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     public boolean waitUntilBy(By locator, WebelementState state, long timeout, boolean report) {
         setWaitCount(WaitCount() + 1);
         WebDriverWait wa = new WebDriverWait(getDriver(), Duration.ofSeconds(timeout));
-        WebElement webEl = wa.until(ExpectedConditions.refreshed(ExpectedConditions.presenceOfElementLocated(locator)));
+        WebElement webEl = null;
+        String errMsg = "";
+		try {
+			webEl = wa.until(ExpectedConditions.refreshed(ExpectedConditions.presenceOfElementLocated(locator)));
+		} catch (TimeoutException e1) {
+        	errMsg = e1.getRawMessage();
+		}
         if (webEl != null) {
         	setWebElement(webEl);
             if (state.equals(WebelementState.Enabled)) {
@@ -1515,7 +1522,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
             if (ok) {
                 reportStepPass("<b>WAIT  </b> " + locator + " for " + state.name() + " - true");
             } else {
-                reportStepFail("<b>WAIT  </b> " + locator + " for " + state.name() + " - false");
+                reportStepFail("<b>WAIT  </b> " + locator + " for " + state.name() + " - false" + errMsg);
             }
         }
         return ok;
