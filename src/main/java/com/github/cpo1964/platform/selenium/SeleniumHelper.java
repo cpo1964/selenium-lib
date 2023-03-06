@@ -168,7 +168,9 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      * @param value the new run status
      */
     public static void setRunStatus(boolean value) {
-        logSelenium.info("setRunStatus: " + value);
+        if (value == false) {
+            logSelenium.info("setRunStatus: " + false);
+        }
         runStatus = value;
     }
 
@@ -555,6 +557,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
         setDriverImplicitlyWaitTimoutSeconds(oldTimeout);
         // the searched webelement must be unique
         if (webEls.size() > 1) {
+            setRunStatus(false);
             throw new NonUniqueResultException("more then 1 webelement found with xpath: " + xpath);
         }
         // one Webelements found in ImplicitlyWaitTimout
@@ -1485,7 +1488,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
                 reportStepFail("<b>WAIT  </b> " + locator + " for " + state.name() + " - false");
             }
         }
-        setRunStatus(ok);
         return ok;
     }
     /**
