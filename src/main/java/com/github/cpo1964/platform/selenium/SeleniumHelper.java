@@ -138,7 +138,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     /**
      * The global timeout
      * 
-     * used for TODO
+     * used for waitUntil methods
      */
 	private long timeout = 30;
 
@@ -585,249 +585,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     }
 
     /**
-     * Checks if is clickable.
-     * <p>
-     * An expectation for checking an element is visible and enabled such that you can click it.
-     *
-     * @param xpath   the xpath
-     * @param timeout the timeout
-     * @return true, if is clickable
-     */
-    @Override
-    public boolean isClickableByXpath(String xpath, long timeout) {
-        return waitUntilBy(By.xpath(xpath), WebelementState.Enabled, timeout, false);
-    }
-
-    /**
-     * Checks if is clickable by xpath.
-     * <p>
-     * An expectation for checking an element is visible and enabled such that you can click it.
-     * Uses default timeout
-     *
-     * @param xpath the xpath
-     * @return true, if is clickable by xpath
-     */
-    @Override
-    public boolean isClickableByXpath(String xpath) {
-        return isClickableByXpath(xpath, getDriverImplicitlyWaitTimoutSeconds());
-    }
-
-    /**
-     * Checks if is clickable.
-     *
-     * @param locatorDelegate the locator delegate
-     * @param timeout         the timeout
-     * @return true, if is clickable
-     */
-    @Override
-    public boolean isClickable(String locatorDelegate, long timeout) {
-        return isClickableByXpath(getLocator(locatorDelegate), timeout);
-    }
-
-    /**
-     * Checks if is clickable.
-     * <p>
-     * An expectation for checking an element is visible and enabled such that you can click it.
-     * Uses default timeout
-     *
-     * @param locatorDelegate the locator delegate
-     * @return true, if is clickable
-     */
-    @Override
-    public boolean isClickable(String locatorDelegate) {
-        return isClickable(locatorDelegate, getDriverImplicitlyWaitTimoutSeconds());
-    }
-
-    /**
-     * Checks if is displayed.
-     * <p>
-     * An expectation for checking that an element is present on the DOM of a page and visible.
-     * Visibility means that the element is not only displayed but also has a height and width that isgreater than 0.
-     *
-     * @param xpath   the xpath
-     * @param timeout the timeout
-     * @return true, if is displayed
-     */
-    @Override
-    public boolean isDisplayed(String xpath, long timeout) {
-        // wait timeout for first Webelement to be clickable
-        WebDriverWait wa = new WebDriverWait(getDriver(), Duration.ofSeconds(timeout));
-        WebElement webEl = wa.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
-        if (webEl == null) {
-            return false;
-        }
-        return webEl.isDisplayed();
-    }
-
-    /**
-     * Checks if is selected.
-     * <p>
-     * An expectation for checking if the given element is selected.
-     *
-     * @param xpath   the xpath
-     * @param timeout the timeout
-     * @return true, if is selected
-     */
-    @Override
-    public boolean isSelected(String xpath, long timeout) {
-        // wait timeout for first Webelement to be clickable
-        WebDriverWait wa = new WebDriverWait(getDriver(), Duration.ofSeconds(timeout));
-        ok = wa.until(ExpectedConditions.elementToBeSelected(By.xpath(xpath)));
-        return ok;
-    }
-
-    /**
-     * Exists by xpath.
-     * <p>
-     * the searched webelement must be unique
-     *
-     * @deprecated
-     * <p> Use {@link SeleniumHelper#waitUntilBy(By, WebelementState, long, boolean)} instead.
-     *
-     * @param xpath        the xpath
-     * @param report the report failed
-     * @param timeout      the timeout
-     * @return true, if successful
-     */
-    @Deprecated
-    public boolean existsByXpath(String xpath, long timeout, boolean report) {
-        return waitUntilBy(By.xpath(xpath), WebelementState.Displayed, timeout, report);
-    }
-
-    /**
-     * Exists by xpath.
-     * the searched webelement must be unique
-     *
-     * @deprecated
-     * <p> Use {@link SeleniumHelper#waitUntilBy(By, WebelementState, long, boolean)} instead.
-     *
-     * @param xpath the xpath
-     * @return true, if successful
-     */
-    @Deprecated
-    public boolean existsByXpath(String xpath) {
-        return waitUntilBy(By.xpath(xpath), WebelementState.Displayed,
-                getDriverImplicitlyWaitTimoutSeconds(), false);
-    }
-
-    /**
-     * Exists.
-     * <p>
-     * the searched webelement must be unique
-     *
-     * @deprecated
-     * <p> Use {@link SeleniumHelper#waitUntilBy(By, WebelementState, long, boolean)} instead.
-     *
-     * @param xpath  the xpath
-     * @param report the reportFailed
-     * @return true, if successful
-     */
-    @Deprecated
-    public boolean existsByXpath(String xpath, boolean report) {
-        return waitUntilBy(By.xpath(xpath), WebelementState.Displayed,
-                getDriverImplicitlyWaitTimoutSeconds(), report);
-    }
-
-    /**
-     * Exists by xpath.
-     * <p>
-     * the searched webelement must be unique
-     *
-     * @deprecated
-     * <p> Use {@link SeleniumHelper#waitUntilBy(By, WebelementState, long, boolean)} instead.
-     *
-     * @param xpath   the xpath
-     * @param timeout the timeout
-     * @return true, if successful
-     */
-    @Deprecated
-    public boolean existsByXpath(String xpath, long timeout) {
-        return waitUntilBy(By.xpath(xpath), WebelementState.Displayed,
-                getDriverImplicitlyWaitTimoutSeconds(), false);
-    }
-
-    /**
-     * Exists.
-     * the searched webelement must be unique
-     *
-     * @deprecated
-     * <p> Use {@link SeleniumHelper#waitUntil(String, WebelementState, long, boolean)}  instead.
-     *
-     * @param locatorDelegate the locator delegate
-     * @param timeout         the timeout
-     * @param report          the report failed
-     * @return true, if successful
-     */
-    @Deprecated
-    public boolean exists(String locatorDelegate, long timeout, boolean report) {
-        return waitUntilBy(By.xpath(getLocator(locatorDelegate)), WebelementState.Displayed, timeout, report);
-    }
-
-    /**
-     * Exists.
-     * <p>
-     * the searched webelement must be unique
-     *
-     * @deprecated
-     * <p> Use {@link SeleniumHelper#waitUntil(String, WebelementState, long, boolean)}  instead.
-     *
-     * @param locatorDelegate the locator delegate
-     * @param timeout         the timeout
-     * @return true, if successful
-     */
-    @Deprecated
-    public boolean exists(String locatorDelegate, long timeout) {
-        return waitUntilBy(By.xpath(getLocator(locatorDelegate)), WebelementState.Displayed, timeout, false);
-    }
-
-    /**
-     * Exists.
-     * <p>
-     * the searched webelement must be unique
-     *
-     * @deprecated
-     * <p> Use {@link SeleniumHelper#waitUntil(String, WebelementState, long, boolean)}  instead.
-     *
-     * @param locatorDelegate the locator delegate
-     * @param report    the reportFailed
-     * @return true, if successful
-     */
-    @Deprecated
-    public boolean exists(String locatorDelegate, boolean report) {
-        return waitUntilBy(By.xpath(getLocator(locatorDelegate)), WebelementState.Displayed,
-                getDriverImplicitlyWaitTimoutSeconds(), report);
-    }
-
-    /**
-     * Exists.
-     * <p>
-     * the searched webelement must be unique
-     *
-     * @deprecated
-     * <p> Use {@link SeleniumHelper#waitUntil(String, WebelementState, long, boolean)}  instead.
-     *
-     * @param locatorDelegate the locator delegate
-     * @return true, if successful
-     */
-    @Deprecated
-    public boolean exists(String locatorDelegate) {
-        return waitUntilBy(By.xpath(getLocator(locatorDelegate)), WebelementState.Displayed,
-                getDriverImplicitlyWaitTimoutSeconds(), false);
-    }
-
-    /**
-     * Click by xpath.
-     *
-     * @param xpath       the xpath
-     * @param clickAction the value
-     * @param timeout     the timeout
-     */
-    @Override
-    public void clickByXpath(String xpath, String clickAction, long timeout) {
-        clickByXpath(xpath, clickAction);
-    }
-
-    /**
      * Click by xpath.
      *
      * @param xpath       the xpath
@@ -840,7 +597,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     	}
         setClicksCount(getClicksCount() + 1);
         setWebElement(null);
-        if (waitUntilBy(By.xpath(xpath), WebelementState.Enabled)) {
+        if (waitUntilBy(By.xpath(xpath), WebelementState.Enabled, getDriverImplicitlyWaitTimoutSeconds())) {
             if (ClickActions.CLICKKEY.name().equals(clickAction)) {
                 Actions actions = new Actions(getDriver());
                 try {
@@ -939,8 +696,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      */
     @Override
     public void click(String locatorDelegate, String clickAction) {
-        String xpath = getLocator(locatorDelegate);
-        clickByXpath(xpath, clickAction);
+        clickByXpath(getLocator(locatorDelegate), clickAction);
     }
 
     /**
@@ -950,31 +706,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
      */
     @Override
     public void click(String locatorDelegate) {
-        click(locatorDelegate, ClickActions.CLICKKEY.name());
-    }
-
-    /**
-     * Click.
-     *
-     * @param locatorDelegate the locator delegate
-     * @param action          the action
-     * @param timeout         the timeout
-     */
-    @Override
-    public void click(String locatorDelegate, String action, long timeout) {
-        String xpath = getLocator(locatorDelegate);
-        clickByXpath(xpath, action, timeout);
-    }
-
-    /**
-     * Click.
-     *
-     * @param locatorDelegate the locator delegate
-     * @param timeout         the timeout
-     */
-    @Override
-    public void click(String locatorDelegate, long timeout) {
-        click(locatorDelegate, ClickActions.CLICKKEY.name(), timeout);
+        clickByXpath(getLocator(locatorDelegate), ClickActions.CLICKKEY.name());
     }
 
     /**
@@ -1215,18 +947,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
             text = CommonHelper.getSecretString(value, true);
         }
         logSelenium.debug("<b>input</b> by xpath $(\"" + locatorDelegate + "\"), value=" + text);
-    }
-
-    /**
-     * Wait until fully loaded.
-     *
-     * @param timeoutSeconds the timeout seconds
-     */
-    @Override
-    public void waitUntilFullyLoaded(int timeoutSeconds) {
-        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(timeoutSeconds));
-        wait.until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState")
-                .equals("complete"));
     }
 
     /**
@@ -1561,6 +1281,20 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
         }
         return ok;
     }
+
+    /**
+     * Wait until locator reaches state.
+     * Uses default timeout
+     *
+     * @param locator the locator
+     * @param state   the state
+     * @return the boolean
+     */
+    @Override
+    public boolean waitUntilBy(By locator, WebelementState state, long timeout) {
+        return waitUntilBy(locator, state, getDriverImplicitlyWaitTimoutSeconds(), false);
+    }
+
     /**
      * Wait until locator reaches state.
      * Uses default timeout
@@ -1600,6 +1334,19 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     @Override
     public boolean waitUntil(String locatorDelegate, WebelementState state, long timeout, boolean report) {
         return waitUntilBy(By.xpath(getLocator(locatorDelegate)), state, timeout, report);
+    }
+
+    /**
+     * Wait until locator reaches state.
+     *
+     * @param locatorDelegate the locator delegate
+     * @param state           the state
+     * @param timeout         the timeout
+     * @return the boolean
+     */
+    @Override
+    public boolean waitUntil(String locatorDelegate, WebelementState state, long timeout) {
+        return waitUntilBy(By.xpath(getLocator(locatorDelegate)), state, timeout, false);
     }
 
     /**

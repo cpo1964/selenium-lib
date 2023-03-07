@@ -123,23 +123,6 @@ public interface SeleniumInterface extends ReportInterface {
 	void click(String locatorDelegate, String clickAction);
 
 	/**
-	 * Click.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @param timeout         the timeout
-	 */
-	void click(String locatorDelegate, long timeout);
-
-	/**
-	 * Click.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @param clickAction     the action
-	 * @param timeout         the timeout
-	 */
-	void click(String locatorDelegate, String clickAction, long timeout);
-
-	/**
 	 * Click by xpath.
 	 *
 	 * @param xpath the xpath
@@ -153,15 +136,6 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @param clickAction the value
 	 */
 	void clickByXpath(String xpath, String clickAction);
-
-	/**
-	 * Click by xpath.
-	 *
-	 * @param xpath       the xpath
-	 * @param clickAction the value
-	 * @param timeout     the timeout
-	 */
-	void clickByXpath(String xpath, String clickAction, long timeout);
 
 	/**
 	 * Input at the webelement referenced by locatorDelegate
@@ -217,13 +191,32 @@ public interface SeleniumInterface extends ReportInterface {
 	void input(String locatorDelegate, String value);
 
 	/**
+	 * Input.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param value           the value
+	 * @param secret          the secret
+	 */
+	void input(String locatorDelegate, String value, boolean secret);
+
+	/**
 	 * Input by xpath.
 	 *
 	 * @param xpath     the xpath
-	 * @param className the class name
+	 * @param type the class name
 	 * @param value     the value
 	 */
-	void inputByXpath(String xpath, String className, String value);
+	void inputByXpath(String xpath, String type, String value);
+
+	/**
+	 * Input by xpath.
+	 *
+	 * @param xpath     the xpath
+	 * @param type the class name
+	 * @param value     the value
+	 * @param secret          the secret
+	 */
+	void inputByXpath(String xpath, String type, String value, boolean secret);
 
 	/**
 	 * Output from the webelement referenced by locatorDelegate
@@ -298,89 +291,6 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @return the test platform properties
 	 */
 	Properties getTestPlatformProperties(String value);
-
-	/**
-	 * Checks if is clickable.
-	 * <p>
-	 * An expectation for checking an element is visible and enabled such that you can click it.
-	 *
-	 * @param xpath   the xpath
-	 * @param timeout the timeout
-	 * @return true, if is clickable
-	 */
-	boolean isClickableByXpath(String xpath, long timeout);
-
-	/**
-	 * Checks if is clickable by xpath.
-	 * <p>
-	 * An expectation for checking an element is visible and enabled such that you can click it.
-	 * Uses default timeout
-	 *
-	 * @param xpath the xpath
-	 * @return true, if is clickable by xpath
-	 */
-	boolean isClickableByXpath(String xpath);
-
-	/**
-	 * Checks if is clickable.
-	 * <p>
-	 * An expectation for checking an element is visible and enabled such that you can click it.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @param timeout         the timeout
-	 * @return true, if is clickable
-	 */
-	boolean isClickable(String locatorDelegate, long timeout);
-
-	/**
-	 * Checks if is clickable.
-	 * <p>
-	 * An expectation for checking an element is visible and enabled such that you can click it.
-	 * Uses default timeout
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @return true, if is clickable
-	 */
-	boolean isClickable(String locatorDelegate);
-
-	/**
-	 * Checks if is displayed.
-	 * <p>
-	 * An expectation for checking that an element is present on the DOM of a page and visible.
-	 * Visibility means that the element is not only displayed but also has a height and width that isgreater than 0.
-	 *
-	 * @param xpath   the xpath
-	 * @param timeout the timeout
-	 * @return true, if is displayed
-	 */
-	boolean isDisplayed(String xpath, long timeout);
-
-	/**
-	 * Checks if is selected.
-	 * <p>
-	 * An expectation for checking if the given element is selected.
-	 *
-	 * @param xpath   the xpath
-	 * @param timeout the timeout
-	 * @return true, if is selected
-	 */
-	boolean isSelected(String xpath, long timeout);
-
-	/**
-	 * Input.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @param value           the value
-	 * @param secret          the secret
-	 */
-	void input(String locatorDelegate, String value, boolean secret);
-
-	/**
-	 * Wait until fully loaded.
-	 *
-	 * @param timeoutSeconds the timeout seconds
-	 */
-	void waitUntilFullyLoaded(int timeoutSeconds);
 
 	/**
 	 * Report step pass screenshot.
@@ -564,4 +474,25 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @return the boolean
 	 */
 	boolean waitUntil(String locatorDelegate, WebelementState state);
+
+	/**
+	 * Wait until locator reaches state.
+	 * Uses default timeout
+	 *
+	 * @param locator the locator
+	 * @param state   the state
+	 * @return the boolean
+	 */
+	boolean waitUntilBy(By locator, WebelementState state, long timeout);
+
+	/**
+	 * Wait until locator reaches state.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param state           the state
+	 * @param timeout         the timeout
+	 * @return the boolean
+	 */
+	boolean waitUntil(String locatorDelegate, WebelementState state, long timeout);
+
 }
