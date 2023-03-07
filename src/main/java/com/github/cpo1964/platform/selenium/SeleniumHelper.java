@@ -73,7 +73,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     /**
      * The Constant VALUE2.
      */
-    private static final String VALUE2 = "\"), value: '";
+    private static final String XPATH_MSG_PART = "\"), value: '";
 
     /**
      * The Constant BOLD_INPUT_BY_XPATH.
@@ -792,11 +792,11 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 				}
                 getWebElement().clear();
                 getWebElement().sendKeys(value);
-                reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + CommonHelper.getSecretString(value, secret) + "'");
+                reportStepPass(BOLD_INPUT_BY_XPATH + xpath + XPATH_MSG_PART + CommonHelper.getSecretString(value, secret) + "'");
                 logSecret(xpath, value, secret);
             } else if (WebelementType.LISTBOX.name().equalsIgnoreCase(type)) {
                 new Select(getWebElement()).selectByVisibleText(value);
-                reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + value + "'");
+                reportStepPass(BOLD_INPUT_BY_XPATH + xpath + XPATH_MSG_PART + value + "'");
             } else if (WebelementType.CHECKBOX.name().equalsIgnoreCase(type)
                     || WebelementType.RADIOBUTTON.name().equalsIgnoreCase(type)) {
                 if (getWebElement().isSelected() && "OFF".equalsIgnoreCase(value) ||
@@ -812,7 +812,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     			            return;
     					}
     				}
-                    reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + value + "'");
+                    reportStepPass(BOLD_INPUT_BY_XPATH + xpath + XPATH_MSG_PART + value + "'");
                 } else {
                     setRunStatus(false);
                     throw new NotFoundException(BOLD_INPUT_BY_XPATH + xpath + "\"), value not found: '" + value + "'");
@@ -822,7 +822,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
                 List<WebElement> radios = getDriver().findElements(By.xpath(xpath));
                 if (option > 0 && option <= radios.size()) {
                     radios.get(option - 1).click();
-                    reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + value + "'");
+                    reportStepPass(BOLD_INPUT_BY_XPATH + xpath + XPATH_MSG_PART + value + "'");
                 } else {
                     setRunStatus(false);
                     throw new NotFoundException(BOLD_INPUT_BY_XPATH + xpath + "\"), value not found: '" + value + "'");
