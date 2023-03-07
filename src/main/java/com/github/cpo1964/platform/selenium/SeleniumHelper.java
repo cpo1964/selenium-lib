@@ -1001,14 +1001,11 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
         try {
         	ok = waitUntilBy(By.xpath(xpath), WebelementState.Enabled);
             if (!ok  || getWebElement() == null || type == null) {
+            	setRunStatus(false);
                 logSecret(xpath + "(unknown) -> not done ", CommonHelper.getSecretString(value, secret), secret);
-                try {
-                    reportStepFailScreenshot(screenshotFile());
-                } catch (WebDriverException ew) {
-                    reportStepFail("<b>INPUT   </b> (" + type + " - " + xpath + ", '" + CommonHelper.getSecretString(value, secret) + ")'");
-                    throw new NotFoundException("type of webelement unknown: '" + type + "'");
-                }
-                return;
+                reportStepFail("<b>INPUT   </b> (" + type + " - " + xpath + ", '" + CommonHelper.getSecretString(value, secret) + ")'");
+                reportStepFailScreenshot(screenshotFile());
+                throw new NotFoundException("type of webelement unknown: '" + type + "'");
             }
         	Actions actions = new Actions(getDriver());
             if (WebelementType.EDITFIELD.name().equalsIgnoreCase(type)
@@ -1016,10 +1013,16 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
                     || WebelementType.SLIDER.name().equalsIgnoreCase(type) // type='range'
                     || WebelementType.FILEFIELD.name().equalsIgnoreCase(type)) {
                 try {
-                    getWebElement().click();
-				} catch (Exception e) {
-	                actions.moveToElement(getWebElement()).click().build().perform();
-                }
+					actions.moveToElement(getWebElement()).click().build().perform();
+				} catch (MoveTargetOutOfBoundsException | StaleElementReferenceException e) {
+					try {
+						getWebElement().click();
+					} catch (Exception e1) {
+			            reportStepFail("CLICK   by xpath $(" + xpath + ") with " + ClickActions.CLICKKEY.name() + " failed");
+			            setRunStatus(false);
+			            return;
+					}
+				}
                 getWebElement().clear();
                 getWebElement().sendKeys(value);
                 reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + CommonHelper.getSecretString(value, secret) + "'");
@@ -1032,10 +1035,16 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
                 if (getWebElement().isSelected() && "OFF".equalsIgnoreCase(value) ||
                         !getWebElement().isSelected() && "ON".equalsIgnoreCase(value)) {
                     try {
-                        getWebElement().click();
-    				} catch (Exception e) {
-    	                actions.moveToElement(getWebElement()).click().build().perform();
-                    }
+    					actions.moveToElement(getWebElement()).click().build().perform();
+    				} catch (MoveTargetOutOfBoundsException | StaleElementReferenceException e) {
+    					try {
+    						getWebElement().click();
+    					} catch (Exception e1) {
+    			            reportStepFail("CLICK   by xpath $(" + xpath + ") with " + ClickActions.CLICKKEY.name() + " failed");
+    			            setRunStatus(false);
+    			            return;
+    					}
+    				}
                     reportStepPass(BOLD_INPUT_BY_XPATH + xpath + VALUE2 + value + "'");
                 } else {
                     setRunStatus(false);

@@ -28,6 +28,7 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.model.Media;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+import com.github.cpo1964.platform.selenium.CommonSeleniumException;
 import com.github.cpo1964.report.ReportInterface;
 
 /**
@@ -361,9 +362,13 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	public void screenshotNode(String screenShot, Status s) {
 		// ExtentReport 5
-		Media media = getNode().addScreenCaptureFromPath(screenShot).getModel().getMedia().get(0);
-		getNode().getModel().getMedia().clear();
-		getNode().log(s, media);
+		try {
+			Media media = getNode().addScreenCaptureFromPath(screenShot).getModel().getMedia().get(0);
+			getNode().getModel().getMedia().clear();
+			getNode().log(s, media);
+		} catch (Exception e) {
+            throw new CommonSeleniumException(e.getMessage());
+		}
 	}
 
 	/**
