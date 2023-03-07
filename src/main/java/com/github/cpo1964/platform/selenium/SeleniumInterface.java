@@ -481,6 +481,7 @@ public interface SeleniumInterface extends ReportInterface {
 	 *
 	 * @param locator the locator
 	 * @param state   the state
+	 * @param timeout         the timeout
 	 * @return the boolean
 	 */
 	boolean waitUntilBy(By locator, WebelementState state, long timeout);
