@@ -81,6 +81,41 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     private static final String BOLD_INPUT_BY_XPATH = "<b>INPUT   </b> by xpath $(\"";
 
     /**
+     * Displayed webelement state.
+     */
+    public static final WebelementState Displayed = WebelementState.Displayed;
+    
+    /**
+     * Hidden webelement state.
+     */
+    public static final WebelementState Hidden = WebelementState.Hidden;
+
+    /**
+     * Selected webelement state.
+     */
+    public static final WebelementState Selected = WebelementState.Selected;
+
+    /**
+     * Un selected webelement state.
+     */
+    public static final WebelementState UnSelected = WebelementState.UnSelected;
+
+    /**
+     * Enabled webelement state.
+     */
+    public static final WebelementState Enabled = WebelementState.Enabled;
+
+    /**
+     * Disabled webelement state.
+     */
+    public static final WebelementState Disabled = WebelementState.Disabled;
+
+    /**
+     * Not found webelement state.
+     */
+    public static final WebelementState NotFound = WebelementState.NotFound;
+
+    /**
      * The name.
      */
     private String name = "";
