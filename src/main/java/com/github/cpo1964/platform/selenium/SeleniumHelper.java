@@ -216,7 +216,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @return true, if is run status
 	 */
 	public static boolean isRunStatus() {
-		return runStatus;
+		return runStatus == true;
 	}
 
 	/**
@@ -899,6 +899,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		try {
 			webEl = wa
 					.until(ExpectedConditions.refreshed(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath))));
+			setWebElement(webEl);
 		} catch (TimeoutException e1) {
 			errMsg = e1.getRawMessage();
 		}
@@ -909,8 +910,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 			setRunStatus(false);
 			reportStepFailScreenshot(screenshotFile());
 			reportStepFail(
-					"<b>OUTPUT   </b> by xpath $(\"" + xpath + "\")<br>text: '" + output + "''" + 
-							webEl != null ? "" : (System.lineSeparator() + errMsg));
+					"<b>OUTPUT   </b> by xpath $(\"" + xpath + "\")<br>text: '" + output + "''" + webEl != null ? ""
+							: (System.lineSeparator() + errMsg));
 		}
 		return output;
 	}
@@ -935,18 +936,17 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 */
 	@Override
 	public boolean validate(boolean condition, String description) {
-		if (!isRunStatus()) {
-			return false;
-		}
-		if (condition) {
-			reportStepPass("<b>VALIDATE</b> '" + description + "' - " + true);
-		} else {
-			setRunStatus(false);
-			reportStepFail("<b>VALIDATE</b> '" + description + "' - " + false);
-			try {
-				reportStepFailScreenshot(screenshotFile());
-			} catch (WebDriverException e) {
-				reportStepFail("screenshotFile failed");
+		if (isRunStatus()) {
+			if (condition) {
+				reportStepPass("<b>VALIDATE</b> '" + description + "' - " + true);
+			} else {
+				setRunStatus(false);
+				reportStepFail("<b>VALIDATE</b> '" + description + "' - " + false);
+				try {
+					reportStepFailScreenshot(screenshotFile());
+				} catch (WebDriverException e) {
+					reportStepFail("screenshotFile failed");
+				}
 			}
 		}
 		return condition;
