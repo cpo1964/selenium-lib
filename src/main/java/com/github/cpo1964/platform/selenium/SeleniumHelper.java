@@ -641,7 +641,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 					try {
 						getWebElement().click();
 					} catch (Exception e1) {
-			            reportStepFail("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed");
+			            reportStepFail("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed:" + 
+			            		System.lineSeparator() + e1.getMessage());
 			            setRunStatus(false);
 			            return;
 					}
@@ -675,7 +676,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 						try {
 							getWebElement().click();
 						} catch (Exception e1) {
-				            reportStepFail("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed");
+				            reportStepFail("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed:" + 
+				            		System.lineSeparator() + e1.getMessage());
 				            setRunStatus(false);
 				            return;
 						}
@@ -785,7 +787,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 					try {
 						getWebElement().click();
 					} catch (Exception e1) {
-			            reportStepFail("CLICK   by xpath $(" + xpath + ") with " + ClickActions.CLICKKEY.name() + " failed");
+			            reportStepFail(type + " - " + "CLICK   by xpath $(" + xpath + ") with " + ClickActions.CLICKKEY.name() + " failed:" + 
+			            		System.lineSeparator() + e1.getMessage());
 			            setRunStatus(false);
 			            return;
 					}
@@ -807,7 +810,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
     					try {
     						getWebElement().click();
     					} catch (Exception e1) {
-    			            reportStepFail("CLICK   by xpath $(" + xpath + ") with " + ClickActions.CLICKKEY.name() + " failed");
+    			            reportStepFail(type + " - " + "CLICK   by xpath $(" + xpath + ") with " + ClickActions.CLICKKEY.name() + " failed:" + 
+    			            		System.lineSeparator() + e1.getMessage());
     			            setRunStatus(false);
     			            return;
     					}
@@ -815,7 +819,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
                     reportStepPass(BOLD_INPUT_BY_XPATH + xpath + XPATH_MSG_PART + value + "'");
                 } else {
                     setRunStatus(false);
-                    throw new NotFoundException(BOLD_INPUT_BY_XPATH + xpath + "\"), value not found: '" + value + "'");
+                    throw new NotFoundException(type + " - " + BOLD_INPUT_BY_XPATH + xpath + "\"), value not found: '" + value + "'");
                 }
             } else if (WebelementType.RADIOGROUP.name().equalsIgnoreCase(type)) {
                 int option = Integer.parseInt(value);
@@ -825,7 +829,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
                     reportStepPass(BOLD_INPUT_BY_XPATH + xpath + XPATH_MSG_PART + value + "'");
                 } else {
                     setRunStatus(false);
-                    throw new NotFoundException(BOLD_INPUT_BY_XPATH + xpath + "\"), value not found: '" + value + "'");
+                    throw new NotFoundException(type + " - " + BOLD_INPUT_BY_XPATH + xpath + "\"), value not found: '" + value + "'");
                 }
             } else {
                 setRunStatus(false);
