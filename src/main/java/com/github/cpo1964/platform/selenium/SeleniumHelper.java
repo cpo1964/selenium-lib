@@ -1300,7 +1300,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		try {
 			webEl = wa.until(ExpectedConditions.refreshed(ExpectedConditions.presenceOfElementLocated(locator)));
 		} catch (TimeoutException e1) {
-			if (WebelementState.NotFound.name().equals(state)) {
+			if (WebelementState.NotFound.equals(state)) {
 				return true;
 			}
 			errMsg = e1.getRawMessage();
@@ -1331,7 +1331,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 				}
 			}
 		} else {
-			if (WebelementState.NotFound.name().equals(state)) {
+			if (WebelementState.NotFound.equals(state)) {
 				return true;
 			}
 			ok = false;
