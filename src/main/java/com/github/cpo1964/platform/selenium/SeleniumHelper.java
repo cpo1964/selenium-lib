@@ -1331,6 +1331,9 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 				}
 			}
 		} else {
+			if (WebelementState.NotFound.name().equals(state)) {
+				return true;
+			}
 			ok = false;
 		}
 
