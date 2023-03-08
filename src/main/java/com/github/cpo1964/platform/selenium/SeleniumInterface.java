@@ -277,14 +277,6 @@ public interface SeleniumInterface extends ReportInterface {
 	// other stuff
 
 	/**
-	 * Wait until fully loaded.
-	 *
-	 * @param timeoutSeconds the timeout seconds
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	void waitUntilFullyLoaded(long timeoutSeconds) throws IOException;
-
-	/**
 	 * Gets the test platform properties.
 	 *
 	 * @param value the value
@@ -308,11 +300,6 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @return the string
 	 */
 	String screenshotBase64();
-
-	/**
-	 * Scroll to bottom.
-	 */
-	void scrollToBottom();
 
 	/**
 	 * Wait.

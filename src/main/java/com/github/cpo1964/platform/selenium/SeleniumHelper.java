@@ -796,19 +796,38 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 				reportStepPass(BOLD_INPUT_BY_XPATH + xpath + XPATH_MSG_PART + value + "'");
 			} else if (WebelementType.CHECKBOX.name().equalsIgnoreCase(type)
 					|| WebelementType.RADIOBUTTON.name().equalsIgnoreCase(type)) {
-				if (getWebElement().isSelected() && "OFF".equalsIgnoreCase(value)
-						|| !getWebElement().isSelected() && "ON".equalsIgnoreCase(value)) {
+				// if checkbox is selected && value ==  on or true -> do nothing
+				// if checkbox is not selected && value ==  off or false -> do nothing
+				// checkbox is selected -> uncheck with value off or false
+				if ((getWebElement().isSelected() && !CommonHelper.isTrue(value))
+						// checkbox is not selected -> check with value on or true
+						|| (!getWebElement().isSelected() && CommonHelper.isTrue(value))) {
 					try {
-						actions.moveToElement(getWebElement()).click().build().perform();
-					} catch (MoveTargetOutOfBoundsException | StaleElementReferenceException e) {
+						// see: https://stackoverflow.com/questions/34562061/webdriver-click-vs-javascript-click
+						scrollIntoView(getWebElement());
+						// FIRST approach
+						getWebElement().click();
+					} catch (Exception e1) {
 						try {
-							getWebElement().click();
-						} catch (Exception e1) {
-							reportStepFail(type + " - " + "CLICK   by xpath $(" + xpath + ") with "
-									+ ClickActions.CLICKKEY.name() + " failed:" + System.lineSeparator()
-									+ e1.getMessage());
-							setRunStatus(false);
-							return;
+							// SECOND approach
+							actions
+//							.moveToElement(getWebElement())
+							.moveToElement(getWebElement(), 0, -250)
+							.click()
+							.build()
+							.perform();
+						} catch (MoveTargetOutOfBoundsException | StaleElementReferenceException e) {
+							// THIRD approach
+							clickByJS(getWebElement());
+							// error if the checkbox is in NOT in the expected state
+							if ((getWebElement().isSelected() && !CommonHelper.isTrue(value)) || 
+									(!getWebElement().isSelected() && CommonHelper.isTrue(value))) {
+								reportStepFail(type + " - " + "CLICK   by xpath $(" + xpath + ") with "
+										+ ClickActions.CLICKKEY.name() + " failed:" + System.lineSeparator()
+										+ e.getMessage());
+								setRunStatus(false);
+								return;
+							}
 						}
 					}
 					reportStepPass(BOLD_INPUT_BY_XPATH + xpath + XPATH_MSG_PART + value + "'");
@@ -1100,14 +1119,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		String scnShot = getDriver().getScreenshotAs(OutputType.BASE64);
 		return "data:image/jpg;base64, " + scnShot;
 
-	}
-
-	/**
-	 * Scroll to bottom.
-	 */
-	@Override
-	public void scrollToBottom() {
-		((JavascriptExecutor) driver).executeScript("window.scrollBy(0,document.body.scrollHeight)", "");
 	}
 
 	/**
@@ -1443,16 +1454,49 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 //                        ExpectedConditions.elementToBeClickable(by)));
 //    }
 
+	// javascript methods
+	
+	// mouseMove(getWebElement(), 0, -250).
+	
+	/**
+	 * Scroll into view.
+	 *
+	 * @param webEl the WebElement
+	 */
+	public static void scrollIntoView(WebElement webEl) {
+		((JavascriptExecutor) getDriver())
+				.executeScript("arguments[0].scrollIntoView(true);", webEl);
+	}
+
+	/**
+	 * Scroll to bottom.
+	 */
+	public static void scrollToBottom() {
+		((JavascriptExecutor) getDriver())
+			.executeScript("window.scrollBy(0,document.body.scrollHeight)", "");
+	}
+
 	/**
 	 * Wait until fully loaded.
 	 *
 	 * @param timeoutSeconds the timeout seconds
 	 */
-	@Override
-	public void waitUntilFullyLoaded(long timeoutSeconds) {
+	public static void waitUntilFullyLoaded(long timeoutSeconds) {
 		WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(timeoutSeconds));
-		wait.until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState"))
+		wait.until(webDriver -> ((JavascriptExecutor) webDriver)
+				.executeScript("return document.readyState"))
 				.equals("complete");
+	}
+	
+	/**
+	 * Click the WebElement
+	 *
+	 * @param webEl the WebElement
+	 */
+	public static void clickByJS(WebElement webEl) {
+		((JavascriptExecutor) getDriver()).
+			executeScript("arguments[0].click();", webEl);
+
 	}
 
 }
