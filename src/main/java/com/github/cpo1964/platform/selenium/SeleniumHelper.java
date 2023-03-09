@@ -474,6 +474,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 			}
 		}
 		ChromeOptions chromeOptions = new ChromeOptions();
+		chromeOptions.addArguments("--remote-allow-origins=*");
 		if ("true".equalsIgnoreCase(System.getProperty("headless"))) {
 			chromeOptions.setHeadless(true);
 		}
