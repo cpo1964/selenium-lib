@@ -33,6 +33,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.TimeoutException;
@@ -502,11 +503,20 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		if ("true".equalsIgnoreCase(System.getProperty("headless"))) {
 			FirefoxBinary firefoxBinary = new FirefoxBinary();
 			firefoxBinary.addCommandLineOptions("--headless");
+
 			FirefoxOptions firefoxOptions = new FirefoxOptions();
-			FirefoxProfile profile = new FirefoxProfile();
-			firefoxOptions.setProfile(profile);
-			profile.setPreference("privacy.trackingprotection.enabled", false);
 			firefoxOptions.setBinary(firefoxBinary);
+			firefoxOptions.addArguments("--ignore-certificate-errors", "--ignore-ssl-errors");
+			firefoxOptions.addArguments("--disable-web-security");
+			firefoxOptions.addArguments("--allow-running-insecure-content");
+			firefoxOptions.setPageLoadStrategy(PageLoadStrategy.NORMAL);
+
+			FirefoxProfile profile = new FirefoxProfile();
+			profile.setAcceptUntrustedCertificates(true);
+			profile.setAssumeUntrustedCertificateIssuer(false);
+			profile.setPreference("pageLoadStrategy", "normal");
+			profile.setPreference("privacy.trackingprotection.enabled", false);
+			firefoxOptions.setProfile(profile);
 			// start firefox with empty tab
 			setDriver(new FirefoxDriver(firefoxOptions));
 		} else {
