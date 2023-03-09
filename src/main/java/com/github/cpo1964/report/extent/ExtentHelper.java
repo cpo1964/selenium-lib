@@ -36,6 +36,9 @@ import com.github.cpo1964.report.ReportInterface;
  */
 public class ExtentHelper implements ReportInterface {
 
+	/** The passed status */
+	private static boolean passed = true;
+
 	/** The exists count. */
 	private static int waitCount;
 
@@ -90,6 +93,42 @@ public class ExtentHelper implements ReportInterface {
 
 	public static void setOutputsCount(int value) {
 		ExtentHelper.outputsCount = value;
+	}
+
+	/**
+	 * Checks if is failed.
+	 *
+	 * @return true, if is failed
+	 */
+	public static boolean isFailed() {
+		return passed == false;
+	}
+
+	/**
+	 * Checks if is failed.
+	 *
+	 * @return true, if is failed
+	 */
+	public static boolean isPassed() {
+		return passed == true;
+	}
+
+	/**
+	 * Sets the passed.
+	 *
+	 * @return true, if is failed
+	 */
+	public static void setPassed() {
+		passed = true;
+	}
+
+	/**
+	 * Sets the failed.
+	 *
+	 * @param value the new value
+	 */
+	public static void setFailed() {
+		passed = false;
 	}
 
 	/**
@@ -210,6 +249,9 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	@Override
 	public void reportCreateTest(String msg) {
+		if (isFailed()) {
+			return;
+		}
 		setWaitCount(0);
 		setClicksCount(0);
 		setInputsCount(0);
@@ -227,6 +269,9 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	@Override
 	public void reportEndTest(String msg) {
+		if (isFailed()) {
+			return;
+		}
 		if (!msg.isEmpty()) {
 			getTest().log(Status.INFO, msg);
 			msg = msg.replace("<b>", "");
@@ -259,6 +304,9 @@ public class ExtentHelper implements ReportInterface {
 	 * @param msg the msg
 	 */
 	public void reportTestPass(String msg) {
+		if (isFailed()) {
+			return;
+		}
 		test.log(Status.PASS, msg);
 		logExtent.info(() -> msg.replace("<br>", System.lineSeparator()));
 	}
@@ -270,6 +318,9 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	@Override
 	public void reportTestInfo(String msg) {
+		if (isFailed()) {
+			return;
+		}
 		test.log(Status.INFO, msg);
 		logExtent.info(() -> msg.replace("<br>", System.lineSeparator()));
 	}
@@ -281,6 +332,9 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	@Override
 	public void reportCreateStep(String msg) {
+		if (isFailed()) {
+			return;
+		}
 		setNode(test.createNode("<b>" + msg + "</b>"));
 		logExtent.info(() -> "### " + msg.replace("<br>", System.lineSeparator()));
 	}
@@ -292,6 +346,9 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	@Override
 	public void reportEndStep(String msg) {
+		if (isFailed()) {
+			return;
+		}
 		reportStepInfo(msg);
 	}
 
@@ -302,6 +359,9 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	@Override
 	public void reportStepInfo(String msg) {
+		if (isFailed()) {
+			return;
+		}
 		getNode().log(Status.INFO, msg);
 		msg = msg.replace("<b>", "");
 		msg = msg.replace("</b>", "");
@@ -315,6 +375,9 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	@Override
 	public void reportStepPass(String msg) {
+		if (isFailed()) {
+			return;
+		}
 		getNode().log(Status.PASS, msg);
 		msg = msg.replace("<b>", "");
 		msg = msg.replace("</b>", "");
@@ -351,6 +414,9 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	@Override
 	public void reportStepPassScreenshot(String screenShot) {
+		if (isFailed()) {
+			return;
+		}
 		screenshotNode(screenShot, Status.PASS);
 	}
 

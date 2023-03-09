@@ -121,11 +121,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	private String name = "";
 
 	/**
-	 * The failed.
-	 */
-	private boolean failed;
-
-	/**
 	 * The value.
 	 */
 	protected static String value;
@@ -188,11 +183,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	private static int iteration = 0;
 
 	/**
-	 * The run status.
-	 */
-	private static boolean runStatus = true;
-
-	/**
 	 * Gets the iteration.
 	 *
 	 * @return the iteration
@@ -208,45 +198,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 */
 	public static void setIteration(int value) {
 		iteration = value;
-	}
-
-	/**
-	 * Checks if is run status.
-	 *
-	 * @return true, if is run status
-	 */
-	public static boolean isRunStatus() {
-		return runStatus == true;
-	}
-
-	/**
-	 * Sets the run status.
-	 *
-	 * @param value the new run status
-	 */
-	public static void setRunStatus(boolean value) {
-		if (!value) {
-			logSelenium.info("setRunStatus: " + false);
-		}
-		runStatus = value;
-	}
-
-	/**
-	 * Checks if is failed.
-	 *
-	 * @return true, if is failed
-	 */
-	public boolean isFailed() {
-		return failed;
-	}
-
-	/**
-	 * Sets the failed.
-	 *
-	 * @param value the new value
-	 */
-	public void setFailed(boolean value) {
-		failed = value;
 	}
 
 	/**
@@ -615,7 +566,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		}
 		// the searched webelement must be unique
 		if (webEls.size() > 1) {
-			setRunStatus(false);
+			setFailed();
 			throw new NonUniqueResultException("more then 1 webelement found with xpath: " + xpath);
 		}
 		// one Webelements found in ImplicitlyWaitTimout
@@ -633,7 +584,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 */
 	@Override
 	public void clickByXpath(String xpath, String clickAction) {
-		if (!isRunStatus()) {
+		if (isFailed()) {
 			return;
 		}
 		setClicksCount(getClicksCount() + 1);
@@ -649,7 +600,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 					} catch (Exception e1) {
 						reportStepFail("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed:"
 								+ System.lineSeparator() + e1.getMessage());
-						setRunStatus(false);
+						setFailed();
 						return;
 					}
 				}
@@ -678,7 +629,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 						} catch (Exception e1) {
 							reportStepFail("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed:"
 									+ System.lineSeparator() + e1.getMessage());
-							setRunStatus(false);
+							setFailed();
 							return;
 						}
 						action.keyUp(Keys.CONTROL);
@@ -705,7 +656,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 			}
 			reportStepPass("<b>CLICK   </b> by xpath $(\"" + xpath + "\")");
 		} else {
-			setRunStatus(false);
+			setFailed();
 			reportStepFail("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed");
 			reportStepFailScreenshot(screenshotFile());
 			throw new NoSuchElementException("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed");
@@ -755,14 +706,14 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param secret the secret
 	 */
 	public void inputByXpath(String xpath, String type, String value, boolean secret) {
-		if (!isRunStatus()) {
+		if (isFailed()) {
 			return;
 		}
 		setInputsCount(getInputsCount() + 1);
 		try {
 			ok = waitUntilBy(By.xpath(xpath), WebelementState.Enabled);
 			if (!ok || getWebElement() == null || type == null) {
-				setRunStatus(false);
+				setFailed();
 				logSecret(xpath + "(unknown) -> not done ", CommonHelper.getSecretString(value, secret), secret);
 				reportStepFail("<b>INPUT   </b> (" + type + " - " + xpath + ", '"
 						+ CommonHelper.getSecretString(value, secret) + ")'");
@@ -782,7 +733,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 					} catch (Exception e1) {
 						reportStepFail(type + " - " + "CLICK   by xpath $(" + xpath + ") with "
 								+ ClickActions.CLICKKEY.name() + " failed:" + System.lineSeparator() + e1.getMessage());
-						setRunStatus(false);
+						setFailed();
 						return;
 					}
 				}
@@ -825,14 +776,14 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 								reportStepFail(type + " - " + "CLICK   by xpath $(" + xpath + ") with "
 										+ ClickActions.CLICKKEY.name() + " failed:" + System.lineSeparator()
 										+ e.getMessage());
-								setRunStatus(false);
+								setFailed();
 								return;
 							}
 						}
 					}
 					reportStepPass(BOLD_INPUT_BY_XPATH + xpath + XPATH_MSG_PART + value + "'");
 				} else {
-					setRunStatus(false);
+					setFailed();
 					throw new NotFoundException(
 							type + " - " + BOLD_INPUT_BY_XPATH + xpath + "\"), value not found: '" + value + "'");
 				}
@@ -843,16 +794,16 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 					radios.get(option - 1).click();
 					reportStepPass(BOLD_INPUT_BY_XPATH + xpath + XPATH_MSG_PART + value + "'");
 				} else {
-					setRunStatus(false);
+					setFailed();
 					throw new NotFoundException(
 							type + " - " + BOLD_INPUT_BY_XPATH + xpath + "\"), value not found: '" + value + "'");
 				}
 			} else {
-				setRunStatus(false);
+				setFailed();
 				throw new NotFoundException("type of webelement unknown: '" + type + "'");
 			}
 		} catch (Exception e) {
-			setRunStatus(false);
+			setFailed();
 			reportStepFailScreenshot(screenshotFile());
 			reportStepFail("<b>INPUT   </b> (" + type + " - " + xpath + ", '"
 					+ CommonHelper.getSecretString(value, secret) + ")'");
@@ -908,7 +859,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	@Override
 	public String outputByXpath(String xpath) {
 		String output = "";
-		if (!isRunStatus()) {
+		if (isFailed()) {
 			return output;
 		}
 		setOutputsCount(getOutputsCount() + 1);
@@ -926,7 +877,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 			output = getWebElement().getAttribute("textContent");
 			reportStepPass("<b>OUTPUT   </b> by xpath $(\"" + xpath + "\")<br>text: '" + output + "'");
 		} else {
-			setRunStatus(false);
+			setFailed();
 			reportStepFailScreenshot(screenshotFile());
 			reportStepFail(
 					"<b>OUTPUT   </b> by xpath $(\"" + xpath + "\")<br>text: '" + output + "''" + webEl != null ? ""
@@ -955,11 +906,11 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 */
 	@Override
 	public boolean validate(boolean condition, String description) {
-		if (isRunStatus()) {
+		if (isPassed()) {
 			if (condition) {
 				reportStepPass("<b>VALIDATE</b> '" + description + "' - " + true);
 			} else {
-				setRunStatus(false);
+				setFailed();
 				reportStepFail("<b>VALIDATE</b> '" + description + "' - " + false);
 				try {
 					reportStepFailScreenshot(screenshotFile());
