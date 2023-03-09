@@ -476,6 +476,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		ChromeOptions chromeOptions = new ChromeOptions();
 		chromeOptions.addArguments("--no-sandbox");
 		chromeOptions.addArguments("--remote-allow-origins=*");
+		chromeOptions.addArguments("--disable-gpu");
 		chromeOptions.setExperimentalOption("useAutomationExtension", false);
 		if ("true".equalsIgnoreCase(System.getProperty("headless"))) {
 			chromeOptions.setHeadless(true);
