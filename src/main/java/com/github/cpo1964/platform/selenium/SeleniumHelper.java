@@ -566,7 +566,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		}
 		// the searched webelement must be unique
 		if (webEls.size() > 1) {
-			setFailed();
+			
 			throw new NonUniqueResultException("more then 1 webelement found with xpath: " + xpath);
 		}
 		// one Webelements found in ImplicitlyWaitTimout
@@ -654,7 +654,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 			}
 			reportStepPass("<b>CLICK   </b> by xpath $(\"" + xpath + "\")");
 		} else {
-			setFailed();
+			
 			reportStepFail("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed");
 			reportStepFailScreenshot(screenshotFile());
 			throw new NoSuchElementException("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed");
@@ -711,7 +711,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		try {
 			ok = waitUntilBy(By.xpath(xpath), WebelementState.Enabled);
 			if (!ok || getWebElement() == null || type == null) {
-				setFailed();
+				
 				logSecret(xpath + "(unknown) -> not done ", CommonHelper.getSecretString(value, secret), secret);
 				reportStepFail("<b>INPUT   </b> (" + type + " - " + xpath + ", '"
 						+ CommonHelper.getSecretString(value, secret) + ")'");
@@ -779,7 +779,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 					}
 					reportStepPass(BOLD_INPUT_BY_XPATH + xpath + XPATH_MSG_PART + value + "'");
 				} else {
-					setFailed();
+					
 					throw new NotFoundException(
 							type + " - " + BOLD_INPUT_BY_XPATH + xpath + "\"), value not found: '" + value + "'");
 				}
@@ -790,12 +790,12 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 					radios.get(option - 1).click();
 					reportStepPass(BOLD_INPUT_BY_XPATH + xpath + XPATH_MSG_PART + value + "'");
 				} else {
-					setFailed();
+					reportStepFail("<b>INPUT   </b> (" + type + " - " + xpath + ", '"
+							+ CommonHelper.getSecretString(value, secret) + ")'");
 					throw new NotFoundException(
 							type + " - " + BOLD_INPUT_BY_XPATH + xpath + "\"), value not found: '" + value + "'");
 				}
 			} else {
-				setFailed();
 				throw new NotFoundException("type of webelement unknown: '" + type + "'");
 			}
 		} catch (Exception e) {
