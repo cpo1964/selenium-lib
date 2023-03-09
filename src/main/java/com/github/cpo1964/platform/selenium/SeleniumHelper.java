@@ -69,7 +69,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	/**
 	 * The Constant WDM_CACHE_PATH.
 	 */
-	private static final String WDM_CACHE_PATH = "wdm.cachePath";
+	public static final String WDM_CACHE_PATH = "wdm.cachePath";
 
 	/**
 	 * The Constant VALUE2.
@@ -434,11 +434,9 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 				.getLogger(java.util.logging.Logger.GLOBAL_LOGGER_NAME);
 		globalLogger.setLevel(java.util.logging.Level.OFF);
 
-		System.setProperty(WDM_CACHE_PATH, "src/test/resources");
-		String wdmCachePath = System.getProperty(WDM_CACHE_PATH);
-		if (wdmCachePath != null && !wdmCachePath.isEmpty()) {
-			System.setProperty(WDM_CACHE_PATH, wdmCachePath);
-		}
+		// wdm.cachePath
+		logSelenium.info(() -> "downloading driver to: " + System.getProperty(WDM_CACHE_PATH));
+		
 		setProxy(System.getProperty("proxy"));
 		setProxyUser(System.getProperty("proxyUser"));
 		setProxyPass(System.getProperty("proxyPass"));
@@ -478,7 +476,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		chromeOptions.addArguments("--no-sandbox");
 		chromeOptions.addArguments("--remote-allow-origins=*");
 		chromeOptions.addArguments("--disable-gpu");
-		chromeOptions.setExperimentalOption("useAutomationExtension", false);
 		if ("true".equalsIgnoreCase(System.getProperty("headless"))) {
 			chromeOptions.setHeadless(true);
 		}
