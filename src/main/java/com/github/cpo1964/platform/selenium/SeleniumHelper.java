@@ -600,7 +600,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 					} catch (Exception e1) {
 						reportStepFail("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed:"
 								+ System.lineSeparator() + e1.getMessage());
-						setFailed();
 						return;
 					}
 				}
@@ -629,7 +628,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 						} catch (Exception e1) {
 							reportStepFail("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed:"
 									+ System.lineSeparator() + e1.getMessage());
-							setFailed();
 							return;
 						}
 						action.keyUp(Keys.CONTROL);
@@ -733,7 +731,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 					} catch (Exception e1) {
 						reportStepFail(type + " - " + "CLICK   by xpath $(" + xpath + ") with "
 								+ ClickActions.CLICKKEY.name() + " failed:" + System.lineSeparator() + e1.getMessage());
-						setFailed();
 						return;
 					}
 				}
@@ -776,7 +773,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 								reportStepFail(type + " - " + "CLICK   by xpath $(" + xpath + ") with "
 										+ ClickActions.CLICKKEY.name() + " failed:" + System.lineSeparator()
 										+ e.getMessage());
-								setFailed();
 								return;
 							}
 						}
@@ -803,7 +799,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 				throw new NotFoundException("type of webelement unknown: '" + type + "'");
 			}
 		} catch (Exception e) {
-			setFailed();
 			reportStepFailScreenshot(screenshotFile());
 			reportStepFail("<b>INPUT   </b> (" + type + " - " + xpath + ", '"
 					+ CommonHelper.getSecretString(value, secret) + ")'");
@@ -877,7 +872,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 			output = getWebElement().getAttribute("textContent");
 			reportStepPass("<b>OUTPUT   </b> by xpath $(\"" + xpath + "\")<br>text: '" + output + "'");
 		} else {
-			setFailed();
 			reportStepFailScreenshot(screenshotFile());
 			reportStepFail(
 					"<b>OUTPUT   </b> by xpath $(\"" + xpath + "\")<br>text: '" + output + "''" + webEl != null ? ""
@@ -910,7 +904,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 			if (condition) {
 				reportStepPass("<b>VALIDATE</b> '" + description + "' - " + true);
 			} else {
-				setFailed();
 				reportStepFail("<b>VALIDATE</b> '" + description + "' - " + false);
 				try {
 					reportStepFailScreenshot(screenshotFile());

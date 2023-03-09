@@ -105,9 +105,9 @@ public class ExtentHelper implements ReportInterface {
 	}
 
 	/**
-	 * Checks if is failed.
+	 * Checks if is passed.
 	 *
-	 * @return true, if is failed
+	 * @return true, if is passed
 	 */
 	public static boolean isPassed() {
 		return passed == true;
@@ -115,8 +115,6 @@ public class ExtentHelper implements ReportInterface {
 
 	/**
 	 * Sets the passed.
-	 *
-	 * @return true, if is failed
 	 */
 	public static void setPassed() {
 		passed = true;
@@ -124,8 +122,6 @@ public class ExtentHelper implements ReportInterface {
 
 	/**
 	 * Sets the failed.
-	 *
-	 * @param value the new value
 	 */
 	public static void setFailed() {
 		passed = false;
@@ -391,6 +387,7 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	@Override
 	public void reportStepFail(String msg) {
+		setFailed();
 		getNode().log(Status.FAIL, msg);
 		msg = msg.replace("<b>", "");
 		msg = msg.replace("</b>", "");
