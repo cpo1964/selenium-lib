@@ -444,9 +444,13 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		// wdm.cachePath
 		logSelenium.info(() -> "downloading driver to: " + System.getProperty(WDM_CACHE_PATH));
 		
-		setProxy(System.getProperty("proxy"));
-		setProxyUser(System.getProperty("proxyUser"));
-		setProxyPass(System.getProperty("proxyPass"));
+		if (System.getProperty("proxy") != null &&
+				System.getProperty("proxyUser") != null &&
+				System.getProperty("proxyPass") != null) {
+			setProxy(System.getProperty("proxy"));
+			setProxyUser(System.getProperty("proxyUser"));
+			setProxyPass(System.getProperty("proxyPass"));
+		}
 
 		if ("chrome".equalsIgnoreCase(getBrowser())) {
 			setupChromeDriver();
@@ -472,7 +476,12 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 */
 	private static void setupChromeDriver() {
 		if (getDriver() == null) {
-			if (getProxyUser() != null && !getProxyUser().isEmpty()) {
+			if (System.getProperty("proxy") != null &&
+					System.getProperty("proxyUser") != null &&
+					System.getProperty("proxyPass") != null) {
+				logSelenium.info(() -> "using proxy: " + System.getProperty("proxy") + System.lineSeparator() +
+						"using proxyUser: *****" + System.lineSeparator() +
+						"using proxyPass: *****" + System.lineSeparator());
 				io.github.bonigarcia.wdm.WebDriverManager.chromedriver().proxyUser(getProxyUser())
 						.proxyPass(getProxyPass()).proxy(getProxy()).setup();
 			} else {
@@ -495,7 +504,9 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 */
 	protected static void setupFirefoxDriver() {
 		if (getDriver() == null) {
-			if (getProxyUser() != null && !getProxyUser().isEmpty()) {
+			if (System.getProperty("proxy") != null &&
+					System.getProperty("proxyUser") != null &&
+					System.getProperty("proxyPass") != null) {
 				io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver().proxyUser(getProxyUser())
 						.proxyPass(getProxyPass()).proxy(getProxy()).setup();
 			} else {
