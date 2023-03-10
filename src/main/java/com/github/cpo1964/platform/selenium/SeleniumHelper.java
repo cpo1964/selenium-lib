@@ -429,6 +429,12 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 */
 	@Override
 	public Object setupDriver() {
+		try {
+			Runtime.getRuntime().exec("taskkill /IM chromedriver.exe");
+			Runtime.getRuntime().exec("taskkill /IM geckodriver.exe");
+		} catch (IOException e) {
+			logSelenium.debug("task chromedriver.exe or geckodriver.exe not found - nothing to kill.");
+		}
 		// supress all java.util.logging messages
 		java.util.logging.LogManager.getLogManager().reset();
 		java.util.logging.Logger globalLogger = java.util.logging.Logger
