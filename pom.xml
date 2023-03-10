@@ -181,9 +181,9 @@ limitations under the License.
 		<webdrivermanager.version>5.3.2</webdrivermanager.version>
 		<selenium-java.version>4.7.2</selenium-java.version>
 		<extentreports.version>5.0.9</extentreports.version>
-		<!--slf4j.version>2.0.6</slf4j.version-->
+		<slf4j.version>2.0.6</slf4j.version>
 		<!--log4j2.version>2.19.0</log4j2.version-->
-		<log4j2.version>2.10.0</log4j2.version>
+		<log4j2.version>2.18.0</log4j2.version>
 		<junit4.version>4.13.2</junit4.version>
 		<junit5.version>5.9.2</junit5.version>
 		<poi.version>[4.1.1,)</poi.version>
@@ -265,18 +265,18 @@ limitations under the License.
 			<artifactId>log4j-1.2-api</artifactId>
 			<version>${log4j2.version}</version>
 		</dependency>
-		<!--dependency>
+		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>${slf4j.version}</version>
 			<scope>test</scope>
-			<exclusions>
+			<!--exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
 					<artifactId>slf4j-api</artifactId>
 				</exclusion>
-			</exclusions>
-		</dependency-->
+			</exclusions-->
+		</dependency>
 		<dependency>
 			<groupId>io.github.bonigarcia</groupId>
 			<artifactId>webdrivermanager</artifactId>
