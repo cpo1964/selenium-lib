@@ -28,6 +28,7 @@ import java.util.Properties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
@@ -598,26 +599,25 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		if (isFailed()) {
 			return;
 		}
+		Actions action = new Actions(getDriver());
 		setClicksCount(getClicksCount() + 1);
 		setWebElement(null);
 		if (waitUntilBy(By.xpath(xpath), WebelementState.Enabled, getDriverImplicitlyWaitTimoutSeconds())) {
 			if (ClickActions.CLICKKEY.name().equals(clickAction)) {
-				Actions actions = new Actions(getDriver());
 				try {
-					actions.moveToElement(getWebElement()).click().build().perform();
-				} catch (MoveTargetOutOfBoundsException | StaleElementReferenceException e) {
+					getWebElement().click();
+				} catch (Exception e1) {
 					try {
-						getWebElement().click();
-					} catch (Exception e1) {
+						action.moveToElement(getWebElement()).click().build().perform();
+					} catch (ElementNotInteractableException | MoveTargetOutOfBoundsException | StaleElementReferenceException e2) {
 						reportStepFail("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed:"
-								+ System.lineSeparator() + e1.getMessage());
+								+ System.lineSeparator() + e1.getMessage() + System.lineSeparator() + e2.getMessage());
 						return;
 					}
 				}
 			} else {
 				// The user-facing API for emulating complex user gestures.
 				// Use this class rather than using the Keyboard or Mouse directly
-				Actions action = new Actions(getDriver());
 				if (ClickActions.RIGHTCLICK.name().equals(clickAction)) {
 					// context-click at middle of the given element
 					action.contextClick(getWebElement()).perform();
@@ -632,16 +632,21 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 				} else if (ClickActions.CONTROLCLICK.name().equals(clickAction)) {
 					try {
 						action.keyDown(Keys.CONTROL).click(getWebElement()).keyUp(Keys.CONTROL).perform();
-					} catch (MoveTargetOutOfBoundsException e) {
+					} catch (ElementNotInteractableException | MoveTargetOutOfBoundsException | StaleElementReferenceException e) {
 						action.keyDown(Keys.CONTROL);
 						try {
 							getWebElement().click();
+							action.keyUp(Keys.CONTROL);
 						} catch (Exception e1) {
-							reportStepFail("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed:"
-									+ System.lineSeparator() + e1.getMessage());
-							return;
+							try {
+								action.moveToElement(getWebElement()).click().build().perform();
+								action.keyUp(Keys.CONTROL);
+							} catch (ElementNotInteractableException | MoveTargetOutOfBoundsException | StaleElementReferenceException e2) {
+								reportStepFail("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed:"
+										+ System.lineSeparator() + e1.getMessage() + System.lineSeparator() + e2.getMessage());
+								return;
+							}
 						}
-						action.keyUp(Keys.CONTROL);
 					}
 				} else if (ClickActions.DOUBLECLICK.name().equals(clickAction)) {
 					action.doubleClick(getWebElement()).perform();
