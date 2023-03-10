@@ -266,9 +266,10 @@ public class ExtentHelper implements ReportInterface {
 	@Override
 	public void reportEndTest(String msg) {
 		if (isFailed()) {
-			return;
+			getTest().log(Status.FAIL, "test failed");
+			logExtent.info("test failed");
 		}
-		if (!msg.isEmpty()) {
+		if (msg != null && !msg.isEmpty()) {
 			getTest().log(Status.INFO, msg);
 			msg = msg.replace("<b>", "");
 			msg = msg.replace("</b>", "");
