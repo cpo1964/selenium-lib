@@ -51,6 +51,7 @@ public class ExcelHelper {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public ExcelHelper(File file, String sheetName) throws IOException {
+		MaxlevelStreamHandler.setupMaxLevelStreamHandler(LOGGER);
 		this.data = this.doloadFromSpreadsheet(file.getPath(), sheetName, true);
 	}
 

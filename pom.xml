@@ -19,7 +19,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.cpo1964</groupId>
 	<artifactId>selenium-lib</artifactId>
-	<version>1.0.38</version>
+	<version>1.0.39</version>
 	<packaging>jar</packaging>
 	<name>${project.name}</name>
 	<description>A fine tuned function library based on selenium webdriver api</description>
@@ -275,14 +275,9 @@ limitations under the License.
 			<artifactId>slf4j-simple</artifactId>
 			<version>${slf4j.version}</version>
 			<scope>test</scope>
-			<!--exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-api</artifactId>
-				</exclusion>
-			</exclusions-->
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/junit/junit -->
+		<!--
+		-->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

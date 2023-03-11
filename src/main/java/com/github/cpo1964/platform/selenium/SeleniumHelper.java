@@ -55,11 +55,18 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.github.cpo1964.report.extent.ExtentHelper;
 import com.github.cpo1964.utils.CommonHelper;
 import com.github.cpo1964.utils.ExcelHelper;
+import com.github.cpo1964.utils.MaxlevelStreamHandler;
 
 /**
  * The Class SeleniumHelper.
  */
 public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
+
+	static {
+        // must set before the Logger
+        String path = SeleniumHelper.class.getClassLoader().getResource("logging.properties").getFile();
+        System.setProperty("java.util.logging.config.file", path);
+    }
 
 	/**
 	 * The logger.
@@ -435,6 +442,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 			logSelenium.finest("task chromedriver.exe or geckodriver.exe not found - nothing to kill.");
 		}
 
+		MaxlevelStreamHandler.setupMaxLevelStreamHandler(logSelenium);
 		System.setProperty("java.util.logging.SimpleFormatter.format",
 				"%1$tF %1$tT %4$s %2$s %5$s%6$s%n");
 

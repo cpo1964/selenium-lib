@@ -28,11 +28,17 @@ import com.aventstack.extentreports.model.Media;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.github.cpo1964.platform.selenium.CommonSeleniumException;
 import com.github.cpo1964.report.ReportInterface;
+import com.github.cpo1964.utils.MaxlevelStreamHandler;
 
 /**
  * The class tearDownExtent.
  */
 public class ExtentHelper implements ReportInterface {
+
+	/**
+	 * The logger.
+	 */
+	static Logger logSelenium = Logger.getLogger(ExtentHelper.class.getSimpleName());
 
 	/** The passed status */
 	private static boolean passed = true;
@@ -243,6 +249,7 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	@Override
 	public void reportCreateTest(String msg) {
+		MaxlevelStreamHandler.setupMaxLevelStreamHandler(logSelenium);
 		if (isFailed()) {
 			return;
 		}
