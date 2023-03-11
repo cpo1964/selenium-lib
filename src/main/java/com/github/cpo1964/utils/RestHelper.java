@@ -22,6 +22,7 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -46,8 +47,6 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.ssl.SSLContextBuilder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * The Class RestHelper.
@@ -57,7 +56,7 @@ public class RestHelper {
     /**
      * The Constant Logger of the class.
      */
-    public static final Logger log = LogManager.getLogger(RestHelper.class.getSimpleName());
+    public static final Logger log = Logger.getLogger(RestHelper.class.getSimpleName());
 
     /**
      * The Constant CONTENT.

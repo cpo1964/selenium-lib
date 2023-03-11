@@ -24,9 +24,8 @@ import java.time.Duration;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Logger;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.JavascriptExecutor;
@@ -65,7 +64,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	/**
 	 * The logger.
 	 */
-	static Logger logSelenium = LogManager.getLogger(SeleniumHelper.class.getSimpleName());
+	static Logger logSelenium = Logger.getLogger(SeleniumHelper.class.getSimpleName());
 
 	/**
 	 * The Constant WDM_CACHE_PATH.
@@ -433,13 +432,17 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 			Runtime.getRuntime().exec("taskkill /IM chromedriver.exe");
 			Runtime.getRuntime().exec("taskkill /IM geckodriver.exe");
 		} catch (IOException e) {
-			logSelenium.debug("task chromedriver.exe or geckodriver.exe not found - nothing to kill.");
+			logSelenium.finest("task chromedriver.exe or geckodriver.exe not found - nothing to kill.");
 		}
+
+		System.setProperty("java.util.logging.SimpleFormatter.format",
+				"%1$tF %1$tT %4$s %2$s %5$s%6$s%n");
+
 		// supress all java.util.logging messages
-		java.util.logging.LogManager.getLogManager().reset();
-		java.util.logging.Logger globalLogger = java.util.logging.Logger
-				.getLogger(java.util.logging.Logger.GLOBAL_LOGGER_NAME);
-		globalLogger.setLevel(java.util.logging.Level.OFF);
+//		java.util.logging.LogManager.getLogManager().reset();
+//		java.util.logging.Logger globalLogger = java.util.logging.Logger
+//				.getLogger(java.util.logging.Logger.GLOBAL_LOGGER_NAME);
+//		globalLogger.setLevel(java.util.logging.Level.OFF);
 
 		// wdm.cachePath
 		logSelenium.info(() -> "downloading driver to: " + System.getProperty(WDM_CACHE_PATH));
@@ -990,7 +993,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		if (secret) {
 			text = CommonHelper.getSecretString(value, true);
 		}
-		logSelenium.debug("<b>input</b> by xpath $(\"" + locatorDelegate + "\"), value=" + text);
+		logSelenium.finest("<b>input</b> by xpath $(\"" + locatorDelegate + "\"), value=" + text);
 	}
 
 	/**
@@ -1015,7 +1018,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		}
 		// expected: a xpath from the property file
 		String locator = CommonHelper.getClassPropertyValueByKey(c, key);
-		logSelenium.debug("Found value '" + (!key.equals("password") ? value : "*****") + "' by key '" + key
+		logSelenium.finest("Found value '" + (!key.equals("password") ? value : "*****") + "' by key '" + key
 				+ "' from file '" + cn + ".properties'");
 		return locator;
 	}
@@ -1032,7 +1035,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 			try (Reader inStream = new InputStreamReader(new FileInputStream(filePath))) {
 				SeleniumHelper.testPlatformProperties.load(inStream);
 			} catch (IOException e) {
-				logSelenium.debug(e.getMessage());
+				logSelenium.finest(e.getMessage());
 			}
 		}
 		return SeleniumHelper.testPlatformProperties;

@@ -21,9 +21,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -39,7 +38,7 @@ import org.apache.poi.ss.usermodel.Row;
 public class ExcelHelper {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = LogManager.getLogger(ExcelHelper.class.getSimpleName());
+	private static final Logger LOGGER = Logger.getLogger(ExcelHelper.class.getSimpleName());
 
 	/** The data. */
 	private LinkedList<Object[]> data = null;

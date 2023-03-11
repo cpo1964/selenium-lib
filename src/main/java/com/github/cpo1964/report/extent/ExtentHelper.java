@@ -18,10 +18,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
@@ -52,7 +50,7 @@ public class ExtentHelper implements ReportInterface {
 	private static int outputsCount;
 
 	/** The logger. */
-	private static Logger logExtent = LogManager.getLogger(ExtentHelper.class.getSimpleName());
+	private static final Logger logExtent = Logger.getLogger(ExtentHelper.class.getSimpleName());
 
 	/** The test. */
 	private static ExtentTest test;
@@ -292,7 +290,7 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	public void reportTestFail(String msg) {
 		test.log(Status.FAIL, msg);
-		logExtent.error(() -> msg.replace("<br>", System.lineSeparator()));
+		logExtent.severe(() -> msg.replace("<br>", System.lineSeparator()));
 	}
 
 	/**
@@ -392,7 +390,7 @@ public class ExtentHelper implements ReportInterface {
 		getNode().log(Status.FAIL, msg);
 		msg = msg.replace("<b>", "");
 		msg = msg.replace("</b>", "");
-		logExtent.error(msg);
+		logExtent.severe(msg);
 	}
 
 	/**
