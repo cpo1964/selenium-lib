@@ -443,14 +443,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		}
 
 		MaxlevelStreamHandler.setupMaxLevelStreamHandler(logSelenium);
-		System.setProperty("java.util.logging.SimpleFormatter.format",
-				"%1$tF %1$tT %4$s %2$s %5$s%6$s%n");
-
-		// supress all java.util.logging messages
-//		java.util.logging.LogManager.getLogManager().reset();
-//		java.util.logging.Logger globalLogger = java.util.logging.Logger
-//				.getLogger(java.util.logging.Logger.GLOBAL_LOGGER_NAME);
-//		globalLogger.setLevel(java.util.logging.Level.OFF);
 
 		// wdm.cachePath
 		logSelenium.info(() -> "downloading driver to: " + System.getProperty(WDM_CACHE_PATH));

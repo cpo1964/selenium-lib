@@ -71,7 +71,6 @@ public class MaxlevelStreamHandler extends StreamHandler {
 		}
 		Formatter formatter = new SimpleFormatter();
 		// must set before the Logger
-		System.setProperty("java.util.logging.SimpleFormatter.format", "%1$tF %1$tT %4$s %2$s %5$s%6$s%n");
 		// setup all logs that are smaller than WARNINGS to stdout
 		MaxlevelStreamHandler outSh = new MaxlevelStreamHandler(System.out, formatter);
 		outSh.setLevel(Level.ALL);
