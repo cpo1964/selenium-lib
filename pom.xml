@@ -203,6 +203,11 @@ limitations under the License.
 	</developers>
 	<dependencies>
 		<dependency>
+			<groupId>io.github.bonigarcia</groupId>
+			<artifactId>webdrivermanager</artifactId>
+			<version>${webdrivermanager.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-devtools-v110</artifactId>
 			<version>4.8.1</version>
@@ -276,11 +281,6 @@ limitations under the License.
 					<artifactId>slf4j-api</artifactId>
 				</exclusion>
 			</exclusions-->
-		</dependency>
-		<dependency>
-			<groupId>io.github.bonigarcia</groupId>
-			<artifactId>webdrivermanager</artifactId>
-			<version>${webdrivermanager.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/junit/junit -->
 		<dependency>
