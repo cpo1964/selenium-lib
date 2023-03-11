@@ -270,16 +270,21 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	@Override
 	public void reportEndTest(String msg) {
+		if (msg != null && !msg.isEmpty()) {
+			String newmsg = msg.replace("<b>", "");
+			newmsg = newmsg.replace("</b>", "");
+			newmsg = newmsg.replace("<br>", "");
+			if (isFailed()) {
+				getTest().log(Status.FAIL, msg);
+				logExtent.severe(newmsg);
+			} else {
+				getTest().log(Status.INFO, msg);
+				logExtent.info(newmsg);
+			}
+		}
 		if (isFailed()) {
 			getTest().log(Status.FAIL, "test failed");
-			logExtent.info("test failed");
-		}
-		if (msg != null && !msg.isEmpty()) {
-			getTest().log(Status.INFO, msg);
-			msg = msg.replace("<b>", "");
-			msg = msg.replace("</b>", "");
-			msg = msg.replace("<br>", "");
-			logExtent.info(msg);
+			logExtent.severe("test failed");
 		}
 		String countMsg = "# Actions ####################<br>" + "waits: " + WaitCount() + "<br>" + "clicks: "
 				+ getClicksCount() + "<br>" + "inputs: " + getInputsCount() + "<br>" + "outputs: " + getOutputsCount()
@@ -393,11 +398,11 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	@Override
 	public void reportStepFail(String msg) {
-		setFailed();
 		getNode().log(Status.FAIL, msg);
 		msg = msg.replace("<b>", "");
 		msg = msg.replace("</b>", "");
 		logExtent.severe(msg);
+		setFailed();
 	}
 
 	/**
@@ -408,6 +413,7 @@ public class ExtentHelper implements ReportInterface {
 	@Override
 	public void reportStepFailScreenshot(String screenShot) {
 		screenshotNode(screenShot, Status.FAIL);
+		setFailed();
 	}
 
 	/**

@@ -62,12 +62,6 @@ import com.github.cpo1964.utils.MaxlevelStreamHandler;
  */
 public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 
-	static {
-        // must set before the Logger
-        String path = SeleniumHelper.class.getClassLoader().getResource("logging.properties").getFile();
-        System.setProperty("java.util.logging.config.file", path);
-    }
-
 	/**
 	 * The logger.
 	 */
@@ -690,7 +684,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 			}
 			reportStepPass("<b>CLICK   </b> by xpath $(\"" + xpath + "\")");
 		} else {
-			
 			reportStepFail("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed");
 			reportStepFailScreenshot(screenshotFile());
 			throw new NoSuchElementException("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed");
