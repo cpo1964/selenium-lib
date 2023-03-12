@@ -345,10 +345,10 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	/**
 	 * Sets the proxy user.
 	 *
-	 * @param proxyUser the new proxy user
+	 * @param proxyUserValue the new proxy user
 	 */
-	public static void setProxyUser(String proxyUser) {
-		SeleniumHelper.proxyUser = proxyUser;
+	public static void setProxyUser(String proxyUserValue) {
+		proxyUser = proxyUserValue;
 	}
 
 	/**
@@ -469,21 +469,47 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	}
 
 	/**
+	 * Sets the up web driver manager.
+	 *
+	 * @param wdm the new up web driver manager
+	 */
+	private static void setupWebDriverManager(io.github.bonigarcia.wdm.WebDriverManager wdm) {
+		String proxy = System.getProperty("proxy");
+		String proxyUser = System.getProperty("proxyUser");
+		String proxyPass = System.getProperty("proxyPass");
+		String driverVersion = System.getProperty("driverVersion");
+		String browserVersion = System.getProperty("browserVersion");
+		if (proxy != null && proxyUser != null && proxyPass != null && 
+				!proxy.isEmpty() && !proxyUser.isEmpty() && !proxyPass.isEmpty()) {
+			logSelenium.info(() -> "using proxy: " + proxy + System.lineSeparator() +
+					"using proxyUser: *****" + System.lineSeparator() +
+					"using proxyPass: *****" + System.lineSeparator());
+			wdm = wdm.proxyUser(proxyUser).proxyPass(proxyPass).proxy(proxy);
+		}
+		if (driverVersion != null && !driverVersion.isEmpty()) {
+			logSelenium.info(() -> "using driverVersion: " + driverVersion + System.lineSeparator());
+			wdm = wdm
+					.avoidReadReleaseFromRepository()
+					.useLocalVersionsPropertiesFirst()
+					.driverVersion(driverVersion);
+		}
+		if (browserVersion != null && !browserVersion.isEmpty()) {
+			logSelenium.info(() -> "using browserVersion: " + browserVersion + System.lineSeparator());
+			wdm = wdm
+					.avoidReadReleaseFromRepository()
+					.useLocalVersionsPropertiesFirst()
+					.driverVersion(browserVersion);
+		}
+		wdm.setup();
+	}
+
+	/**
 	 * Setup chrome driver.
 	 */
 	private static void setupChromeDriver() {
 		if (getDriver() == null) {
-			if (System.getProperty("proxy") != null &&
-					System.getProperty("proxyUser") != null &&
-					System.getProperty("proxyPass") != null) {
-				logSelenium.info(() -> "using proxy: " + System.getProperty("proxy") + System.lineSeparator() +
-						"using proxyUser: *****" + System.lineSeparator() +
-						"using proxyPass: *****" + System.lineSeparator());
-				io.github.bonigarcia.wdm.WebDriverManager.chromedriver().proxyUser(getProxyUser())
-						.proxyPass(getProxyPass()).proxy(getProxy()).setup();
-			} else {
-				io.github.bonigarcia.wdm.WebDriverManager.chromedriver().setup();
-			}
+			io.github.bonigarcia.wdm.WebDriverManager wdm = io.github.bonigarcia.wdm.WebDriverManager.chromedriver();
+			setupWebDriverManager(wdm);
 		}
 		ChromeOptions chromeOptions = new ChromeOptions();
 		chromeOptions.addArguments("--no-sandbox");
@@ -501,14 +527,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 */
 	protected static void setupFirefoxDriver() {
 		if (getDriver() == null) {
-			if (System.getProperty("proxy") != null &&
-					System.getProperty("proxyUser") != null &&
-					System.getProperty("proxyPass") != null) {
-				io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver().proxyUser(getProxyUser())
-						.proxyPass(getProxyPass()).proxy(getProxy()).setup();
-			} else {
-				io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver().setup();
-			}
+			io.github.bonigarcia.wdm.WebDriverManager wdm = io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver();
+			setupWebDriverManager(wdm);
 		}
 		System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, "FFLogs.txt");
 
