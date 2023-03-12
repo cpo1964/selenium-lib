@@ -14,6 +14,7 @@ package com.github.cpo1964.report.extent;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -194,9 +195,18 @@ public class ExtentHelper implements ReportInterface {
 		String runResultsDir = Paths.get("").toAbsolutePath().toString() + File.separatorChar + "RunResults";
 		deleteDirectory(runResultsDir);
 		createDirectories(runResultsDir + File.separatorChar + "Resources" + File.separatorChar + "Snapshots");
-		ExtentSparkReporter r = new ExtentSparkReporter(runResultsDir + File.separatorChar + "runresults.html");
+		ExtentSparkReporter spark = new ExtentSparkReporter(runResultsDir + File.separatorChar + "runresults.html");
+		spark.config().setEncoding("UTF-8");
+//		spark.config();
 		setReport(new ExtentReports());
-		getReport().attachReporter(r);
+		getReport().attachReporter(spark);
+		try {
+			getReport().setSystemInfo("Hostname", java.net.InetAddress.getLocalHost().getHostName());
+		} catch (UnknownHostException e) {
+			logSelenium.finest(e.getMessage());
+		}
+		getReport().setSystemInfo("Operation System", System.getProperty("os.name") + " " + System.getProperty("os.version"));
+		getReport().setSystemInfo("User", System.getProperty("user.name"));
 		return getReport();
 	}
 
@@ -260,6 +270,14 @@ public class ExtentHelper implements ReportInterface {
 		setTest(getReport().createTest("<b>" + msg + "</b>"));
 		logExtent.info("##################");
 		logExtent.info(() -> "## " + msg);
+		logExtent.info("##################");
+		try {
+			logExtent.info("Hostname: " + java.net.InetAddress.getLocalHost().getHostName());
+		} catch (UnknownHostException e) {
+			logSelenium.finest(e.getMessage());
+		}
+		logExtent.info("Operation System: " + System.getProperty("os.name") + " - " + System.getProperty("os.version"));
+		logExtent.info("User: " + System.getProperty("user.name"));
 		logExtent.info("##################");
 	}
 
