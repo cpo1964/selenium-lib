@@ -19,7 +19,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.cpo1964</groupId>
 	<artifactId>selenium-lib</artifactId>
-	<version>1.0.42</version>
+	<version>1.0.43</version>
 	<packaging>jar</packaging>
 	<name>${project.name}</name>
 	<description>A fine tuned function library based on selenium webdriver api</description>
@@ -30,6 +30,29 @@
 			<url>LICENSE</url>
 		</license>
 	</licenses>
+	<properties>
+		<project.name>selenium-lib</project.name>
+		<owner>com.github.cpo1964</owner>
+		<email>christian.poecksteiner@aon.at</email>
+		<organizationName>com.github.cpo1964</organizationName>
+		<project.inceptionYear>2023</project.inceptionYear>
+		<year>2023</year>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<license.dir>${basedir}</license.dir>
+		<webdrivermanager.version>5.3.2</webdrivermanager.version>
+		<selenium-java.version>4.7.2</selenium-java.version>
+		<extentreports.version>5.0.9</extentreports.version>
+		<slf4j.version>2.0.6</slf4j.version>
+		<!--log4j2.version>2.19.0</log4j2.version-->
+		<log4j2.version>2.18.0</log4j2.version>
+		<junit4.version>4.13.2</junit4.version>
+		<junit5.version>5.9.2</junit5.version>
+		<poi.version>[4.1.1,)</poi.version>
+		<httpclient.version>[4.5.13,)</httpclient.version>
+		<commons-lang.version>2.6</commons-lang.version>
+		<java.version>1.8</java.version>
+	</properties>
 	<build>
 		<plugins>
 			<plugin>
@@ -170,29 +193,7 @@ limitations under the License.
 		<developerConnection>scm:git:ssh://github.com:cpo1964/selenium-lib.git</developerConnection>
 		<url>https://github.com/cpo1964/selenium-lib</url>
 	</scm>
-	<properties>
-		<project.name>selenium-lib</project.name>
-		<owner>com.github.cpo1964</owner>
-		<email>christian.poecksteiner@aon.at</email>
-		<organizationName>com.github.cpo1964</organizationName>
-		<project.inceptionYear>2023</project.inceptionYear>
-		<year>2023</year>
-		<license.dir>${basedir}</license.dir>
-		<webdrivermanager.version>5.3.2</webdrivermanager.version>
-		<selenium-java.version>4.7.2</selenium-java.version>
-		<extentreports.version>5.0.9</extentreports.version>
-		<slf4j.version>2.0.6</slf4j.version>
-		<!--log4j2.version>2.19.0</log4j2.version-->
-		<log4j2.version>2.18.0</log4j2.version>
-		<junit4.version>4.13.2</junit4.version>
-		<junit5.version>5.9.2</junit5.version>
-		<poi.version>[4.1.1,)</poi.version>
-		<httpclient.version>[4.5.13,)</httpclient.version>
-		<commons-lang.version>2.6</commons-lang.version>
-		<java.version>1.8</java.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-	</properties>
+
 	<developers>
 		<developer>
 			<name>Christian Pöcksteiner</name>

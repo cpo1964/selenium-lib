@@ -205,7 +205,8 @@ public class ExtentHelper implements ReportInterface {
 		} catch (UnknownHostException e) {
 			logSelenium.finest(e.getMessage());
 		}
-		getReport().setSystemInfo("Operation System", System.getProperty("os.name") + " " + System.getProperty("os.version"));
+		getReport().setSystemInfo("Operation System",
+				System.getProperty("os.name") + " " + System.getProperty("os.version"));
 		getReport().setSystemInfo("User", System.getProperty("user.name"));
 		return getReport();
 	}
@@ -267,7 +268,7 @@ public class ExtentHelper implements ReportInterface {
 		setClicksCount(0);
 		setInputsCount(0);
 		setOutputsCount(0);
-		setTest(getReport().createTest("<b>" + msg + "</b>"));
+		setTest(getReport().createTest("<b>" + replaceUmlaute(msg) + "</b>"));
 		logExtent.info("##################");
 		logExtent.info(() -> "## " + msg);
 		logExtent.info("##################");
@@ -293,10 +294,10 @@ public class ExtentHelper implements ReportInterface {
 			newmsg = newmsg.replace("</b>", "");
 			newmsg = newmsg.replace("<br>", "");
 			if (isFailed()) {
-				getTest().log(Status.FAIL, msg);
+				getTest().log(Status.FAIL, replaceUmlaute(msg));
 				logExtent.severe(newmsg);
 			} else {
-				getTest().log(Status.INFO, msg);
+				getTest().log(Status.INFO, replaceUmlaute(msg));
 				logExtent.info(newmsg);
 			}
 		}
@@ -360,7 +361,7 @@ public class ExtentHelper implements ReportInterface {
 		if (isFailed()) {
 			return;
 		}
-		setNode(test.createNode("<b>" + msg + "</b>"));
+		setNode(test.createNode("<b>" + replaceUmlaute(msg) + "</b>"));
 		logExtent.info(() -> "### " + msg.replace("<br>", System.lineSeparator()));
 	}
 
@@ -387,7 +388,7 @@ public class ExtentHelper implements ReportInterface {
 		if (isFailed()) {
 			return;
 		}
-		getNode().log(Status.INFO, msg);
+		getNode().log(Status.INFO, replaceUmlaute(msg));
 		msg = msg.replace("<b>", "");
 		msg = msg.replace("</b>", "");
 		logExtent.info(msg);
@@ -403,7 +404,7 @@ public class ExtentHelper implements ReportInterface {
 		if (isFailed()) {
 			return;
 		}
-		getNode().log(Status.PASS, msg);
+		getNode().log(Status.PASS, replaceUmlaute(msg));
 		msg = msg.replace("<b>", "");
 		msg = msg.replace("</b>", "");
 		logExtent.info(msg);
@@ -416,7 +417,7 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	@Override
 	public void reportStepFail(String msg) {
-		getNode().log(Status.FAIL, msg);
+		getNode().log(Status.FAIL, replaceUmlaute(msg));
 		msg = msg.replace("<b>", "");
 		msg = msg.replace("</b>", "");
 		logExtent.severe(msg);
@@ -460,8 +461,36 @@ public class ExtentHelper implements ReportInterface {
 			getNode().getModel().getMedia().clear();
 			getNode().log(s, media);
 		} catch (Exception e) {
-            throw new CommonSeleniumException(e.getMessage());
+			throw new CommonSeleniumException(e.getMessage());
 		}
+	}
+
+	/** The umlaut replacements. */
+	private static String[][] UMLAUT_REPLACEMENTS = { { new String("Ä"), "&Auml;" }, { new String("Ü"), "&Uuml;" },
+			{ new String("Ö"), "&Ouml;" }, { new String("ä"), "&auml;" }, { new String("ü"), "&uuml;" }, { new String("ö"), "&ouml;" },
+			{ new String("ß"), "&szlig;" } };
+	
+	/** The umlaut replacements2. */
+	@SuppressWarnings("unused")
+	private static String[][] UMLAUT_REPLACEMENTS2 = { { new String("Ä"), "Ae" }, { new String("Ü"), "Ue" },
+			{ new String("Ö"), "Oe" }, { new String("ä"), "ae" }, { new String("ü"), "ue" }, { new String("ö"), "oe" },
+			{ new String("ß"), "ss" } };
+
+
+	/**
+	 * Replace umlaute.
+	 *
+	 * @param orig the orig
+	 * @return the string
+	 */
+	public static String replaceUmlaute(String orig) {
+		String result = orig;
+
+		for (int i = 0; i < UMLAUT_REPLACEMENTS.length; i++) {
+			result = result.replace(UMLAUT_REPLACEMENTS[i][0], UMLAUT_REPLACEMENTS[i][1]);
+		}
+
+		return result;
 	}
 
 	/**
