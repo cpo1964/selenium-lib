@@ -19,7 +19,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.cpo1964</groupId>
 	<artifactId>selenium-lib</artifactId>
-	<version>1.0.43</version>
+	<version>1.0.44</version>
 	<packaging>jar</packaging>
 	<name>${project.name}</name>
 	<description>A fine tuned function library based on selenium webdriver api</description>
@@ -43,6 +43,7 @@
 		<webdrivermanager.version>5.3.2</webdrivermanager.version>
 		<selenium-java.version>4.7.2</selenium-java.version>
 		<extentreports.version>5.0.9</extentreports.version>
+		<pdfextentreporter.version>1.3.2</pdfextentreporter.version>
 		<slf4j.version>2.0.6</slf4j.version>
 		<!--log4j2.version>2.19.0</log4j2.version-->
 		<log4j2.version>2.18.0</log4j2.version>
@@ -64,32 +65,32 @@
 				</configuration>
 			</plugin>
 			<plugin>
-		      <groupId>org.apache.maven.plugins</groupId>
-		      <artifactId>maven-deploy-plugin</artifactId>
-		      <version>3.1.0</version>
-		      <configuration>
-		        <skip>true</skip>
-		      </configuration>
-		    </plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
 			<plugin>
-		      <groupId>org.sonatype.plugins</groupId>
-		      <artifactId>nexus-staging-maven-plugin</artifactId>
-		      <version>1.6.8</version>
-		      <extensions>true</extensions>
-			<executions>
-				<execution>
-					<phase>deploy</phase>
-					<goals>
-						<goal>deploy</goal>
-					</goals>
-				</execution>
-			</executions>
-		      <configuration>
-		        <serverId>nexus</serverId>
-		        <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-		        <autoReleaseAfterClose>true</autoReleaseAfterClose>
-		      </configuration>
-		    </plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.8</version>
+				<extensions>true</extensions>
+				<executions>
+					<execution>
+						<phase>deploy</phase>
+						<goals>
+							<goal>deploy</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<serverId>nexus</serverId>
+					<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
 			<!-- License information -->
 			<plugin>
 				<groupId>com.mycila</groupId>
@@ -126,7 +127,7 @@ limitations under the License.
 		</plugins>
 	</build>
 	<profiles>
-   		<profile>
+		<profile>
 			<id>deploy</id>
 			<build>
 				<plugins>
@@ -149,11 +150,11 @@ limitations under the License.
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<version>3.5.0</version>
-				        <configuration>
-				          <show>public</show>
-				          <nohelp>true</nohelp>
-				        </configuration>
-   						<executions>
+						<configuration>
+							<show>public</show>
+							<nohelp>true</nohelp>
+						</configuration>
+						<executions>
 							<execution>
 								<id>attach-javadocs</id>
 								<goals>
@@ -162,28 +163,27 @@ limitations under the License.
 							</execution>
 						</executions>
 					</plugin>
-					
 					<!--
 					usage: mvn verify -Dgpg.passphrase=thephrase
 					-->
 					<plugin>
-				        <groupId>org.apache.maven.plugins</groupId>
-				        <artifactId>maven-gpg-plugin</artifactId>
-				        <version>3.0.1</version>
-				        <executions>
-				          <execution>
-				            <id>sign-artifacts</id>
-				            <phase>verify</phase>
-				            <goals>
-				              <goal>sign</goal>
-				            </goals>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>3.0.1</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
 								<configuration>
-                                    <keyname>5C1F10600B4AC9EEC9EDE1CF5F6BA593CDD2BB03</keyname>
-                                    <passphraseServerId>http://keys.gnupg.net</passphraseServerId>
-                                </configuration>
-                          </execution>
-				        </executions>
-				      </plugin>
+									<keyname>5C1F10600B4AC9EEC9EDE1CF5F6BA593CDD2BB03</keyname>
+									<passphraseServerId>http://keys.gnupg.net</passphraseServerId>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
 				</plugins>
 			</build>
 		</profile>
@@ -193,7 +193,6 @@ limitations under the License.
 		<developerConnection>scm:git:ssh://github.com:cpo1964/selenium-lib.git</developerConnection>
 		<url>https://github.com/cpo1964/selenium-lib</url>
 	</scm>
-
 	<developers>
 		<developer>
 			<name>Christian Pöcksteiner</name>
@@ -234,6 +233,12 @@ limitations under the License.
 			<groupId>com.aventstack</groupId>
 			<artifactId>extentreports</artifactId>
 			<version>${extentreports.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/tech.grasshopper/pdfextentreporter -->
+		<dependency>
+			<groupId>tech.grasshopper</groupId>
+			<artifactId>pdfextentreporter</artifactId>
+			<version>${pdfextentreporter.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
@@ -287,14 +292,13 @@ limitations under the License.
 		</dependency>
 	</dependencies>
 	<distributionManagement>
-	  <snapshotRepository>
-	    <id>nexus</id>
-	    <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-	  </snapshotRepository>
-	  <repository>
-	    <id>ossrh</id>
-	    <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-	  </repository>
+		<snapshotRepository>
+			<id>nexus</id>
+			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
 	</distributionManagement>
-
 </project>

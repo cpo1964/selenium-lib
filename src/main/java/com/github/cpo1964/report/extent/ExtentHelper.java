@@ -31,6 +31,8 @@ import com.github.cpo1964.platform.selenium.CommonSeleniumException;
 import com.github.cpo1964.report.ReportInterface;
 import com.github.cpo1964.utils.MaxlevelStreamHandler;
 
+import tech.grasshopper.reporter.ExtentPDFReporter;
+
 /**
  * The class tearDownExtent.
  */
@@ -59,14 +61,25 @@ public class ExtentHelper implements ReportInterface {
 	/** The logger. */
 	private static final Logger logExtent = Logger.getLogger(ExtentHelper.class.getSimpleName());
 
-	/** The test. */
-	private static ExtentTest test;
+	/** The htmlTest. */
+	private static ExtentTest htmlTest;
 
-	/** The getNode(). */
-	private static ExtentTest node;
+	/** The pdfTest. */
+	private static ExtentTest pdfTest;
 
-	/** The getReport(). */
-	private static ExtentReports report = ExtentHelper.prepareExtentReport();
+	/** The htmlNode. */
+	private static ExtentTest htmlNode;
+
+	/** The pdfNode. */
+	private static ExtentTest pdfNode;
+
+	/** The htmlReport. */
+	private static ExtentReports htmlReport = ExtentHelper.prepareHtmlReport();
+	
+	/** The htmlReport. */
+	private static ExtentReports pdfReport = ExtentHelper.preparePdfReport();
+	
+	private static String runResultsDir = null;
 
 	public static int WaitCount() {
 		return waitCount;
@@ -133,82 +146,163 @@ public class ExtentHelper implements ReportInterface {
 	}
 
 	/**
-	 * Gets the test.
+	 * Gets the htmlTest.
 	 *
 	 * @return the test
 	 */
-	public static ExtentTest getTest() {
-		return test;
+	public static ExtentTest getHtmlTest() {
+		return htmlTest;
 	}
 
 	/**
-	 * Sets the test.
+	 * Sets the htmlTest.
 	 *
-	 * @param test the new test
+	 * @param test the new htmlTest
 	 */
-	public static void setTest(ExtentTest test) {
-		ExtentHelper.test = test;
+	public static void setHtmlTest(ExtentTest test) {
+		htmlTest = test;
 	}
 
 	/**
-	 * Gets the node.
+	 * Gets the pdfTest.
+	 *
+	 * @return the test
+	 */
+	public static ExtentTest getPdfTest() {
+		return pdfTest;
+	}
+
+	/**
+	 * Sets the pdfTest.
+	 *
+	 * @param test the new pdfTest
+	 */
+	public static void setPdfTest(ExtentTest test) {
+		pdfTest = test;
+	}
+
+	/**
+	 * Gets the html node.
 	 *
 	 * @return the node
 	 */
-	public static ExtentTest getNode() {
-		return node;
+	public static ExtentTest getHtmlNode() {
+		return htmlNode;
 	}
 
 	/**
-	 * Sets the node.
+	 * Sets the html node.
 	 *
 	 * @param node the new node
 	 */
-	public static void setNode(ExtentTest node) {
-		ExtentHelper.node = node;
+	public static void setHtmlNode(ExtentTest node) {
+		htmlNode = node;
 	}
 
 	/**
-	 * Gets the report.
+	 * Gets the pdfNode node.
+	 *
+	 * @return the node
+	 */
+	public static ExtentTest getPdfNode() {
+		return pdfNode;
+	}
+
+	/**
+	 * Sets the pdfNode node.
+	 *
+	 * @param node the new node
+	 */
+	public static void setPdfNode(ExtentTest node) {
+		pdfNode = node;
+	}
+
+	/**
+	 * Gets the pdfReport.
 	 *
 	 * @return the report
 	 */
-	public static ExtentReports getReport() {
-		return report;
+	public static ExtentReports getPdfReport() {
+		return pdfReport;
 	}
 
 	/**
-	 * Sets the report.
+	 * Sets the pdfReport.
 	 *
 	 * @param report the new report
 	 */
-	public static void setReport(ExtentReports report) {
-		ExtentHelper.report = report;
+	public static void setPdfReport(ExtentReports report) {
+		pdfReport = report;
 	}
 
 	/**
-	 * Prepare extent getReport().
+	 * Gets the htmlReport.
+	 *
+	 * @return the report
+	 */
+	public static ExtentReports getHtmlReport() {
+		return htmlReport;
+	}
+
+	/**
+	 * Sets the htmlReport.
+	 *
+	 * @param report the new report
+	 */
+	public static void setHtmlReport(ExtentReports report) {
+		htmlReport = report;
+	}
+
+	/**
+	 * prepare the html report.
 	 *
 	 * @return the extent reports
 	 */
-	public static ExtentReports prepareExtentReport() {
-		String runResultsDir = Paths.get("").toAbsolutePath().toString() + File.separatorChar + "RunResults";
+	public static ExtentReports prepareHtmlReport() {
+		runResultsDir = Paths.get("").toAbsolutePath().toString() + File.separatorChar + "RunResults";
 		deleteDirectory(runResultsDir);
 		createDirectories(runResultsDir + File.separatorChar + "Resources" + File.separatorChar + "Snapshots");
+
+		setHtmlReport(new ExtentReports());
+
+		// html report
 		ExtentSparkReporter spark = new ExtentSparkReporter(runResultsDir + File.separatorChar + "runresults.html");
 		spark.config().setEncoding("UTF-8");
-//		spark.config();
-		setReport(new ExtentReports());
-		getReport().attachReporter(spark);
+		getHtmlReport().attachReporter(spark);
+		
 		try {
-			getReport().setSystemInfo("Hostname", java.net.InetAddress.getLocalHost().getHostName());
+			getHtmlReport().setSystemInfo("Hostname", java.net.InetAddress.getLocalHost().getHostName());
 		} catch (UnknownHostException e) {
 			logSelenium.finest(e.getMessage());
 		}
-		getReport().setSystemInfo("Operation System",
+		getHtmlReport().setSystemInfo("Operation System",
 				System.getProperty("os.name") + " " + System.getProperty("os.version"));
-		getReport().setSystemInfo("User", System.getProperty("user.name"));
-		return getReport();
+		getHtmlReport().setSystemInfo("User", System.getProperty("user.name"));
+		return getHtmlReport();
+	}
+
+	/**
+	 * prepare the pdf report.
+	 *
+	 * @return the extent reports
+	 */
+	public static ExtentReports preparePdfReport() {
+		setPdfReport(new ExtentReports());
+
+		// pdf report
+		ExtentPDFReporter pdfReport = new ExtentPDFReporter("RunResults/runresults.pdf");
+		pdfReport.config().setMediaFolders(new String[] { "RunResults/Resources/Snapshots"});
+		getPdfReport().attachReporter(pdfReport);
+		
+		try {
+			getPdfReport().setSystemInfo("Hostname", java.net.InetAddress.getLocalHost().getHostName());
+		} catch (UnknownHostException e) {
+			logSelenium.finest(e.getMessage());
+		}
+		getPdfReport().setSystemInfo("Operation System",
+				System.getProperty("os.name") + " " + System.getProperty("os.version"));
+		getPdfReport().setSystemInfo("User", System.getProperty("user.name"));
+		return getPdfReport();
 	}
 
 	/**
@@ -268,9 +362,13 @@ public class ExtentHelper implements ReportInterface {
 		setClicksCount(0);
 		setInputsCount(0);
 		setOutputsCount(0);
-		setTest(getReport().createTest("<b>" + replaceUmlaute(msg) + "</b>"));
+		setHtmlTest(getHtmlReport().createTest("<b>" + replaceUmlaute(msg) + "</b>"));
+		msg = msg.replaceAll("\\Wbr\\W", System.lineSeparator());
+		msg = msg.replaceAll("\\Wb\\W", "");
+		msg = msg.replaceAll("\\W/b\\W", "");
+		setPdfTest(getPdfReport().createTest(replaceUmlaute(msg)));
 		logExtent.info("##################");
-		logExtent.info(() -> "## " + msg);
+		logExtent.info("## " + msg);
 		logExtent.info("##################");
 		try {
 			logExtent.info("Hostname: " + java.net.InetAddress.getLocalHost().getHostName());
@@ -294,24 +392,31 @@ public class ExtentHelper implements ReportInterface {
 			newmsg = newmsg.replace("</b>", "");
 			newmsg = newmsg.replace("<br>", "");
 			if (isFailed()) {
-				getTest().log(Status.FAIL, replaceUmlaute(msg));
+				getHtmlTest().log(Status.FAIL, replaceUmlaute(msg));
+				getPdfTest().log(Status.FAIL, replaceUmlaute(msg));
 				logExtent.severe(newmsg);
 			} else {
-				getTest().log(Status.INFO, replaceUmlaute(msg));
+				getHtmlTest().log(Status.INFO, replaceUmlaute(msg));
+				getPdfTest().log(Status.INFO, replaceUmlaute(msg));
 				logExtent.info(newmsg);
 			}
 		}
 		if (isFailed()) {
-			getTest().log(Status.FAIL, "test failed");
+			getHtmlTest().log(Status.FAIL, "test failed");
+			getPdfTest().log(Status.FAIL, "test failed");
 			logExtent.severe("test failed");
 		}
 		String countMsg = "# Actions ####################<br>" + "waits: " + WaitCount() + "<br>" + "clicks: "
 				+ getClicksCount() + "<br>" + "inputs: " + getInputsCount() + "<br>" + "outputs: " + getOutputsCount()
 				+ "<br>";
-		getTest().log(Status.INFO, countMsg);
-		countMsg = countMsg.replace("<br>", System.lineSeparator());
+		getHtmlTest().log(Status.INFO, countMsg);
+		countMsg = countMsg.replaceAll("\\Wbr\\W", System.lineSeparator());
+		countMsg = countMsg.replaceAll("\\Wb\\W", "");
+		countMsg = countMsg.replaceAll("\\W/b\\W", "");
+		getPdfTest().log(Status.INFO, countMsg);
 		logExtent.info(countMsg);
-		getReport().flush();
+		getHtmlReport().flush();
+		getPdfReport().flush();
 	}
 
 	/**
@@ -320,8 +425,12 @@ public class ExtentHelper implements ReportInterface {
 	 * @param msg the msg
 	 */
 	public void reportTestFail(String msg) {
-		test.log(Status.FAIL, msg);
-		logExtent.severe(() -> msg.replace("<br>", System.lineSeparator()));
+		htmlTest.log(Status.FAIL, msg);
+		msg = msg.replaceAll("\\Wbr\\W", System.lineSeparator());
+		msg = msg.replaceAll("\\Wb\\W", "");
+		msg = msg.replaceAll("\\W/b\\W", "");
+		pdfTest.log(Status.FAIL, msg);
+		logExtent.severe(msg);
 	}
 
 	/**
@@ -333,8 +442,12 @@ public class ExtentHelper implements ReportInterface {
 		if (isFailed()) {
 			return;
 		}
-		test.log(Status.PASS, msg);
-		logExtent.info(() -> msg.replace("<br>", System.lineSeparator()));
+		htmlTest.log(Status.PASS, msg);
+		msg = msg.replaceAll("\\Wbr\\W", System.lineSeparator());
+		msg = msg.replaceAll("\\Wb\\W", "");
+		msg = msg.replaceAll("\\W/b\\W", "");
+		pdfTest.log(Status.PASS, msg);
+		logExtent.info(msg);
 	}
 
 	/**
@@ -347,8 +460,12 @@ public class ExtentHelper implements ReportInterface {
 		if (isFailed()) {
 			return;
 		}
-		test.log(Status.INFO, msg);
-		logExtent.info(() -> msg.replace("<br>", System.lineSeparator()));
+		htmlTest.log(Status.INFO, msg);
+		msg = msg.replaceAll("\\Wbr\\W", System.lineSeparator());
+		msg = msg.replaceAll("\\Wb\\W", "");
+		msg = msg.replaceAll("\\W/b\\W", "");
+		pdfTest.log(Status.INFO, msg);
+		logExtent.info(msg);
 	}
 
 	/**
@@ -361,8 +478,12 @@ public class ExtentHelper implements ReportInterface {
 		if (isFailed()) {
 			return;
 		}
-		setNode(test.createNode("<b>" + replaceUmlaute(msg) + "</b>"));
-		logExtent.info(() -> "### " + msg.replace("<br>", System.lineSeparator()));
+		setHtmlNode(htmlTest.createNode("<b>" + replaceUmlaute(msg) + "</b>"));
+		msg = msg.replaceAll("\\Wbr\\W", System.lineSeparator());
+		msg = msg.replaceAll("\\Wb\\W", "");
+		msg = msg.replaceAll("\\W/b\\W", "");
+		setPdfNode(pdfTest.createNode(replaceUmlaute(msg)));
+		logExtent.info(msg);
 	}
 
 	/**
@@ -388,9 +509,11 @@ public class ExtentHelper implements ReportInterface {
 		if (isFailed()) {
 			return;
 		}
-		getNode().log(Status.INFO, replaceUmlaute(msg));
-		msg = msg.replace("<b>", "");
-		msg = msg.replace("</b>", "");
+		getHtmlNode().log(Status.INFO, replaceUmlaute(msg));
+		msg = msg.replaceAll("\\Wbr\\W", System.lineSeparator());
+		msg = msg.replaceAll("\\Wb\\W", "");
+		msg = msg.replaceAll("\\W/b\\W", "");
+		getPdfNode().log(Status.INFO, replaceUmlaute(msg));
 		logExtent.info(msg);
 	}
 
@@ -404,9 +527,11 @@ public class ExtentHelper implements ReportInterface {
 		if (isFailed()) {
 			return;
 		}
-		getNode().log(Status.PASS, replaceUmlaute(msg));
-		msg = msg.replace("<b>", "");
-		msg = msg.replace("</b>", "");
+		getHtmlNode().log(Status.PASS, replaceUmlaute(msg));
+		msg = msg.replaceAll("\\Wbr\\W", System.lineSeparator());
+		msg = msg.replaceAll("\\Wb\\W", "");
+		msg = msg.replaceAll("\\W/b\\W", "");
+		getPdfNode().log(Status.PASS, replaceUmlaute(msg));
 		logExtent.info(msg);
 	}
 
@@ -417,9 +542,11 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	@Override
 	public void reportStepFail(String msg) {
-		getNode().log(Status.FAIL, replaceUmlaute(msg));
-		msg = msg.replace("<b>", "");
-		msg = msg.replace("</b>", "");
+		getHtmlNode().log(Status.FAIL, replaceUmlaute(msg));
+		msg = msg.replaceAll("\\Wbr\\W", System.lineSeparator());
+		msg = msg.replaceAll("\\Wb\\W", "");
+		msg = msg.replaceAll("\\W/b\\W", "");
+		getPdfNode().log(Status.FAIL, replaceUmlaute(msg));
 		logExtent.severe(msg);
 		setFailed();
 	}
@@ -457,9 +584,9 @@ public class ExtentHelper implements ReportInterface {
 	public void screenshotNode(String screenShot, Status s) {
 		// ExtentReport 5
 		try {
-			Media media = getNode().addScreenCaptureFromPath(screenShot).getModel().getMedia().get(0);
-			getNode().getModel().getMedia().clear();
-			getNode().log(s, media);
+			Media media = getHtmlNode().addScreenCaptureFromPath(screenShot).getModel().getMedia().get(0);
+			getHtmlNode().getModel().getMedia().clear();
+			getHtmlNode().log(s, media);
 		} catch (Exception e) {
 			throw new CommonSeleniumException(e.getMessage());
 		}
