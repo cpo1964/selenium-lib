@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -45,6 +46,7 @@ import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.firefox.GeckoDriverService;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.MoveTargetOutOfBoundsException;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -439,6 +441,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		MaxlevelStreamHandler.setupMaxLevelStreamHandler(logSelenium);
 
 		// wdm.cachePath
+		System.setProperty(WDM_CACHE_PATH, Paths.get("").toAbsolutePath().toString() + 
+				File.separator + "src" +	File.separator + "test" + File.separator + "resources");
 		logSelenium.info(() -> "downloading driver to: " + System.getProperty(WDM_CACHE_PATH));
 		
 		if (System.getProperty("proxy") != null &&
@@ -550,14 +554,47 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 			profile.setPreference("privacy.trackingprotection.enabled", false);
 			firefoxOptions.setProfile(profile);
 			// start firefox with empty tab
-			setDriver(new FirefoxDriver(firefoxOptions));
+			setDriver(getFirefoxDriver(firefoxOptions));
 		} else {
-			// start firefox with epmty tab
-			setDriver(new FirefoxDriver());
+			// start firefox with empty tab
+//			setDriver(new FirefoxDriver());
+			setDriver(getFirefoxDriver(new FirefoxOptions()));
 		}
 	}
 
-	/**
+	public static FirefoxDriver getFirefoxDriver(FirefoxOptions options) {
+        String osName = System.getProperty("os.name");
+        String profileRoot = osName.contains("Linux") && new File("/snap/firefox").exists()
+                ? createProfileRootInUserHome()
+                : null;
+        return profileRoot != null
+                ? new FirefoxDriver(createGeckoDriverService(profileRoot), options)
+                : new FirefoxDriver(options);
+    }
+
+    private static String createProfileRootInUserHome() {
+        String userHome = System.getProperty("user.home");
+        File profileRoot = new File(userHome, "snap/firefox/common/.firefox-profile-root");
+        if (!profileRoot.exists()) {
+            if (!profileRoot.mkdirs()) {
+                return null;
+            }
+        }
+        return profileRoot.getAbsolutePath();
+    }
+
+    private static GeckoDriverService createGeckoDriverService(String tempProfileDir) {
+        return new GeckoDriverService.Builder() {
+            @Override
+            protected List<String> createArgs() {
+                List<String> args = new ArrayList<>(super.createArgs());
+                args.add(String.format("--profile-root=%s", tempProfileDir));
+                return args;
+            }
+        }.build();
+    }
+    
+    /**
 	 * Close browser.
 	 */
 	public void closeBrowser() {
