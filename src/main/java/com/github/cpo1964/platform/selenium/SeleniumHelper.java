@@ -431,11 +431,14 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 */
 	@Override
 	public Object setupDriver() {
-		try {
-			Runtime.getRuntime().exec("taskkill /IM chromedriver.exe");
-			Runtime.getRuntime().exec("taskkill /IM geckodriver.exe");
-		} catch (IOException e) {
-			logSelenium.finest("task chromedriver.exe or geckodriver.exe not found - nothing to kill.");
+		String osName = System.getProperty("os.name");
+		if (osName.contains("Linux")) {
+			try {
+				Runtime.getRuntime().exec("taskkill /IM chromedriver.exe");
+				Runtime.getRuntime().exec("taskkill /IM geckodriver.exe");
+			} catch (IOException e) {
+				logSelenium.finest("task chromedriver.exe or geckodriver.exe not found - nothing to kill.");
+			}
 		}
 
 		MaxlevelStreamHandler.setupMaxLevelStreamHandler(logSelenium);

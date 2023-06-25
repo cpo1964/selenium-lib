@@ -1,14 +1,21 @@
 <!--
 
-    Copyright (C) 2023 Christian Pöcksteiner (christian.poecksteiner@aon.at)
-    Licensed under the Apache License, Version 2.0 (the "License").
-    You may not use this file except in compliance with the License.
+    Copyright (C) 2023 Christian Pöcksteiner
+(christian.poecksteiner@aon.at)
+    Licensed under the Apache License, Version
+2.0 (the "License").
+    You may not use this file except in compliance with the
+License.
     You may obtain a copy of the License at
-            https://www.apache.org/licenses/LICENSE-2.0
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
+https://www.apache.org/licenses/LICENSE-2.0
+    Unless required by applicable
+law or agreed to in writing, software
+    distributed under the License is
+distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.
+    See the License for the specific language
+governing permissions and
     limitations under the License.
 
 -->
@@ -19,7 +26,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.cpo1964</groupId>
 	<artifactId>selenium-lib</artifactId>
-	<version>1.0.45</version>
+	<version>1.0.46</version>
 	<packaging>jar</packaging>
 	<name>${project.name}</name>
 	<description>A fine tuned function library based on selenium webdriver api</description>
@@ -41,7 +48,8 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<license.dir>${basedir}</license.dir>
 		<webdrivermanager.version>5.3.2</webdrivermanager.version>
-		<selenium-java.version>4.7.2</selenium-java.version>
+		<selenium-java.version>4.8.1</selenium-java.version>
+		<!-- 4.7.2 -->
 		<extentreports.version>5.0.9</extentreports.version>
 		<pdfextentreporter.version>1.3.2</pdfextentreporter.version>
 		<slf4j.version>2.0.6</slf4j.version>
@@ -52,7 +60,7 @@
 		<poi.version>[4.1.1,)</poi.version>
 		<httpclient.version>[4.5.13,)</httpclient.version>
 		<commons-lang.version>2.6</commons-lang.version>
-		<java.version>1.8</java.version>
+		<java.version>11</java.version>
 	</properties>
 	<build>
 		<plugins>
@@ -178,7 +186,8 @@ limitations under the License.
 									<goal>sign</goal>
 								</goals>
 								<configuration>
-									<keyname>5C1F10600B4AC9EEC9EDE1CF5F6BA593CDD2BB03</keyname>
+									<keyname>
+										5C1F10600B4AC9EEC9EDE1CF5F6BA593CDD2BB03</keyname>
 									<passphraseServerId>http://keys.gnupg.net</passphraseServerId>
 								</configuration>
 							</execution>
@@ -209,8 +218,13 @@ limitations under the License.
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-http-jdk-client</artifactId>
+			<version>4.5.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-devtools-v110</artifactId>
-			<version>4.8.1</version>
+			<version>${selenium-java.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
@@ -234,7 +248,8 @@ limitations under the License.
 			<artifactId>extentreports</artifactId>
 			<version>${extentreports.version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/tech.grasshopper/pdfextentreporter -->
+		<!--
+		https://mvnrepository.com/artifact/tech.grasshopper/pdfextentreporter -->
 		<dependency>
 			<groupId>tech.grasshopper</groupId>
 			<artifactId>pdfextentreporter</artifactId>
@@ -298,7 +313,8 @@ limitations under the License.
 		</snapshotRepository>
 		<repository>
 			<id>ossrh</id>
-			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+			<url>
+				https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
 </project>
