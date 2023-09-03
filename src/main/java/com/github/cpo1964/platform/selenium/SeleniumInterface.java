@@ -167,11 +167,11 @@ public interface SeleniumInterface extends ReportInterface {
 	 * Input.
 	 *
 	 * @param locatorDelegate the locator delegate
-	 * @param type the type
-	 * @param value the value
+	 * @param type            the type
+	 * @param value           the value
 	 */
 	void input(String locatorDelegate, WebelementType type, String value);
-	
+
 	/**
 	 * Input.
 	 *
@@ -262,7 +262,9 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the link locator
 	 */
-	String getLinkLocator(String locatorDelegate);
+	static String getLinkLocator(Class<?> page, String locatorDelegate) {
+		return null;
+	};
 
 	/**
 	 * Gets the slider locator.
@@ -270,7 +272,9 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the slider locator
 	 */
-	String getSliderLocator(String locatorDelegate);
+	static String getSliderLocator(String locatorDelegate) {
+		return null;
+	}
 
 	/**
 	 * Gets the filefield locator.
@@ -278,7 +282,9 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the filefield locator
 	 */
-	String getFilefieldLocator(String locatorDelegate);
+	static String getFilefieldLocator(String locatorDelegate) {
+		return null;
+	}
 
 	/**
 	 * Gets the numericfield locator.
@@ -286,7 +292,9 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the numericfield locator
 	 */
-	String getNumericfieldLocator(String locatorDelegate);
+	static String getNumericfieldLocator(String locatorDelegate) {
+		return null;
+	}
 
 	/**
 	 * Gets the checkbox locator.
@@ -294,7 +302,9 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the checkbox locator
 	 */
-	String getCheckboxLocator(String locatorDelegate);
+	static String getCheckboxLocator(String locatorDelegate) {
+		return null;
+	}
 
 	/**
 	 * Gets the radiobutton locator.
@@ -302,7 +312,9 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the radiobutton locator
 	 */
-	String getRadiobuttonLocator(String locatorDelegate);
+	static String getRadiobuttonLocator(String locatorDelegate) {
+		return null;
+	}
 
 	/**
 	 * Gets the radiogroup locator.
@@ -310,7 +322,9 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the radiogroup locator
 	 */
-	String getRadiogroupLocator(String locatorDelegate);
+	static String getRadiogroupLocator(String locatorDelegate) {
+		return null;
+	}
 
 	/**
 	 * Gets the listbox locator.
@@ -318,7 +332,9 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the listbox locator
 	 */
-	String getListboxLocator(String locatorDelegate);
+	static String getListboxLocator(String locatorDelegate) {
+		return null;
+	}
 
 	/**
 	 * Gets the text locator.
@@ -326,7 +342,9 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the text locator
 	 */
-	String getTextLocator(String locatorDelegate);
+	static String getTextLocator(String locatorDelegate) {
+		return null;
+	}
 
 	/**
 	 * Gets the button locator.
@@ -334,7 +352,9 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the button locator
 	 */
-	String getButtonLocator(String locatorDelegate);
+	static String getButtonLocator(String locatorDelegate) {
+		return null;
+	}
 
 	/**
 	 * Gets the edits the field locator.
@@ -342,7 +362,9 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @param locatorDelegate the locator delegate
 	 * @return the edits the field locator
 	 */
-	String getEditFieldLocator(String locatorDelegate);
+	static String getEditFieldLocator(String locatorDelegate) {
+		return null;
+	}
 
 	/**
 	 * Wait until locator reaches state.
