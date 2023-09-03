@@ -16,6 +16,8 @@ package com.github.cpo1964.platform.selenium;
  * The type Non unique result exception.
  */
 public class CommonSeleniumException extends RuntimeException {
+
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -1757423191400510324L;
 
 	/**

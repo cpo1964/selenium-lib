@@ -81,8 +81,8 @@ public class ExcelHelper {
 			if (!(new File(pFilePath)).exists()) {
 				throw new IOException("Die Datei '" + pFilePath + "' konnte nicht gefunden werden");
 			}
-			String logMsg = "Benutze folgende Testdaten:\n" + 
-					(new File(pFilePath)).getCanonicalPath() + " / Sheet: " + pSheetName;
+			String logMsg = "Benutze folgende Testdaten:\n" + (new File(pFilePath)).getCanonicalPath() + " / Sheet: "
+					+ pSheetName;
 			LOGGER.info(logMsg);
 			HSSFSheet sheet = workbook.getSheet(pSheetName);
 			int numberOfColumns = this.countNonEmptyColumns(sheet);

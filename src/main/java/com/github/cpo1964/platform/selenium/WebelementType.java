@@ -15,53 +15,53 @@ package com.github.cpo1964.platform.selenium;
 /**
  * The enum Webelement type.
  *
- * 	definitions of standard webelement types
- * 	use this values for element definitions in page objects
+ * definitions of standard webelement types use this values for element
+ * definitions in page objects
  */
 public enum WebelementType {
 
-    /**
-     * Editfield webelement type.
-     */
-    EDITFIELD,
-    /**
-     * Listbox webelement type.
-     */
-    LISTBOX,
-    /**
-     * Radiogroup webelement type.
-     */
-    RADIOGROUP,
-    /**
-     * Radiobutton webelement type.
-     */
-    RADIOBUTTON,
-    /**
-     * Checkbox webelement type.
-     */
-    CHECKBOX,
-    /**
-     * Numericfield webelement type.
-     */
-    NUMERICFIELD,
-    /**
-     * Filefield webelement type.
-     */
-    FILEFIELD,
-    /**
-     * Slider webelement type.
-     */
-    SLIDER,
-    /**
-     * Button webelement type.
-     */
-    BUTTON,
-    /**
-     * Link webelement type.
-     */
-    LINK,
-    /**
-     * Text webelement type.
-     */
-    TEXT
+	/**
+	 * Editfield webelement type.
+	 */
+	EDITFIELD,
+	/**
+	 * Listbox webelement type.
+	 */
+	LISTBOX,
+	/**
+	 * Radiogroup webelement type.
+	 */
+	RADIOGROUP,
+	/**
+	 * Radiobutton webelement type.
+	 */
+	RADIOBUTTON,
+	/**
+	 * Checkbox webelement type.
+	 */
+	CHECKBOX,
+	/**
+	 * Numericfield webelement type.
+	 */
+	NUMERICFIELD,
+	/**
+	 * Filefield webelement type.
+	 */
+	FILEFIELD,
+	/**
+	 * Slider webelement type.
+	 */
+	SLIDER,
+	/**
+	 * Button webelement type.
+	 */
+	BUTTON,
+	/**
+	 * Link webelement type.
+	 */
+	LINK,
+	/**
+	 * Text webelement type.
+	 */
+	TEXT
 }

@@ -43,7 +43,7 @@ public class ExtentHelper implements ReportInterface {
 	 */
 	static Logger logSelenium = Logger.getLogger(ExtentHelper.class.getSimpleName());
 
-	/** The passed status */
+	/** The passed status. */
 	private static boolean passed = true;
 
 	/** The exists count. */
@@ -75,40 +75,81 @@ public class ExtentHelper implements ReportInterface {
 
 	/** The htmlReport. */
 	private static ExtentReports htmlReport = ExtentHelper.prepareHtmlReport();
-	
+
 	/** The htmlReport. */
 	private static ExtentReports pdfReport = ExtentHelper.preparePdfReport();
-	
+
+	/** The run results dir. */
 	private static String runResultsDir = null;
 
+	/**
+	 * Wait count.
+	 *
+	 * @return the int
+	 */
 	public static int WaitCount() {
 		return waitCount;
 	}
 
+	/**
+	 * Sets the wait count.
+	 *
+	 * @param value the new wait count
+	 */
 	public static void setWaitCount(int value) {
 		ExtentHelper.waitCount = value;
 	}
 
+	/**
+	 * Gets the clicks count.
+	 *
+	 * @return the clicks count
+	 */
 	public static int getClicksCount() {
 		return clicksCount;
 	}
 
+	/**
+	 * Sets the clicks count.
+	 *
+	 * @param value the new clicks count
+	 */
 	public static void setClicksCount(int value) {
 		ExtentHelper.clicksCount = value;
 	}
 
+	/**
+	 * Gets the inputs count.
+	 *
+	 * @return the inputs count
+	 */
 	public static int getInputsCount() {
 		return inputsCount;
 	}
 
+	/**
+	 * Sets the inputs count.
+	 *
+	 * @param value the new inputs count
+	 */
 	public static void setInputsCount(int value) {
 		ExtentHelper.inputsCount = value;
 	}
 
+	/**
+	 * Gets the outputs count.
+	 *
+	 * @return the outputs count
+	 */
 	public static int getOutputsCount() {
 		return outputsCount;
 	}
 
+	/**
+	 * Sets the outputs count.
+	 *
+	 * @param value the new outputs count
+	 */
 	public static void setOutputsCount(int value) {
 		ExtentHelper.outputsCount = value;
 	}
@@ -269,7 +310,7 @@ public class ExtentHelper implements ReportInterface {
 		ExtentSparkReporter spark = new ExtentSparkReporter(runResultsDir + File.separatorChar + "runresults.html");
 		spark.config().setEncoding("UTF-8");
 		getHtmlReport().attachReporter(spark);
-		
+
 		try {
 			getHtmlReport().setSystemInfo("Hostname", java.net.InetAddress.getLocalHost().getHostName());
 		} catch (UnknownHostException e) {
@@ -291,9 +332,9 @@ public class ExtentHelper implements ReportInterface {
 
 		// pdf report
 		ExtentPDFReporter pdfReport = new ExtentPDFReporter("RunResults/runresults.pdf");
-		pdfReport.config().setMediaFolders(new String[] { "RunResults/Resources/Snapshots"});
+		pdfReport.config().setMediaFolders(new String[] { "RunResults/Resources/Snapshots" });
 		getPdfReport().attachReporter(pdfReport);
-		
+
 		try {
 			getPdfReport().setSystemInfo("Hostname", java.net.InetAddress.getLocalHost().getHostName());
 		} catch (UnknownHostException e) {
@@ -594,15 +635,14 @@ public class ExtentHelper implements ReportInterface {
 
 	/** The umlaut replacements. */
 	private static String[][] UMLAUT_REPLACEMENTS = { { new String("Ä"), "&Auml;" }, { new String("Ü"), "&Uuml;" },
-			{ new String("Ö"), "&Ouml;" }, { new String("ä"), "&auml;" }, { new String("ü"), "&uuml;" }, { new String("ö"), "&ouml;" },
-			{ new String("ß"), "&szlig;" } };
-	
+			{ new String("Ö"), "&Ouml;" }, { new String("ä"), "&auml;" }, { new String("ü"), "&uuml;" },
+			{ new String("ö"), "&ouml;" }, { new String("ß"), "&szlig;" } };
+
 	/** The umlaut replacements2. */
 	@SuppressWarnings("unused")
 	private static String[][] UMLAUT_REPLACEMENTS2 = { { new String("Ä"), "Ae" }, { new String("Ü"), "Ue" },
 			{ new String("Ö"), "Oe" }, { new String("ä"), "ae" }, { new String("ü"), "ue" }, { new String("ö"), "oe" },
 			{ new String("ß"), "ss" } };
-
 
 	/**
 	 * Replace umlaute.

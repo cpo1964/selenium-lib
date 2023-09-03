@@ -19,36 +19,36 @@ package com.github.cpo1964.platform.selenium;
  */
 public enum ClickActions {
 
-    /**
-     * Altclick click actions.
-     */
-    ALTCLICK,
-    /**
-     * Clickkey click actions.
-     */
-    CLICKKEY,
-    /**
-     * Controlclick click actions.
-     */
-    CONTROLCLICK,
-    /**
-     * Doubleclick click actions.
-     */
-    DOUBLECLICK,
-    /**
-     * Longclick click actions.
-     */
-    LONGCLICK,
-    /**
-     * Mouseover click actions.
-     */
-    MOUSEOVER,
-    /**
-     * Rightclick click actions.
-     */
-    RIGHTCLICK,
-    /**
-     * Shiftclick click actions.
-     */
-    SHIFTCLICK
+	/**
+	 * Altclick click actions.
+	 */
+	ALTCLICK,
+	/**
+	 * Clickkey click actions.
+	 */
+	CLICKKEY,
+	/**
+	 * Controlclick click actions.
+	 */
+	CONTROLCLICK,
+	/**
+	 * Doubleclick click actions.
+	 */
+	DOUBLECLICK,
+	/**
+	 * Longclick click actions.
+	 */
+	LONGCLICK,
+	/**
+	 * Mouseover click actions.
+	 */
+	MOUSEOVER,
+	/**
+	 * Rightclick click actions.
+	 */
+	RIGHTCLICK,
+	/**
+	 * Shiftclick click actions.
+	 */
+	SHIFTCLICK
 }

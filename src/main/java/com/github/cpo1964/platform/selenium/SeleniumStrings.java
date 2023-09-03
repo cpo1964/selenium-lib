@@ -14,10 +14,13 @@ package com.github.cpo1964.platform.selenium;
 
 import java.io.File;
 
+/**
+ * The Class SeleniumStrings.
+ */
 public class SeleniumStrings {
 
 	// values for the verify action
-	
+
 //	/** The Constant EDITABLE. */
 //	public static final String EDITABLE = "Editable";
 //
@@ -31,7 +34,7 @@ public class SeleniumStrings {
 //	public static final String VISIBLE = "Visible";
 
 	// platform stuff
-	
+
 	/** The Constant PRODUKTKEY. */
 	public static final String PRODUKTKEY = "produkt";
 
@@ -43,13 +46,13 @@ public class SeleniumStrings {
 
 	/** The Constant ZONEKEY. */
 	public static final String ZONEKEY = "zone";
-	
+
 	/** The Constant TESTDATA_XLS. */
 	public static final String TESTDATA_XLS = "Testdata.xls";
-	
+
 	/** The Constant TESTDATADIR. */
 	public static final String TESTDATADIR = "src" + File.separator + "test" + File.separator + "data";
-	
+
 	/** The ok. */
 	public static boolean OKKEY = false;
 

@@ -22,46 +22,46 @@ import org.apache.http.client.methods.HttpRequestBase;
  */
 public enum RestMethod {
 
-    /** The get. */
-    GET(new HttpGet()),
-    
-    /** The put. */
-    PUT(new HttpPut()),
-    
-    /** The post. */
-    POST(new HttpPost()),
-    
-    /** The delete. */
-    DELETE(new HttpPost());
+	/** The get. */
+	GET(new HttpGet()),
 
-    /** The method. */
-    private HttpRequestBase method;
+	/** The put. */
+	PUT(new HttpPut()),
 
-    /**
-     * Instantiates a new rest method.
-     *
-     * @param method the method
-     */
-    RestMethod(HttpRequestBase method) {
-        this.method = method;
-    }
+	/** The post. */
+	POST(new HttpPost()),
 
-    /**
-     * Gets the method.
-     *
-     * @return the method
-     */
-    public HttpRequestBase getMethod() {
-        return method;
-    }
+	/** The delete. */
+	DELETE(new HttpPost());
 
-    /**
-     * Sets the method.
-     *
-     * @param method the new method
-     */
-    protected void setMethod(HttpRequestBase method) {
-        this.method = method;
-    }
+	/** The method. */
+	private HttpRequestBase method;
+
+	/**
+	 * Instantiates a new rest method.
+	 *
+	 * @param method the method
+	 */
+	RestMethod(HttpRequestBase method) {
+		this.method = method;
+	}
+
+	/**
+	 * Gets the method.
+	 *
+	 * @return the method
+	 */
+	public HttpRequestBase getMethod() {
+		return method;
+	}
+
+	/**
+	 * Sets the method.
+	 *
+	 * @param method the new method
+	 */
+	protected void setMethod(HttpRequestBase method) {
+		this.method = method;
+	}
 
 }

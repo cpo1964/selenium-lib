@@ -169,11 +169,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 */
 	protected boolean ok;
 
-	/**
-	 * The global timeout
-	 * 
-	 * used for waitUntil methods
-	 */
+	/** The global timeout used for waitUntil methods. */
 	private long timeout = 30;
 
 	/**
@@ -429,6 +425,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 *
 	 * @return the object
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	public Object setupDriver() {
 		String osName = System.getProperty("os.name");
@@ -444,13 +441,12 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		MaxlevelStreamHandler.setupMaxLevelStreamHandler(logSelenium);
 
 		// wdm.cachePath
-		System.setProperty(WDM_CACHE_PATH, Paths.get("").toAbsolutePath().toString() + 
-				File.separator + "src" +	File.separator + "test" + File.separator + "resources");
+		System.setProperty(WDM_CACHE_PATH, Paths.get("").toAbsolutePath().toString() + File.separator + "src"
+				+ File.separator + "test" + File.separator + "resources");
 		logSelenium.info(() -> "downloading driver to: " + System.getProperty(WDM_CACHE_PATH));
-		
-		if (System.getProperty("proxy") != null &&
-				System.getProperty("proxyUser") != null &&
-				System.getProperty("proxyPass") != null) {
+
+		if (System.getProperty("proxy") != null && System.getProperty("proxyUser") != null
+				&& System.getProperty("proxyPass") != null) {
 			setProxy(System.getProperty("proxy"));
 			setProxyUser(System.getProperty("proxyUser"));
 			setProxyPass(System.getProperty("proxyPass"));
@@ -486,26 +482,19 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		String proxyPass = System.getProperty("proxyPass");
 		String driverVersion = System.getProperty("driverVersion");
 		String browserVersion = System.getProperty("browserVersion");
-		if (proxy != null && proxyUser != null && proxyPass != null && 
-				!proxy.isEmpty() && !proxyUser.isEmpty() && !proxyPass.isEmpty()) {
-			logSelenium.info(() -> "using proxy: " + proxy + System.lineSeparator() +
-					"using proxyUser: *****" + System.lineSeparator() +
-					"using proxyPass: *****" + System.lineSeparator());
+		if (proxy != null && proxyUser != null && proxyPass != null && !proxy.isEmpty() && !proxyUser.isEmpty()
+				&& !proxyPass.isEmpty()) {
+			logSelenium.info(() -> "using proxy: " + proxy + System.lineSeparator() + "using proxyUser: *****"
+					+ System.lineSeparator() + "using proxyPass: *****" + System.lineSeparator());
 			wdm = wdm.proxyUser(proxyUser).proxyPass(proxyPass).proxy(proxy);
 		}
 		if (driverVersion != null && !driverVersion.isEmpty()) {
 			logSelenium.info(() -> "using driverVersion: " + driverVersion + System.lineSeparator());
-			wdm = wdm
-					.avoidReadReleaseFromRepository()
-					.useLocalVersionsPropertiesFirst()
-					.driverVersion(driverVersion);
+			wdm = wdm.avoidReadReleaseFromRepository().useLocalVersionsPropertiesFirst().driverVersion(driverVersion);
 		}
 		if (browserVersion != null && !browserVersion.isEmpty()) {
 			logSelenium.info(() -> "using browserVersion: " + browserVersion + System.lineSeparator());
-			wdm = wdm
-					.avoidReadReleaseFromRepository()
-					.useLocalVersionsPropertiesFirst()
-					.driverVersion(browserVersion);
+			wdm = wdm.avoidReadReleaseFromRepository().useLocalVersionsPropertiesFirst().driverVersion(browserVersion);
 		}
 		wdm.setup();
 	}
@@ -513,6 +502,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	/**
 	 * Setup chrome driver.
 	 */
+	@SuppressWarnings("deprecation")
 	private static void setupChromeDriver() {
 		if (getDriver() == null) {
 			io.github.bonigarcia.wdm.WebDriverManager wdm = io.github.bonigarcia.wdm.WebDriverManager.chromedriver();
@@ -565,39 +555,55 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		}
 	}
 
+	/**
+	 * Gets the firefox driver.
+	 *
+	 * @param options the options
+	 * @return the firefox driver
+	 */
 	public static FirefoxDriver getFirefoxDriver(FirefoxOptions options) {
-        String osName = System.getProperty("os.name");
-        String profileRoot = osName.contains("Linux") && new File("/snap/firefox").exists()
-                ? createProfileRootInUserHome()
-                : null;
-        return profileRoot != null
-                ? new FirefoxDriver(createGeckoDriverService(profileRoot), options)
-                : new FirefoxDriver(options);
-    }
+		String osName = System.getProperty("os.name");
+		String profileRoot = osName.contains("Linux") && new File("/snap/firefox").exists()
+				? createProfileRootInUserHome()
+				: null;
+		return profileRoot != null ? new FirefoxDriver(createGeckoDriverService(profileRoot), options)
+				: new FirefoxDriver(options);
+	}
 
-    private static String createProfileRootInUserHome() {
-        String userHome = System.getProperty("user.home");
-        File profileRoot = new File(userHome, "snap/firefox/common/.firefox-profile-root");
-        if (!profileRoot.exists()) {
-            if (!profileRoot.mkdirs()) {
-                return null;
-            }
-        }
-        return profileRoot.getAbsolutePath();
-    }
+	/**
+	 * Creates the profile root in user home.
+	 *
+	 * @return the string
+	 */
+	private static String createProfileRootInUserHome() {
+		String userHome = System.getProperty("user.home");
+		File profileRoot = new File(userHome, "snap/firefox/common/.firefox-profile-root");
+		if (!profileRoot.exists()) {
+			if (!profileRoot.mkdirs()) {
+				return null;
+			}
+		}
+		return profileRoot.getAbsolutePath();
+	}
 
-    private static GeckoDriverService createGeckoDriverService(String tempProfileDir) {
-        return new GeckoDriverService.Builder() {
-            @Override
-            protected List<String> createArgs() {
-                List<String> args = new ArrayList<>(super.createArgs());
-                args.add(String.format("--profile-root=%s", tempProfileDir));
-                return args;
-            }
-        }.build();
-    }
-    
-    /**
+	/**
+	 * Creates the gecko driver service.
+	 *
+	 * @param tempProfileDir the temp profile dir
+	 * @return the gecko driver service
+	 */
+	private static GeckoDriverService createGeckoDriverService(String tempProfileDir) {
+		return new GeckoDriverService.Builder() {
+			@Override
+			protected List<String> createArgs() {
+				List<String> args = new ArrayList<>(super.createArgs());
+				args.add(String.format("--profile-root=%s", tempProfileDir));
+				return args;
+			}
+		}.build();
+	}
+
+	/**
 	 * Close browser.
 	 */
 	public void closeBrowser() {
@@ -652,7 +658,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		}
 		// the searched webelement must be unique
 		if (webEls.size() > 1) {
-			
+
 			throw new NonUniqueResultException("more then 1 webelement found with xpath: " + xpath);
 		}
 		// one Webelements found in ImplicitlyWaitTimout
@@ -683,7 +689,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 				} catch (Exception e1) {
 					try {
 						action.moveToElement(getWebElement()).click().build().perform();
-					} catch (ElementNotInteractableException | MoveTargetOutOfBoundsException | StaleElementReferenceException e2) {
+					} catch (ElementNotInteractableException | MoveTargetOutOfBoundsException
+							| StaleElementReferenceException e2) {
 						reportStepFail("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed:"
 								+ System.lineSeparator() + e1.getMessage() + System.lineSeparator() + e2.getMessage());
 						return;
@@ -706,7 +713,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 				} else if (ClickActions.CONTROLCLICK.name().equals(clickAction)) {
 					try {
 						action.keyDown(Keys.CONTROL).click(getWebElement()).keyUp(Keys.CONTROL).perform();
-					} catch (ElementNotInteractableException | MoveTargetOutOfBoundsException | StaleElementReferenceException e) {
+					} catch (ElementNotInteractableException | MoveTargetOutOfBoundsException
+							| StaleElementReferenceException e) {
 						action.keyDown(Keys.CONTROL);
 						try {
 							getWebElement().click();
@@ -715,9 +723,11 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 							try {
 								action.moveToElement(getWebElement()).click().build().perform();
 								action.keyUp(Keys.CONTROL);
-							} catch (ElementNotInteractableException | MoveTargetOutOfBoundsException | StaleElementReferenceException e2) {
+							} catch (ElementNotInteractableException | MoveTargetOutOfBoundsException
+									| StaleElementReferenceException e2) {
 								reportStepFail("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed:"
-										+ System.lineSeparator() + e1.getMessage() + System.lineSeparator() + e2.getMessage());
+										+ System.lineSeparator() + e1.getMessage() + System.lineSeparator()
+										+ e2.getMessage());
 								return;
 							}
 						}
@@ -800,7 +810,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		try {
 			ok = waitUntilBy(By.xpath(xpath), WebelementState.Enabled);
 			if (!ok || getWebElement() == null || type == null) {
-				
+
 				logSecret(xpath + "(unknown) -> not done ", CommonHelper.getSecretString(value, secret), secret);
 				reportStepFail("<b>INPUT   </b> (" + type + " - " + xpath + ", '"
 						+ CommonHelper.getSecretString(value, secret) + ")'");
@@ -833,14 +843,15 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 				reportStepPass(BOLD_INPUT_BY_XPATH + xpath + XPATH_MSG_PART + value + "'");
 			} else if (WebelementType.CHECKBOX.name().equalsIgnoreCase(type)
 					|| WebelementType.RADIOBUTTON.name().equalsIgnoreCase(type)) {
-				// if checkbox is selected && value ==  on or true -> do nothing
-				// if checkbox is not selected && value ==  off or false -> do nothing
+				// if checkbox is selected && value == on or true -> do nothing
+				// if checkbox is not selected && value == off or false -> do nothing
 				// checkbox is selected -> uncheck with value off or false
 				if ((getWebElement().isSelected() && !CommonHelper.isTrue(value))
 						// checkbox is not selected -> check with value on or true
 						|| (!getWebElement().isSelected() && CommonHelper.isTrue(value))) {
 					try {
-						// see: https://stackoverflow.com/questions/34562061/webdriver-click-vs-javascript-click
+						// see:
+						// https://stackoverflow.com/questions/34562061/webdriver-click-vs-javascript-click
 						scrollIntoView(getWebElement());
 						// FIRST approach
 						getWebElement().click();
@@ -849,16 +860,13 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 							// SECOND approach
 							actions
 //							.moveToElement(getWebElement())
-							.moveToElement(getWebElement(), 0, -250)
-							.click()
-							.build()
-							.perform();
+									.moveToElement(getWebElement(), 0, -250).click().build().perform();
 						} catch (MoveTargetOutOfBoundsException | StaleElementReferenceException e) {
 							// THIRD approach
 							clickByJS(getWebElement());
 							// error if the checkbox is in NOT in the expected state
-							if ((getWebElement().isSelected() && !CommonHelper.isTrue(value)) || 
-									(!getWebElement().isSelected() && CommonHelper.isTrue(value))) {
+							if ((getWebElement().isSelected() && !CommonHelper.isTrue(value))
+									|| (!getWebElement().isSelected() && CommonHelper.isTrue(value))) {
 								reportStepFail(type + " - " + "CLICK   by xpath $(" + xpath + ") with "
 										+ ClickActions.CLICKKEY.name() + " failed:" + System.lineSeparator()
 										+ e.getMessage());
@@ -868,7 +876,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 					}
 					reportStepPass(BOLD_INPUT_BY_XPATH + xpath + XPATH_MSG_PART + value + "'");
 				} else {
-					
+
 					throw new NotFoundException(
 							type + " - " + BOLD_INPUT_BY_XPATH + xpath + "\"), value not found: '" + value + "'");
 				}
@@ -1396,6 +1404,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 *
 	 * @param locator the locator
 	 * @param state   the state
+	 * @param timeout the timeout
 	 * @return the boolean
 	 */
 	@Override
@@ -1488,25 +1497,23 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 //    }
 
 	// javascript methods
-	
+
 	// mouseMove(getWebElement(), 0, -250).
-	
+
 	/**
 	 * Scroll into view.
 	 *
 	 * @param webEl the WebElement
 	 */
 	public static void scrollIntoView(WebElement webEl) {
-		((JavascriptExecutor) getDriver())
-				.executeScript("arguments[0].scrollIntoView(true);", webEl);
+		((JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView(true);", webEl);
 	}
 
 	/**
 	 * Scroll to bottom.
 	 */
 	public static void scrollToBottom() {
-		((JavascriptExecutor) getDriver())
-			.executeScript("window.scrollBy(0,document.body.scrollHeight)", "");
+		((JavascriptExecutor) getDriver()).executeScript("window.scrollBy(0,document.body.scrollHeight)", "");
 	}
 
 	/**
@@ -1516,19 +1523,17 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 */
 	public static void waitUntilFullyLoaded(long timeoutSeconds) {
 		WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(timeoutSeconds));
-		wait.until(webDriver -> ((JavascriptExecutor) webDriver)
-				.executeScript("return document.readyState"))
+		wait.until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState"))
 				.equals("complete");
 	}
-	
+
 	/**
-	 * Click the WebElement
+	 * Click the WebElement.
 	 *
 	 * @param webEl the WebElement
 	 */
 	public static void clickByJS(WebElement webEl) {
-		((JavascriptExecutor) getDriver()).
-			executeScript("arguments[0].click();", webEl);
+		((JavascriptExecutor) getDriver()).executeScript("arguments[0].click();", webEl);
 
 	}
 

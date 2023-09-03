@@ -16,7 +16,7 @@ package com.github.cpo1964.report;
  * The Interface EnvironmentInterface.
  */
 public interface ReportInterface {
-	
+
 	/**
 	 * Report create test.
 	 *
@@ -53,8 +53,8 @@ public interface ReportInterface {
 	void reportTestFail(String msg);
 
 	/**
-	 * Test create node.
-	 step
+	 * Test create node. step
+	 * 
 	 * @param msg the msg
 	 */
 	void reportCreateStep(String msg);

@@ -16,32 +16,32 @@ package com.github.cpo1964.platform.selenium;
  * The enum Webelement state.
  */
 public enum WebelementState {
-    /**
-     * Displayed webelement state.
-     */
-    Displayed,
-    /**
-     * Hidden webelement state.
-     */
-    Hidden,
-    /**
-     * Selected webelement state.
-     */
-    Selected,
-    /**
-     * Un selected webelement state.
-     */
-    UnSelected,
-    /**
-     * Enabled webelement state.
-     */
-    Enabled,
-    /**
-     * Disabled webelement state.
-     */
-    Disabled,
-    /**
-     * Not found webelement state.
-     */
-    NotFound
+	/**
+	 * Displayed webelement state.
+	 */
+	Displayed,
+	/**
+	 * Hidden webelement state.
+	 */
+	Hidden,
+	/**
+	 * Selected webelement state.
+	 */
+	Selected,
+	/**
+	 * Un selected webelement state.
+	 */
+	UnSelected,
+	/**
+	 * Enabled webelement state.
+	 */
+	Enabled,
+	/**
+	 * Disabled webelement state.
+	 */
+	Disabled,
+	/**
+	 * Not found webelement state.
+	 */
+	NotFound
 }

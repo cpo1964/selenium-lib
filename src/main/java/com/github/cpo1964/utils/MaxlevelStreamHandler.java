@@ -32,12 +32,13 @@ import java.util.logging.StreamHandler;
  */
 public class MaxlevelStreamHandler extends StreamHandler {
 
-	/** The maxlevel. 
+	/**
+	 * The maxlevel.
 	 *
 	 * by default, put out everything
 	 */
 	private Level maxlevel = Level.SEVERE;
-	
+
 	/** The format. */
 	private static String format = "[%1$tF %1$tT] [%2$-13s] %3$s %n";
 
@@ -79,9 +80,9 @@ public class MaxlevelStreamHandler extends StreamHandler {
 	}
 
 	/**
-	 *  Constructor forwarding.
+	 * Constructor forwarding.
 	 *
-	 * @param out the out
+	 * @param out       the out
 	 * @param formatter the formatter
 	 */
 	public MaxlevelStreamHandler(PrintStream out, Formatter formatter) {
@@ -89,7 +90,7 @@ public class MaxlevelStreamHandler extends StreamHandler {
 	}
 
 	/**
-	 *  Constructor forwarding.
+	 * Constructor forwarding.
 	 */
 	public MaxlevelStreamHandler() {
 		super();
@@ -115,7 +116,7 @@ public class MaxlevelStreamHandler extends StreamHandler {
 
 			@Override
 			public synchronized String format(LogRecord lr) {
-				return String.format(getFormat() , new Date(lr.getMillis()), lr.getLevel().getLocalizedName(),
+				return String.format(getFormat(), new Date(lr.getMillis()), lr.getLevel().getLocalizedName(),
 						lr.getMessage());
 			}
 		});

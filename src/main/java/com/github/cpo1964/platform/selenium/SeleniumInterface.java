@@ -34,7 +34,8 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @throws IOException            Signals that an I/O exception has occurred.
 	 * @throws ConfigurationException the configuration exception
 	 */
-	SeleniumInterface commonSetup(String platformDelegate, String testDataPath) throws IOException, ConfigurationException;
+	SeleniumInterface commonSetup(String platformDelegate, String testDataPath)
+			throws IOException, ConfigurationException;
 
 	/**
 	 * Common teardown.
@@ -67,7 +68,8 @@ public interface SeleniumInterface extends ReportInterface {
 	/**
 	 * Driver switch to default content.
 	 * <p>
-	 * Selects either the first frame on the page, or the main document when a page contains iframes.
+	 * Selects either the first frame on the page, or the main document when a page
+	 * contains iframes.
 	 */
 	void driverSwitchToDefaultContent();
 
@@ -98,8 +100,8 @@ public interface SeleniumInterface extends ReportInterface {
 	 * <p>
 	 * see: https://www.w3schools.com/jsref/event_onclick.asp
 	 * <p>
-	 * The onclick event occurs when the user clicks on an HTML element.
-	 * onclick is a DOM Level 2 (2001) feature
+	 * The onclick event occurs when the user clicks on an HTML element. onclick is
+	 * a DOM Level 2 (2001) feature
 	 * <p>
 	 * same behaviour as click(locatorDelegate, CLICK)
 	 *
@@ -112,8 +114,8 @@ public interface SeleniumInterface extends ReportInterface {
 	 * <p>
 	 * see: https://www.w3schools.com/jsref/event_onclick.asp
 	 * <p>
-	 * The onclick event occurs when the user clicks on an HTML element.
-	 * onclick is a DOM Level 2 (2001) feature
+	 * The onclick event occurs when the user clicks on an HTML element. onclick is
+	 * a DOM Level 2 (2001) feature
 	 * <p>
 	 * see: values for the click action (defined above)
 	 *
@@ -142,48 +144,34 @@ public interface SeleniumInterface extends ReportInterface {
 	 * <p>
 	 * see: https://www.w3schools.com/html/html_form_input_types.asp
 	 * <p>
-	 * possible types:
-	 * input type="radio"
-	 * input type="checkbox"
-	 * input type="number"
-	 * input type="file"
-	 * input type="range" // vulgo 'slider'
-	 * input type="text"
+	 * possible types: input type="radio" input type="checkbox" input type="number"
+	 * input type="file" input type="range" // vulgo 'slider' input type="text"
 	 * <p>
-	 * text fields with value validation:
-	 * input type="email" // text field with email validation
-	 * input type="password" // text field with hidden input
-	 * input type="tel" // text field with tel validation
-	 * input type="date" // text field with date validation
-	 * input type="datetime-local" // text field with datetime-local validation
-	 * input type="time" // text field with time validation
-	 * input type="month" // text field with month validation
-	 * input type="week" // text field with week validation
-	 * input type="url" // text field with url validation
+	 * text fields with value validation: input type="email" // text field with
+	 * email validation input type="password" // text field with hidden input input
+	 * type="tel" // text field with tel validation input type="date" // text field
+	 * with date validation input type="datetime-local" // text field with
+	 * datetime-local validation input type="time" // text field with time
+	 * validation input type="month" // text field with month validation input
+	 * type="week" // text field with week validation input type="url" // text field
+	 * with url validation
 	 * <p>
-	 * input type="color"
-	 * is used for input fields that should contain a color.
+	 * input type="color" is used for input fields that should contain a color.
 	 * Depending on browser support, a color picker can show up in the input field.
 	 * <p>
-	 * input type="hidden"
-	 * defines a hidden input field (not visible to a user).
-	 * not clickable - should not be supported by this method 'input'
+	 * input type="hidden" defines a hidden input field (not visible to a user). not
+	 * clickable - should not be supported by this method 'input'
 	 * <p>
-	 * input type="button"
-	 * defines a button, value = text at button
-	 * default used as click weblement - should not be supported by this method 'input'
-	 * input type="image"
-	 * used as submit button
-	 * default used as click weblement - should not be supported by this method 'input'
-	 * input type="submit"
-	 * used as submit button
-	 * default used as click weblement - should not be supported by this method 'input'
-	 * input type="reset"
-	 * defines a reset button that will reset all form values to their default values
-	 * default used as click weblement - should not be supported by this method 'input'
-	 * input type="search"
-	 * is used for search fields (a search field behaves like a regular text field).
-	 * default used as click weblement - should not be supported by this method 'input'
+	 * input type="button" defines a button, value = text at button default used as
+	 * click weblement - should not be supported by this method 'input' input
+	 * type="image" used as submit button default used as click weblement - should
+	 * not be supported by this method 'input' input type="submit" used as submit
+	 * button default used as click weblement - should not be supported by this
+	 * method 'input' input type="reset" defines a reset button that will reset all
+	 * form values to their default values default used as click weblement - should
+	 * not be supported by this method 'input' input type="search" is used for
+	 * search fields (a search field behaves like a regular text field). default
+	 * used as click weblement - should not be supported by this method 'input'
 	 *
 	 * @param locatorDelegate the locator delegate
 	 * @param value           the value
@@ -202,19 +190,19 @@ public interface SeleniumInterface extends ReportInterface {
 	/**
 	 * Input by xpath.
 	 *
-	 * @param xpath     the xpath
-	 * @param type the class name
-	 * @param value     the value
+	 * @param xpath the xpath
+	 * @param type  the class name
+	 * @param value the value
 	 */
 	void inputByXpath(String xpath, String type, String value);
 
 	/**
 	 * Input by xpath.
 	 *
-	 * @param xpath     the xpath
-	 * @param type the class name
-	 * @param value     the value
-	 * @param secret          the secret
+	 * @param xpath  the xpath
+	 * @param type   the class name
+	 * @param value  the value
+	 * @param secret the secret
 	 */
 	void inputByXpath(String xpath, String type, String value, boolean secret);
 
@@ -225,8 +213,8 @@ public interface SeleniumInterface extends ReportInterface {
 	 * <p>
 	 * element.textContent is a DOM Level 3 (2004) feature.
 	 * <p>
-	 * The textContent property sets or returns the text content of the specified node, and all its descendants.
-	 * eg by text = element.textContent;
+	 * The textContent property sets or returns the text content of the specified
+	 * node, and all its descendants. eg by text = element.textContent;
 	 *
 	 * @param locatorDelegate the locator delegate
 	 * @return the string
@@ -240,7 +228,6 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @return the string
 	 */
 	String outputByXpath(String xpath);
-
 
 	/**
 	 * Validate.
@@ -273,7 +260,7 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @return the string
 	 */
 	String screenshotFile();
-	
+
 	// other stuff
 
 	/**
@@ -410,8 +397,7 @@ public interface SeleniumInterface extends ReportInterface {
 	boolean waitUntilBy(By locator, WebelementState state, long timeout, boolean report);
 
 	/**
-	 * Wait until locator reaches state.
-	 * Uses default timeout
+	 * Wait until locator reaches state. Uses default timeout
 	 *
 	 * @param locator the locator
 	 * @param state   the state
@@ -421,8 +407,7 @@ public interface SeleniumInterface extends ReportInterface {
 	boolean waitUntilBy(By locator, WebelementState state, boolean report);
 
 	/**
-	 * Wait until locator reaches state.
-	 * Uses default timeout
+	 * Wait until locator reaches state. Uses default timeout
 	 *
 	 * @param locator the locator
 	 * @param state   the state
@@ -442,8 +427,7 @@ public interface SeleniumInterface extends ReportInterface {
 	boolean waitUntil(String locatorDelegate, WebelementState state, long timeout, boolean report);
 
 	/**
-	 * Wait until locator reaches state.
-	 * Uses default timeout
+	 * Wait until locator reaches state. Uses default timeout
 	 *
 	 * @param locatorDelegate the locator delegate
 	 * @param state           the state
@@ -453,8 +437,7 @@ public interface SeleniumInterface extends ReportInterface {
 	boolean waitUntil(String locatorDelegate, WebelementState state, boolean report);
 
 	/**
-	 * Wait until locator reaches state.
-	 * Uses default timeout
+	 * Wait until locator reaches state. Uses default timeout
 	 *
 	 * @param locatorDelegate the locator delegate
 	 * @param state           the state
@@ -463,12 +446,11 @@ public interface SeleniumInterface extends ReportInterface {
 	boolean waitUntil(String locatorDelegate, WebelementState state);
 
 	/**
-	 * Wait until locator reaches state.
-	 * Uses default timeout
+	 * Wait until locator reaches state. Uses default timeout
 	 *
 	 * @param locator the locator
 	 * @param state   the state
-	 * @param timeout         the timeout
+	 * @param timeout the timeout
 	 * @return the boolean
 	 */
 	boolean waitUntilBy(By locator, WebelementState state, long timeout);
