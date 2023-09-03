@@ -767,7 +767,12 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 */
 	@Override
 	public void click(String locatorDelegate, String clickAction) {
-		clickByXpath(getLocator(locatorDelegate), clickAction);
+		try {
+			clickByXpath(LocatorHelper.getLocator(locatorDelegate), clickAction);
+		} catch (NotFoundException e) {
+			reportStepFail(e.getMessage());
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -777,7 +782,12 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 */
 	@Override
 	public void click(String locatorDelegate) {
-		clickByXpath(getLocator(locatorDelegate), ClickActions.CLICKKEY.name());
+		try {
+			clickByXpath(LocatorHelper.getLocator(locatorDelegate), ClickActions.CLICKKEY.name());
+		} catch (NotFoundException e) {
+			reportStepFail(e.getMessage());
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -903,7 +913,12 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	@Override
 	public void input(String locatorDelegate, String value, boolean secret) {
 		String[] descParts = locatorDelegate.split(File.pathSeparator);
-		inputByXpath(getLocator(locatorDelegate), WebelementType.valueOf(descParts[1]), value, secret);
+		try {
+			inputByXpath(LocatorHelper.getLocator(locatorDelegate), WebelementType.valueOf(descParts[1]), value, secret);
+		} catch (NotFoundException e) {
+			reportStepFail(e.getMessage());
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -972,7 +987,13 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 */
 	@Override
 	public String output(String locatorDelegate) {
-		return outputByXpath(getLocator(locatorDelegate));
+		try {
+			value = outputByXpath(LocatorHelper.getLocator(locatorDelegate));
+		} catch (NotFoundException e) {
+			reportStepFail(e.getMessage());
+			e.printStackTrace();
+		}
+		return value;
 	}
 
 	/**
@@ -1008,9 +1029,14 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	@Override
 	public void dragAndDrop(String locatorFrom, String locatorTo) {
 		// expected: xpath from the property file
-		String xpathFrom = getLocator(locatorFrom);
-		String xpathTo = getLocator(locatorTo);
-		dragAndDropByXpath(xpathFrom, xpathTo);
+		try {
+			String xpathFrom = LocatorHelper.getLocator(locatorFrom);
+			String xpathTo = LocatorHelper.getLocator(locatorTo);
+			dragAndDropByXpath(xpathFrom, xpathTo);
+		} catch (NotFoundException e) {
+			reportStepFail(e.getMessage());
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -1041,40 +1067,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 			text = CommonHelper.getSecretString(value, true);
 		}
 		logSelenium.finest("<b>input</b> by xpath $(\"" + locatorDelegate + "\"), value=" + text);
-	}
-
-	/**
-	 * Gets the locator.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @return the locator
-	 */
-	private String getLocator(String locatorDelegate) {
-		if (isXpath(locatorDelegate)) {
-			return locatorDelegate;
-		}
-		String[] locatorDelegateSplit = locatorDelegate.split(File.pathSeparator);
-		if (locatorDelegateSplit.length != 3) {
-			String errMsg = "locatorDelegate must match pattern 'classname" + File.pathSeparator + "locatortype"
-					+ File.pathSeparator + "locatorDelegate': '" + locatorDelegate + "'";
-			reportStepFail(errMsg);
-			throw new NotFoundException(errMsg);
-		}
-		String cn = locatorDelegateSplit[0];
-		String key = locatorDelegateSplit[2];
-		Class<?> c = getClassByQualifiedName(cn);
-		if (c == null) {
-			throw new NotFoundException("class not found: " + cn);
-		}
-		// expected: a xpath from the property file
-		String locator = CommonHelper.getClassPropertyValueByKey(c, key);
-		logSelenium.finest("Found value '" + (!key.equals("password") ? value : "*****") + "' by key '" + key
-				+ "' from file '" + cn + ".properties'");
-		return locator;
-	}
-
-	private boolean isXpath(String locatorDelegate) {
-		return locatorDelegate.startsWith("//") || locatorDelegate.startsWith("(//");
 	}
 
 	/**
@@ -1310,7 +1302,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 */
 	@Override
 	public boolean waitUntil(String locatorDelegate, WebelementState state, long timeout, boolean report) {
-		return waitUntilBy(By.xpath(getLocator(locatorDelegate)), state, timeout, report);
+		return waitUntilBy(By.xpath(LocatorHelper.getLocator(locatorDelegate)), state, timeout, report);
 	}
 
 	/**
@@ -1323,7 +1315,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 */
 	@Override
 	public boolean waitUntil(String locatorDelegate, WebelementState state, long timeout) {
-		return waitUntilBy(By.xpath(getLocator(locatorDelegate)), state, timeout, false);
+		return waitUntilBy(By.xpath(LocatorHelper.getLocator(locatorDelegate)), state, timeout, false);
 	}
 
 	/**
@@ -1336,7 +1328,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 */
 	@Override
 	public boolean waitUntil(String locatorDelegate, WebelementState state, boolean report) {
-		return waitUntilBy(By.xpath(getLocator(locatorDelegate)), state, getDriverImplicitlyWaitTimoutSeconds(),
+		return waitUntilBy(By.xpath(LocatorHelper.getLocator(locatorDelegate)), state, getDriverImplicitlyWaitTimoutSeconds(),
 				report);
 	}
 
@@ -1349,7 +1341,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 */
 	@Override
 	public boolean waitUntil(String locatorDelegate, WebelementState state) {
-		return waitUntilBy(By.xpath(getLocator(locatorDelegate)), state, getDriverImplicitlyWaitTimoutSeconds(), false);
+		return waitUntilBy(By.xpath(LocatorHelper.getLocator(locatorDelegate)), state, getDriverImplicitlyWaitTimoutSeconds(), false);
 	}
 
 //    public WebElement waitForElementToBeRefreshedAndClickable(By by) {
@@ -1361,22 +1353,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	// javascript methods
 
 	// mouseMove(getWebElement(), 0, -250).
-
-	/**
-	 * Scroll into view.
-	 *
-	 * @param webEl the WebElement
-	 */
-	public static void scrollIntoView(WebElement webEl) {
-		((JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView(true);", webEl);
-	}
-
-	/**
-	 * Scroll to bottom.
-	 */
-	public static void scrollToBottom() {
-		((JavascriptExecutor) getDriver()).executeScript("window.scrollBy(0,document.body.scrollHeight)", "");
-	}
 
 	/**
 	 * Wait until fully loaded.
@@ -1399,5 +1375,20 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 
 	}
 
+	/**
+	 * Scroll into view.
+	 *
+	 * @param webEl the WebElement
+	 */
+	public static void scrollIntoView(WebElement webEl) {
+		((JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView(true);", webEl);
+	}
+
+	/**
+	 * Scroll to bottom.
+	 */
+	public static void scrollToBottom() {
+		((JavascriptExecutor) getDriver()).executeScript("window.scrollBy(0,document.body.scrollHeight)", "");
+	}
 
 }

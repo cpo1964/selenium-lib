@@ -1,8 +1,19 @@
 package com.github.cpo1964.platform.selenium;
 
 import java.io.File;
+import java.util.logging.Logger;
+
+import org.openqa.selenium.NotFoundException;
+
+import com.github.cpo1964.report.extent.ExtentHelper;
+import com.github.cpo1964.utils.CommonHelper;
 
 public class LocatorHelper {
+
+	/**
+	 * The logger.
+	 */
+	static Logger logLocatorHelper = Logger.getLogger(LocatorHelper.class.getSimpleName());
 
 	/**
 	 * Gets the edits the field locator.
@@ -133,5 +144,38 @@ public class LocatorHelper {
 	public static String getLinkLocator(Class<?> page, String locatorDelegate) {
 		return page.getName() + File.pathSeparator + WebelementType.LINK.name() + File.pathSeparator
 				+ locatorDelegate;	}
+
+	/**
+	 * Gets the locator.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @return the locator
+	 */
+	static String getLocator(String locatorDelegate) {
+		if (isXpath(locatorDelegate)) {
+			return locatorDelegate;
+		}
+		String[] locatorDelegateSplit = locatorDelegate.split(File.pathSeparator);
+		if (locatorDelegateSplit.length != 3) {
+			String errMsg = "locatorDelegate must match pattern 'classname" + File.pathSeparator + "locatortype"
+					+ File.pathSeparator + "locatorDelegate': '" + locatorDelegate + "'";
+			throw new NotFoundException(errMsg);
+		}
+		String cn = locatorDelegateSplit[0];
+		String key = locatorDelegateSplit[2];
+		Class<?> c = ExtentHelper.getClassByQualifiedName(cn);
+		if (c == null) {
+			throw new NotFoundException("class not found: " + cn);
+		}
+		// expected: a xpath from the property file
+		String locator = CommonHelper.getClassPropertyValueByKey(c, key);
+		logLocatorHelper.finest("Found value '" + (!key.equals("password") ? locator : "*****") + "' by key '" + key
+				+ "' from file '" + cn + ".properties'");
+		return locator;
+	}
+
+	private static boolean isXpath(String locatorDelegate) {
+		return locatorDelegate.startsWith("//") || locatorDelegate.startsWith("(//");
+	}
 
 }
