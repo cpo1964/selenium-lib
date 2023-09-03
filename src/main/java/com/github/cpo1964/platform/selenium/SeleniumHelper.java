@@ -674,8 +674,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param xpath       the xpath
 	 * @param clickAction the value
 	 */
-	@Override
-	public void clickByXpath(String xpath, String clickAction) {
+	private void clickByXpath(String xpath, String clickAction) {
 		if (isFailed()) {
 			return;
 		}
@@ -761,16 +760,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	}
 
 	/**
-	 * Click by xpath.
-	 *
-	 * @param xpath the xpath
-	 */
-	@Override
-	public void clickByXpath(String xpath) {
-		clickByXpath(xpath, ClickActions.CLICKKEY.name());
-	}
-
-	/**
 	 * Click.
 	 *
 	 * @param locatorDelegate the locator delegate
@@ -802,7 +791,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param value  the value
 	 * @param secret the secret
 	 */
-	public void inputByXpath(String xpath, String type, String value, boolean secret) {
+	public void inputByXpath(String xpath, WebelementType type, String value, boolean secret) {
 		if (isFailed()) {
 			return;
 		}
@@ -818,10 +807,10 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 				throw new NotFoundException("type of webelement unknown: '" + type + "'");
 			}
 			Actions actions = new Actions(getDriver());
-			if (WebelementType.EDITFIELD.name().equalsIgnoreCase(type)
-					|| WebelementType.NUMERICFIELD.name().equalsIgnoreCase(type)
-					|| WebelementType.SLIDER.name().equalsIgnoreCase(type) // type='range'
-					|| WebelementType.FILEFIELD.name().equalsIgnoreCase(type)) {
+			if (WebelementType.EDITFIELD.equals(type)
+					|| WebelementType.NUMERICFIELD.equals(type)
+					|| WebelementType.SLIDER.equals(type) // type='range'
+					|| WebelementType.FILEFIELD.equals(type)) {
 				try {
 					actions.moveToElement(getWebElement()).click().build().perform();
 				} catch (MoveTargetOutOfBoundsException | StaleElementReferenceException e) {
@@ -838,11 +827,11 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 				reportStepPass(BOLD_INPUT_BY_XPATH + xpath + XPATH_MSG_PART
 						+ CommonHelper.getSecretString(value, secret) + "'");
 				logSecret(xpath, value, secret);
-			} else if (WebelementType.LISTBOX.name().equalsIgnoreCase(type)) {
+			} else if (WebelementType.LISTBOX.equals(type)) {
 				new Select(getWebElement()).selectByVisibleText(value);
 				reportStepPass(BOLD_INPUT_BY_XPATH + xpath + XPATH_MSG_PART + value + "'");
-			} else if (WebelementType.CHECKBOX.name().equalsIgnoreCase(type)
-					|| WebelementType.RADIOBUTTON.name().equalsIgnoreCase(type)) {
+			} else if (WebelementType.CHECKBOX.equals(type)
+					|| WebelementType.RADIOBUTTON.equals(type)) {
 				// if checkbox is selected && value == on or true -> do nothing
 				// if checkbox is not selected && value == off or false -> do nothing
 				// checkbox is selected -> uncheck with value off or false
@@ -880,7 +869,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 					throw new NotFoundException(
 							type + " - " + BOLD_INPUT_BY_XPATH + xpath + "\"), value not found: '" + value + "'");
 				}
-			} else if (WebelementType.RADIOGROUP.name().equalsIgnoreCase(type)) {
+			} else if (WebelementType.RADIOGROUP.equals(type)) {
 				int option = Integer.parseInt(value);
 				List<WebElement> radios = getDriver().findElements(By.xpath(xpath));
 				if (option > 0 && option <= radios.size()) {
@@ -903,18 +892,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	}
 
 	/**
-	 * Input by xpath.
-	 *
-	 * @param xpath the xpath
-	 * @param type  the type
-	 * @param value the value
-	 */
-	@Override
-	public void inputByXpath(String xpath, String type, String value) {
-		inputByXpath(xpath, type, value, false);
-	}
-
-	/**
 	 * Input.
 	 * <p>
 	 * If secret=true the input value will be masked in report like '*****'
@@ -926,7 +903,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	@Override
 	public void input(String locatorDelegate, String value, boolean secret) {
 		String[] descParts = locatorDelegate.split(File.pathSeparator);
-		inputByXpath(getLocator(locatorDelegate), descParts[1], value, secret);
+		inputByXpath(getLocator(locatorDelegate), WebelementType.valueOf(descParts[1]), value, secret);
 	}
 
 	/**
@@ -941,6 +918,17 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	}
 
 	/**
+	 * Input.
+	 *
+	 * @param locatorDelegate the locator delegate
+	 * @param type the type
+	 * @param value the value
+	 */
+	public void input(String locatorDelegate, WebelementType type, String value) {
+		inputByXpath(locatorDelegate, type, value, false);
+	}
+	
+	/**
 	 * Output by xpath.
 	 * 
 	 * delivers even hidden text
@@ -948,8 +936,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param xpath the xpath
 	 * @return the string
 	 */
-	@Override
-	public String outputByXpath(String xpath) {
+	private String outputByXpath(String xpath) {
 		String output = "";
 		if (isFailed()) {
 			return output;
@@ -1032,8 +1019,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @param xpathFrom the xpath from
 	 * @param xpathTo   the xpath to
 	 */
-	@Override
-	public void dragAndDropByXpath(String xpathFrom, String xpathTo) {
+	private void dragAndDropByXpath(String xpathFrom, String xpathTo) {
 		WebElement webElFrom = getDriver().findElement(By.xpath(xpathFrom));
 		WebElement webElTo = getDriver().findElement(By.xpath(xpathTo));
 		// see: https://www.selenium.dev/documentation/webdriver/actions_api/mouse/
@@ -1064,6 +1050,9 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * @return the locator
 	 */
 	private String getLocator(String locatorDelegate) {
+		if (isXpath(locatorDelegate)) {
+			return locatorDelegate;
+		}
 		String[] locatorDelegateSplit = locatorDelegate.split(File.pathSeparator);
 		if (locatorDelegateSplit.length != 3) {
 			String errMsg = "locatorDelegate must match pattern 'classname" + File.pathSeparator + "locatortype"
@@ -1082,6 +1071,10 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 		logSelenium.finest("Found value '" + (!key.equals("password") ? value : "*****") + "' by key '" + key
 				+ "' from file '" + cn + ".properties'");
 		return locator;
+	}
+
+	private boolean isXpath(String locatorDelegate) {
+		return locatorDelegate.startsWith("//") || locatorDelegate.startsWith("(//");
 	}
 
 	/**

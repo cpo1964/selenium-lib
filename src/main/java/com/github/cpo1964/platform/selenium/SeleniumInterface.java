@@ -125,21 +125,6 @@ public interface SeleniumInterface extends ReportInterface {
 	void click(String locatorDelegate, String clickAction);
 
 	/**
-	 * Click by xpath.
-	 *
-	 * @param xpath the xpath
-	 */
-	void clickByXpath(String xpath);
-
-	/**
-	 * Click by xpath.
-	 *
-	 * @param xpath       the xpath
-	 * @param clickAction the value
-	 */
-	void clickByXpath(String xpath, String clickAction);
-
-	/**
 	 * Input at the webelement referenced by locatorDelegate
 	 * <p>
 	 * see: https://www.w3schools.com/html/html_form_input_types.asp
@@ -182,29 +167,19 @@ public interface SeleniumInterface extends ReportInterface {
 	 * Input.
 	 *
 	 * @param locatorDelegate the locator delegate
+	 * @param type the type
+	 * @param value the value
+	 */
+	void input(String locatorDelegate, WebelementType type, String value);
+	
+	/**
+	 * Input.
+	 *
+	 * @param locatorDelegate the locator delegate
 	 * @param value           the value
 	 * @param secret          the secret
 	 */
 	void input(String locatorDelegate, String value, boolean secret);
-
-	/**
-	 * Input by xpath.
-	 *
-	 * @param xpath the xpath
-	 * @param type  the class name
-	 * @param value the value
-	 */
-	void inputByXpath(String xpath, String type, String value);
-
-	/**
-	 * Input by xpath.
-	 *
-	 * @param xpath  the xpath
-	 * @param type   the class name
-	 * @param value  the value
-	 * @param secret the secret
-	 */
-	void inputByXpath(String xpath, String type, String value, boolean secret);
 
 	/**
 	 * Output from the webelement referenced by locatorDelegate
@@ -222,14 +197,6 @@ public interface SeleniumInterface extends ReportInterface {
 	String output(String locatorDelegate);
 
 	/**
-	 * Output by xpath.
-	 *
-	 * @param xpath the xpath
-	 * @return the string
-	 */
-	String outputByXpath(String xpath);
-
-	/**
 	 * Validate.
 	 *
 	 * @param condition   the condition
@@ -245,14 +212,6 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @param locatorTo   the locator to
 	 */
 	void dragAndDrop(String locatorFrom, String locatorTo);
-
-	/**
-	 * Drag and drop by xpath.
-	 *
-	 * @param xpathFrom the xpath from
-	 * @param xpathTo   the xpath to
-	 */
-	void dragAndDropByXpath(String xpathFrom, String xpathTo);
 
 	/**
 	 * Screenshot file.
