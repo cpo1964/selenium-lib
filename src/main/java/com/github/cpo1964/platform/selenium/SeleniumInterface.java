@@ -12,13 +12,9 @@
  */
 package com.github.cpo1964.platform.selenium;
 
-import java.io.IOException;
 import java.util.Properties;
 
-import javax.naming.ConfigurationException;
-
 import com.github.cpo1964.report.ReportInterface;
-import org.openqa.selenium.By;
 
 /**
  * The Interface EnvironmentInterface.
@@ -28,28 +24,21 @@ public interface SeleniumInterface extends ReportInterface {
 	/**
 	 * Common setup.
 	 *
-	 * @param platformDelegate the platform delegate
-	 * @param testDataPath     the test data path
-	 * @return the platform interface
-	 * @throws IOException            Signals that an I/O exception has occurred.
-	 * @throws ConfigurationException the configuration exception
 	 */
-	SeleniumInterface commonSetup(String platformDelegate, String testDataPath)
-			throws IOException, ConfigurationException;
+	void commonSetup();
 
 	/**
 	 * Common teardown.
 	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	void commonTeardown() throws IOException;
+	void commonTeardown();
 
 	/**
 	 * Setup driver.
 	 *
 	 * @return the object
 	 */
-	Object setupDriver();
+	Object launch();
 
 	/**
 	 * Gets the driver implicitly wait timout seconds.
@@ -241,22 +230,6 @@ public interface SeleniumInterface extends ReportInterface {
 	void reportStepFailScreenshot();
 
 	/**
-	 * Screenshot base 64.
-	 *
-	 * @return the string
-	 */
-	String screenshotBase64();
-
-	/**
-	 * Wait.
-	 * <p>
-	 * Waits the given milliseconds
-	 *
-	 * @param milliseconds the milliseconds
-	 */
-	void wait(int milliseconds);
-
-	/**
 	 * Gets the link locator.
 	 *
 	 * @param locatorDelegate the locator delegate
@@ -369,43 +342,13 @@ public interface SeleniumInterface extends ReportInterface {
 	/**
 	 * Wait until locator reaches state.
 	 *
-	 * @param locator the locator
-	 * @param state   the state
-	 * @param timeout the timeout
-	 * @param report  the report
-	 * @return the boolean
-	 */
-	boolean waitUntilBy(By locator, WebelementState state, long timeout, boolean report);
-
-	/**
-	 * Wait until locator reaches state. Uses default timeout
-	 *
-	 * @param locator the locator
-	 * @param state   the state
-	 * @param report  the report
-	 * @return the boolean
-	 */
-	boolean waitUntilBy(By locator, WebelementState state, boolean report);
-
-	/**
-	 * Wait until locator reaches state. Uses default timeout
-	 *
-	 * @param locator the locator
-	 * @param state   the state
-	 * @return the boolean
-	 */
-	boolean waitUntilBy(By locator, WebelementState state);
-
-	/**
-	 * Wait until locator reaches state.
-	 *
 	 * @param locatorDelegate the locator delegate
 	 * @param state           the state
 	 * @param timeout         the timeout
 	 * @param report          the report
 	 * @return the boolean
 	 */
-	boolean waitUntil(String locatorDelegate, WebelementState state, long timeout, boolean report);
+	boolean waitOn(String locatorDelegate, WebelementState state, long timeout, boolean report);
 
 	/**
 	 * Wait until locator reaches state. Uses default timeout
@@ -415,7 +358,7 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @param report          the report
 	 * @return the boolean
 	 */
-	boolean waitUntil(String locatorDelegate, WebelementState state, boolean report);
+	boolean waitOn(String locatorDelegate, WebelementState state, boolean report);
 
 	/**
 	 * Wait until locator reaches state. Uses default timeout
@@ -424,17 +367,7 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @param state           the state
 	 * @return the boolean
 	 */
-	boolean waitUntil(String locatorDelegate, WebelementState state);
-
-	/**
-	 * Wait until locator reaches state. Uses default timeout
-	 *
-	 * @param locator the locator
-	 * @param state   the state
-	 * @param timeout the timeout
-	 * @return the boolean
-	 */
-	boolean waitUntilBy(By locator, WebelementState state, long timeout);
+	boolean waitOn(String locatorDelegate, WebelementState state);
 
 	/**
 	 * Wait until locator reaches state.
@@ -444,6 +377,6 @@ public interface SeleniumInterface extends ReportInterface {
 	 * @param timeout         the timeout
 	 * @return the boolean
 	 */
-	boolean waitUntil(String locatorDelegate, WebelementState state, long timeout);
+	boolean waitOn(String locatorDelegate, WebelementState state, long timeout);
 
 }

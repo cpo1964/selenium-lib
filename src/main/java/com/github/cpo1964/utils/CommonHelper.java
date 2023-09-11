@@ -92,4 +92,19 @@ public class CommonHelper {
 		return bld.toString();
 	}
 
+	/**
+	 * Wait.
+	 * <p>
+	 * Waits the given milliseconds
+	 *
+	 * @param milliseconds the milliseconds
+	 */
+	public static void wait(int milliseconds) {
+		try {
+			Thread.sleep(milliseconds);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
+	}
+
 }
