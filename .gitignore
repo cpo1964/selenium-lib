@@ -5,6 +5,7 @@ selenium-lib.iws
 *.iml
 *.class
 *.lst
+/src/test/
 /target/
 /RunResults/
 /.idea/
@@ -12,6 +13,5 @@ selenium-lib.iws
 /FFLogs.txt
 /doc/
 /RunResults.zip
-.classpath
 .classpath
 .project
