@@ -59,7 +59,6 @@ import com.github.cpo1964.utils.CommonHelper;
 import com.github.cpo1964.utils.ExcelHelper;
 import com.github.cpo1964.utils.MaxlevelStreamHandler;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class SeleniumHelper.
  */
@@ -213,8 +212,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 
 	/**
 	 * Sets the driver.
-	 *
-	 * @param rdriver the new driver
 	 */
 	public static void setDriver() {
 		if (CHROME.equalsIgnoreCase(getBrowser())) {
