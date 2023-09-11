@@ -17,21 +17,9 @@ import java.io.File;
 /**
  * The Class SeleniumStrings.
  */
-public class SeleniumStrings {
+public interface SeleniumStrings {
 
 	// values for the verify action
-
-//	/** The Constant EDITABLE. */
-//	public static final String EDITABLE = "Editable";
-//
-//	/** The Constant ENABLED. */
-//	public static final String ENABLED = "Enabled";
-//
-//	/** The Constant EXISTS. */
-//	public static final String EXISTSKEY = "Exists";
-//
-//	/** The Constant VISIBLE. */
-//	public static final String VISIBLE = "Visible";
 
 	// platform stuff
 

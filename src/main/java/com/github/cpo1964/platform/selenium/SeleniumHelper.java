@@ -59,13 +59,16 @@ import com.github.cpo1964.utils.CommonHelper;
 import com.github.cpo1964.utils.ExcelHelper;
 import com.github.cpo1964.utils.MaxlevelStreamHandler;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class SeleniumHelper.
  */
 public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 
+	/** The Constant FIREFOX. */
 	private static final String FIREFOX = "firefox";
 
+	/** The Constant CHROME. */
 	private static final String CHROME = "chrome";
 
 	/**
@@ -211,7 +214,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	/**
 	 * Sets the driver.
 	 *
-	 * @param driver the new driver
+	 * @param rdriver the new driver
 	 */
 	public static void setDriver(RemoteWebDriver rdriver) {
 		if (CHROME.equalsIgnoreCase(getBrowser())) {
@@ -481,7 +484,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 
 	/**
 	 * Setup chrome driver.
-	 * @return 
+	 *
+	 * @return the chrome driver
 	 */
 	@SuppressWarnings("deprecation")
 	private static ChromeDriver getChromeDriver() {
@@ -502,7 +506,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 
 	/**
 	 * Setup firefox driver.
-	 * @return 
+	 *
+	 * @return the firefox driver
 	 */
 	private static FirefoxDriver getFirefoxDriver() {
 		if (getDriver() == null) {
@@ -783,7 +788,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * <p>
 	 * supported input types:<p> 
 	 * text, radio, number, file, checkbox, range // vulgo 'slider'<p>
-	 *<p>
+	 * <p>.
+	 *
 	 * @param xpath    the xpath locator
 	 * @param type     the input type
 	 * @param value    the value
