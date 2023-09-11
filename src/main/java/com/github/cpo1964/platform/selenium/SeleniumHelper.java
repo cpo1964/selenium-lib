@@ -216,7 +216,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 *
 	 * @param rdriver the new driver
 	 */
-	public static void setDriver(RemoteWebDriver rdriver) {
+	public static void setDriver() {
 		if (CHROME.equalsIgnoreCase(getBrowser())) {
 			driver = getChromeDriver();
 			if (isDriverLoaded()) {
@@ -232,7 +232,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 				setDriverLoaded(true);
 			}
 		}
-		driver = rdriver;
 	}
 
 	/**
@@ -450,6 +449,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 			setProxyPass(System.getProperty("proxyPass"));
 		}
 
+		setDriver();
 		getDriver().manage().window().maximize();
 		return getDriver();
 	}
