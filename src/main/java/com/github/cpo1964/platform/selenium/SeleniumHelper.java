@@ -1077,14 +1077,14 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 */
 	@Override
 	public Properties getTestPlatformProperties(String filePath) {
-		if (SeleniumHelper.testPlatformProperties.isEmpty()) {
+		if (testPlatformProperties.isEmpty()) {
 			try (Reader inStream = new InputStreamReader(new FileInputStream(filePath))) {
-				SeleniumHelper.testPlatformProperties.load(inStream);
+				testPlatformProperties.load(inStream);
 			} catch (IOException e) {
 				logSelenium.finest(e.getMessage());
 			}
 		}
-		return SeleniumHelper.testPlatformProperties;
+		return testPlatformProperties;
 	}
 
 	/**
