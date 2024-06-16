@@ -32,28 +32,28 @@ public interface ReportInterface {
 	void reportEndTest(String msg);
 
 	/**
-	 * Test log info.
+	 * Report test message to log info.
 	 *
 	 * @param msg the msg
 	 */
 	void reportTestInfo(String msg);
 
 	/**
-	 * Test log pass.
+	 * Report test message with status pass.
 	 *
 	 * @param msg the msg
 	 */
 	void reportTestPass(String msg);
 
 	/**
-	 * Test log fail.
+	 * Report test message with status fail.
 	 *
 	 * @param msg the msg
 	 */
 	void reportTestFail(String msg);
 
 	/**
-	 * Test create node. step
+	 * Test create step.
 	 * 
 	 * @param msg the msg
 	 */
@@ -67,21 +67,21 @@ public interface ReportInterface {
 	void reportEndStep(String msg);
 
 	/**
-	 * Report step info.
+	 * Report test message to log info.
 	 *
 	 * @param msg the msg
 	 */
 	void reportStepInfo(String msg);
 
 	/**
-	 * Step log pass.
+	 * Report step message with status pass.
 	 *
 	 * @param msg the msg
 	 */
 	void reportStepPass(String msg);
 
 	/**
-	 * Step log fail.
+	 * Report step message with status fail.
 	 *
 	 * @param msg the msg
 	 */
@@ -89,16 +89,12 @@ public interface ReportInterface {
 
 	/**
 	 * Screenshot step pass.
-	 *
-	 * @param screenShot the screen shot
 	 */
-	void reportStepPassScreenshot(String screenShot);
+	void reportStepPassScreenshot();
 
 	/**
 	 * Screenshot step fail.
-	 *
-	 * @param screenShot the screen shot
 	 */
-	void reportStepFailScreenshot(String screenShot);
+	void reportStepFailScreenshot();
 
 }

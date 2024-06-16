@@ -25,20 +25,32 @@ public interface SeleniumInterface extends ReportInterface {
 	 * Common setup.
 	 *
 	 */
-	void commonSetup();
+	static void commonSetup() {
+	}
 
 	/**
 	 * Common teardown.
 	 *
 	 */
-	void commonTeardown();
+	static void commonTeardown() {
+	}
 
 	/**
-	 * Setup driver.
-	 *
-	 * @return the object
+	 * Setup driver and start browser.
 	 */
-	Object launch();
+	void launch();
+
+	/**
+	 * navigate to given url.
+	 *
+	 * @param url the url
+	 */
+	void navigateTo(String url);
+
+	/**
+	 * Close browser.
+	 */
+	void closeBrowser();
 
 	/**
 	 * Gets the driver implicitly wait timout seconds.
@@ -48,41 +60,25 @@ public interface SeleniumInterface extends ReportInterface {
 	long getDriverImplicitlyWaitTimoutSeconds();
 
 	/**
-	 * Driver implicitly wait.
+	 * Sets the driver implicitly wait timout seconds.
 	 *
 	 * @param value the value
 	 */
 	void setDriverImplicitlyWaitTimoutSeconds(long value);
 
 	/**
-	 * Driver switch to default content.
-	 * <p>
 	 * Selects either the first frame on the page, or the main document when a page
 	 * contains iframes.
 	 */
 	void driverSwitchToDefaultContent();
 
 	/**
-	 * Driver switch to I frame.
-	 * <p>
 	 * Send future commands to iFrame
 	 *
 	 * @param name the name
 	 * @return true, if successful
 	 */
 	boolean driverSwitchToIFrame(String name);
-
-	/**
-	 * Close browser.
-	 */
-	void closeBrowser();
-
-	/**
-	 * navigate to given url.
-	 *
-	 * @param url the url
-	 */
-	void driverGet(String url);
 
 	/**
 	 * Click at the webelement referenced by locatorDelegate
@@ -153,20 +149,11 @@ public interface SeleniumInterface extends ReportInterface {
 	void input(String locatorDelegate, String value);
 
 	/**
-	 * Input.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @param type            the type
-	 * @param value           the value
-	 */
-	void input(String locatorDelegate, WebelementType type, String value);
-
-	/**
-	 * Input.
+	 * Input at the webelement referenced by locatorDelegate
 	 *
 	 * @param locatorDelegate the locator delegate
 	 * @param value           the value
-	 * @param secret          the secret
+	 * @param secret          the secret detemines if the value is hidden by asterixes while reporting
 	 */
 	void input(String locatorDelegate, String value, boolean secret);
 
@@ -186,7 +173,7 @@ public interface SeleniumInterface extends ReportInterface {
 	String output(String locatorDelegate);
 
 	/**
-	 * Validate.
+	 * A JUnit assertion
 	 *
 	 * @param condition   the condition
 	 * @param description the description
@@ -202,13 +189,6 @@ public interface SeleniumInterface extends ReportInterface {
 	 */
 	void dragAndDrop(String locatorFrom, String locatorTo);
 
-	/**
-	 * Screenshot file.
-	 *
-	 * @return the string
-	 */
-	String screenshotFile();
-
 	// other stuff
 
 	/**
@@ -220,132 +200,12 @@ public interface SeleniumInterface extends ReportInterface {
 	Properties getTestPlatformProperties(String value);
 
 	/**
-	 * Report step pass screenshot.
-	 */
-	void reportStepPassScreenshot();
-
-	/**
-	 * Report step fail screenshot.
-	 */
-	void reportStepFailScreenshot();
-
-	/**
-	 * Gets the link locator.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @return the link locator
-	 */
-	static String getLinkLocator(Class<?> page, String locatorDelegate) {
-		return null;
-	};
-
-	/**
-	 * Gets the slider locator.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @return the slider locator
-	 */
-	static String getSliderLocator(String locatorDelegate) {
-		return null;
-	}
-
-	/**
-	 * Gets the filefield locator.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @return the filefield locator
-	 */
-	static String getFilefieldLocator(String locatorDelegate) {
-		return null;
-	}
-
-	/**
-	 * Gets the numericfield locator.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @return the numericfield locator
-	 */
-	static String getNumericfieldLocator(String locatorDelegate) {
-		return null;
-	}
-
-	/**
-	 * Gets the checkbox locator.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @return the checkbox locator
-	 */
-	static String getCheckboxLocator(String locatorDelegate) {
-		return null;
-	}
-
-	/**
-	 * Gets the radiobutton locator.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @return the radiobutton locator
-	 */
-	static String getRadiobuttonLocator(String locatorDelegate) {
-		return null;
-	}
-
-	/**
-	 * Gets the radiogroup locator.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @return the radiogroup locator
-	 */
-	static String getRadiogroupLocator(String locatorDelegate) {
-		return null;
-	}
-
-	/**
-	 * Gets the listbox locator.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @return the listbox locator
-	 */
-	static String getListboxLocator(String locatorDelegate) {
-		return null;
-	}
-
-	/**
-	 * Gets the text locator.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @return the text locator
-	 */
-	static String getTextLocator(String locatorDelegate) {
-		return null;
-	}
-
-	/**
-	 * Gets the button locator.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @return the button locator
-	 */
-	static String getButtonLocator(String locatorDelegate) {
-		return null;
-	}
-
-	/**
-	 * Gets the edits the field locator.
-	 *
-	 * @param locatorDelegate the locator delegate
-	 * @return the edits the field locator
-	 */
-	static String getEditFieldLocator(String locatorDelegate) {
-		return null;
-	}
-
-	/**
 	 * Wait until locator reaches state.
 	 *
 	 * @param locatorDelegate the locator delegate
 	 * @param state           the state
 	 * @param timeout         the timeout
-	 * @param report          the report
+	 * @param report          the report determines if the waitOn should be reported
 	 * @return the boolean
 	 */
 	boolean waitOn(String locatorDelegate, WebelementState state, long timeout, boolean report);
@@ -355,7 +215,7 @@ public interface SeleniumInterface extends ReportInterface {
 	 *
 	 * @param locatorDelegate the locator delegate
 	 * @param state           the state
-	 * @param report          the report
+	 * @param report          the report determines if the waitOn should be reported
 	 * @return the boolean
 	 */
 	boolean waitOn(String locatorDelegate, WebelementState state, boolean report);
@@ -370,7 +230,7 @@ public interface SeleniumInterface extends ReportInterface {
 	boolean waitOn(String locatorDelegate, WebelementState state);
 
 	/**
-	 * Wait until locator reaches state.
+	 * Wait until locator reaches state. Uses given timeout
 	 *
 	 * @param locatorDelegate the locator delegate
 	 * @param state           the state

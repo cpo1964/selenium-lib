@@ -54,6 +54,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.github.cpo1964.report.ReportInterface;
 import com.github.cpo1964.report.extent.ExtentHelper;
 import com.github.cpo1964.utils.CommonHelper;
 import com.github.cpo1964.utils.ExcelHelper;
@@ -62,7 +63,7 @@ import com.github.cpo1964.utils.MaxlevelStreamHandler;
 /**
  * The Class SeleniumHelper.
  */
-public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
+public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, ReportInterface{
 
 	/** The Constant FIREFOX. */
 	private static final String FIREFOX = "firefox";
@@ -303,8 +304,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 *
 	 * @param url the url
 	 */
-	@Override
-	public void driverGet(String url) {
+//	@Override
+	public void navigateTo(String url) {
 		getDriver().get(url);
 	}
 
@@ -418,10 +419,9 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * https://github.com/bharadwaj-pendyala/selenium-java-lean-test-achitecture
 	 * https://github.com/bharadwaj-pendyala/selenium-java-lean-test-achitecture/blob/master/src/main/java/driver/local/LocalDriverManager.java
 	 *
-	 * @return the object
 	 */
 	@Override
-	public Object launch() {
+	public void launch() {
 		String osName = System.getProperty("os.name");
 		if (osName.contains("Linux")) {
 			try {
@@ -448,7 +448,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 
 		setDriver();
 		getDriver().manage().window().maximize();
-		return getDriver();
 	}
 
 	/**
@@ -604,8 +603,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * Common setup.
 	 *
 	 */
-	@Override
-	public void commonSetup() {
+	public static void commonSetup() {
 		throw new UnsupportedOperationException("Not implemented, yet");
 	}
 
@@ -613,7 +611,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 * Common teardown.
 	 *
 	 */
-	@Override
 	public void commonTeardown() {
 		throw new UnsupportedOperationException("Not implemented, yet");
 	}
@@ -744,7 +741,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 			reportStepPass("<b>CLICK   </b> by xpath $(\"" + xpath + "\")");
 		} else {
 			reportStepFail("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed");
-			reportStepFailScreenshot(screenshotFile());
+			reportStepFailScreenshot();
 			throw new NoSuchElementException("CLICK   by xpath $(" + xpath + ") with " + clickAction + " failed");
 		}
 	}
@@ -804,7 +801,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 				logSecret(xpath + "(unknown) -> not done ", CommonHelper.getSecretString(value, isSecret), isSecret);
 				reportStepFail("<b>INPUT   </b> (" + type + " - " + xpath + ", '"
 						+ CommonHelper.getSecretString(value, isSecret) + ")'");
-				reportStepFailScreenshot(screenshotFile());
+				reportStepFailScreenshot();
 				throw new NotFoundException("type of webelement unknown: '" + type + "'");
 			}
 			Actions actions = new Actions(getDriver());
@@ -883,7 +880,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 				throw new NotFoundException("type of webelement unknown: '" + type + "'");
 			}
 		} catch (Exception e) {
-			reportStepFailScreenshot(screenshotFile());
+			reportStepFailScreenshot();
 			reportStepFail("<b>INPUT   </b> (" + type + " - " + xpath + ", '"
 					+ CommonHelper.getSecretString(value, isSecret) + ")'");
 		}
@@ -960,7 +957,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 			output = getWebElement().getAttribute("textContent");
 			reportStepPass("<b>OUTPUT   </b> by xpath $(\"" + xpath + "\")<br>text: '" + output + "'");
 		} else {
-			reportStepFailScreenshot(screenshotFile());
+			reportStepFailScreenshot();
 			reportStepFail(
 					"<b>OUTPUT   </b> by xpath $(\"" + xpath + "\")<br>text: '" + output + "''" + webEl != null ? ""
 							: (System.lineSeparator() + errMsg));
@@ -1000,7 +997,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 			} else {
 				reportStepFail("<b>VALIDATE</b> '" + description + "' - " + false);
 				try {
-					reportStepFailScreenshot(screenshotFile());
+					reportStepFailScreenshot();
 				} catch (WebDriverException e) {
 					reportStepFail("screenshotFile failed");
 				}
@@ -1077,9 +1074,9 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	}
 
 	/**
-	 * Report step pass screenshot.
+	 * Report step pass screenshot. TODO
 	 */
-	@Override
+//	@Override
 	public void reportStepPassScreenshot() {
 		reportStepPassScreenshot(screenshotFile());
 	}
@@ -1098,7 +1095,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface {
 	 *
 	 * @return the string
 	 */
-	@Override
 	public String screenshotFile() {
 		long time = new Date().getTime();
 		File source = ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.FILE);

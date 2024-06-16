@@ -28,7 +28,6 @@ import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.model.Media;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.github.cpo1964.platform.selenium.CommonSeleniumException;
-import com.github.cpo1964.report.ReportInterface;
 import com.github.cpo1964.utils.MaxlevelStreamHandler;
 
 import tech.grasshopper.reporter.ExtentPDFReporter;
@@ -36,7 +35,7 @@ import tech.grasshopper.reporter.ExtentPDFReporter;
 /**
  * The class tearDownExtent.
  */
-public class ExtentHelper implements ReportInterface {
+public class ExtentHelper {
 
 	/**
 	 * The logger.
@@ -393,7 +392,7 @@ public class ExtentHelper implements ReportInterface {
 	 *
 	 * @param msg the msg
 	 */
-	@Override
+	//@Override
 	public void reportCreateTest(String msg) {
 		MaxlevelStreamHandler.setupMaxLevelStreamHandler(logSelenium);
 		if (isFailed()) {
@@ -426,7 +425,7 @@ public class ExtentHelper implements ReportInterface {
 	 *
 	 * @param msg the msg
 	 */
-	@Override
+	//@Override
 	public void reportEndTest(String msg) {
 		if (msg != null && !msg.isEmpty()) {
 			String newmsg = msg.replace("<b>", "");
@@ -496,7 +495,7 @@ public class ExtentHelper implements ReportInterface {
 	 *
 	 * @param msg the msg
 	 */
-	@Override
+	//@Override
 	public void reportTestInfo(String msg) {
 		if (isFailed()) {
 			return;
@@ -514,7 +513,7 @@ public class ExtentHelper implements ReportInterface {
 	 *
 	 * @param msg the msg
 	 */
-	@Override
+	//@Override
 	public void reportCreateStep(String msg) {
 		if (isFailed()) {
 			return;
@@ -532,7 +531,7 @@ public class ExtentHelper implements ReportInterface {
 	 *
 	 * @param msg the msg
 	 */
-	@Override
+	//@Override
 	public void reportEndStep(String msg) {
 		if (isFailed()) {
 			return;
@@ -545,7 +544,7 @@ public class ExtentHelper implements ReportInterface {
 	 *
 	 * @param msg the msg
 	 */
-	@Override
+	//@Override
 	public void reportStepInfo(String msg) {
 		if (isFailed()) {
 			return;
@@ -563,7 +562,7 @@ public class ExtentHelper implements ReportInterface {
 	 *
 	 * @param msg the msg
 	 */
-	@Override
+	//@Override
 	public void reportStepPass(String msg) {
 		if (isFailed()) {
 			return;
@@ -581,7 +580,7 @@ public class ExtentHelper implements ReportInterface {
 	 *
 	 * @param msg the msg
 	 */
-	@Override
+	//@Override
 	public void reportStepFail(String msg) {
 		getHtmlNode().log(Status.FAIL, replaceUmlaute(msg));
 		msg = msg.replaceAll("\\Wbr\\W", System.lineSeparator());
@@ -595,37 +594,57 @@ public class ExtentHelper implements ReportInterface {
 	/**
 	 * Screenshot node fail.
 	 *
-	 * @param screenShot the screen shot
+	 * @param screenShotPath the screen shot
 	 */
-	@Override
-	public void reportStepFailScreenshot(String screenShot) {
-		screenshotNode(screenShot, Status.FAIL);
+	//@Override
+	public void reportStepFailScreenshot(String screenShotPath) {
+		screenshotNode(screenShotPath, Status.FAIL);
 		setFailed();
 	}
 
 	/**
 	 * Screenshot node pass.
 	 *
-	 * @param screenShot the screen shot
+	 * @param screenShotPath the screen shot
 	 */
-	@Override
-	public void reportStepPassScreenshot(String screenShot) {
+	//@Override
+	public void reportStepPassScreenshot(String screenShotPath) {
 		if (isFailed()) {
 			return;
 		}
-		screenshotNode(screenShot, Status.PASS);
+		screenshotNode(screenShotPath, Status.PASS);
 	}
 
 	/**
-	 * Screenshot getNode().
+	 * Screenshot node.
 	 *
-	 * @param screenShot the screen shot
-	 * @param s          the s
+	 * @param path the path
+	 * @param title the title
+	 * @param s the s
 	 */
-	public void screenshotNode(String screenShot, Status s) {
+	public void screenshotNode(String path, String title, Status s) {
 		// ExtentReport 5
 		try {
-			Media media = getHtmlNode().addScreenCaptureFromPath(screenShot).getModel().getMedia().get(0);
+			Media media = getHtmlNode()
+					.addScreenCaptureFromPath(path, title).getModel().getMedia().get(0);
+			getHtmlNode().getModel().getMedia().clear();
+			getHtmlNode().log(s, media);
+		} catch (Exception e) {
+			throw new CommonSeleniumException(e.getMessage());
+		}
+	}
+	
+	/**
+	 * Screenshot getNode().
+	 *
+	 * @param path the screen shot
+	 * @param s          the s
+	 */
+	public void screenshotNode(String path, Status s) {
+		// ExtentReport 5
+		try {
+			Media media = getHtmlNode()
+					.addScreenCaptureFromPath(path).getModel().getMedia().get(0);
 			getHtmlNode().getModel().getMedia().clear();
 			getHtmlNode().log(s, media);
 		} catch (Exception e) {
