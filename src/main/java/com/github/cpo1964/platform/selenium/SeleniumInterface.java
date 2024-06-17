@@ -12,8 +12,6 @@
  */
 package com.github.cpo1964.platform.selenium;
 
-import java.util.Properties;
-
 import com.github.cpo1964.report.ReportInterface;
 
 /**
@@ -153,7 +151,8 @@ public interface SeleniumInterface extends ReportInterface {
 	 *
 	 * @param locatorDelegate the locator delegate
 	 * @param value           the value
-	 * @param secret          the secret detemines if the value is hidden by asterixes while reporting
+	 * @param secret          the secret detemines if the value is hidden by
+	 *                        asterixes while reporting
 	 */
 	void input(String locatorDelegate, String value, boolean secret);
 
@@ -190,14 +189,6 @@ public interface SeleniumInterface extends ReportInterface {
 	void dragAndDrop(String locatorFrom, String locatorTo);
 
 	// other stuff
-
-	/**
-	 * Gets the test platform properties.
-	 *
-	 * @param value the value
-	 * @return the test platform properties
-	 */
-	Properties getTestPlatformProperties(String value);
 
 	/**
 	 * Wait until locator reaches state.

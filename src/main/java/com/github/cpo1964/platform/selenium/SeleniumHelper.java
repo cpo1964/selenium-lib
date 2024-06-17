@@ -13,10 +13,7 @@
 package com.github.cpo1964.platform.selenium;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -71,6 +68,9 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, R
 	/** The Constant CHROME. */
 	private static final String CHROME = "chrome";
 
+	/** The test properties. */
+	private static Properties testProperties = null;
+	
 	/**
 	 * The logger.
 	 */
@@ -173,11 +173,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, R
 
 	/** The global timeout used for waitOn methods. */
 	private long timeout = 30;
-
-	/**
-	 * The test platform properties.
-	 */
-	public static final Properties testPlatformProperties = new Properties();
 
 	/**
 	 * The iteration.
@@ -1056,24 +1051,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, R
 	}
 
 	/**
-	 * Gets the test platform properties.
-	 *
-	 * @param filePath the file path
-	 * @return the test platform properties
-	 */
-	@Override
-	public Properties getTestPlatformProperties(String filePath) {
-		if (testPlatformProperties.isEmpty()) {
-			try (Reader inStream = new InputStreamReader(new FileInputStream(filePath))) {
-				testPlatformProperties.load(inStream);
-			} catch (IOException e) {
-				logSelenium.finest(e.getMessage());
-			}
-		}
-		return testPlatformProperties;
-	}
-
-	/**
 	 * Report step pass screenshot. TODO
 	 */
 //	@Override
@@ -1120,30 +1097,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, R
 		String scnShot = getDriver().getScreenshotAs(OutputType.BASE64);
 		return "data:image/jpg;base64, " + scnShot;
 
-	}
-
-	/**
-	 * Test platform properties get.
-	 *
-	 * @param key the key
-	 * @return the string
-	 */
-	protected static String testPlatformPropertiesGet(String key) {
-		return testPlatformProperties.getProperty(key);
-	}
-
-	/**
-	 * Gets the testdata.
-	 *
-	 * @param testDataPath the test data path
-	 * @param simpleName   the simple name
-	 * @return the testdata
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	public static List<Object[]> getTestdata(String testDataPath, String simpleName) throws IOException {
-		File file = new File(testDataPath + File.separator + SeleniumStrings.TESTDATA_XLS);
-		ExcelHelper xl = new ExcelHelper(file, simpleName);
-		return xl.getData();
 	}
 
 	/**
@@ -1334,4 +1287,67 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, R
 		((JavascriptExecutor) getDriver()).executeScript("window.scrollBy(0,document.body.scrollHeight)", "");
 	}
 
+//	/**
+//	 * Test platform properties get.
+//	 *
+//	 * @param key the key
+//	 * @return the string
+//	 */
+//	protected static String testPlatformPropertiesGet(String key) {
+//		return testPlatformProperties.getProperty(key);
+//	}
+
+	/**
+	 * Gets the testdata.
+	 *
+	 * @param testDataPath the test data path
+	 * @param simpleName   the simple name
+	 * @return the testdata
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public static List<Object[]> getTestdata(String testDataPath, String simpleName) throws IOException {
+		File file = new File(testDataPath + File.separator + SeleniumStrings.TESTDATA_XLS);
+		ExcelHelper xl = new ExcelHelper(file, simpleName);
+		return xl.getData();
+	}
+
+	/**
+	 * Gets the test platform properties.
+	 *
+	 * @param filePath the file path
+	 * @return the test platform properties
+	 */
+//	public static Properties getTestPlatformProperties(String filePath) {
+//		if (testPlatformProperties.isEmpty()) {
+//			try (Reader inStream = new InputStreamReader(new FileInputStream(filePath))) {
+//				testPlatformProperties.load(inStream);
+//			} catch (IOException e) {
+//				logSelenium.finest(e.getMessage());
+//			}
+//		}
+//		return testPlatformProperties;
+//	}
+
+	/**
+	 * Gets the test properties.
+	 *
+	 * @return the test properties
+	 */
+	private static Properties getTestProperties() {
+		if (testProperties == null) {
+			String path = CommonHelper.getTestDataPathByMandantZone() + File.separator + "test-platform.properties";
+			testProperties = CommonHelper.getProperties(path);
+		}
+		return testProperties;
+	}
+	
+	/**
+	 * Gets the test platform property.
+	 *
+	 * @param key the key
+	 * @return the test platform property
+	 */
+	public static String getTestPlatformProperty(String key) {
+		return getTestProperties().getProperty(key);
+	}
 }

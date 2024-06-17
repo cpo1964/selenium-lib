@@ -29,12 +29,6 @@ public interface SeleniumStrings {
 	/** The Constant TEST_ENVIRONMENT. */
 	public static final String TEST_ENVIRONMENT = "testEnvironment";
 
-	/** The Constant MANDANT. */
-	public static final String MANDANTKEY = "mandant";
-
-	/** The Constant ZONEKEY. */
-	public static final String ZONEKEY = "zone";
-
 	/** The Constant TESTDATA_XLS. */
 	public static final String TESTDATA_XLS = "Testdata.xls";
 

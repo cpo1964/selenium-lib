@@ -12,16 +12,34 @@
  */
 package com.github.cpo1964.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.logging.Logger;
+
+import com.github.cpo1964.platform.selenium.SeleniumStrings;
 
 /**
  * The Class CommonHelper.
  */
 public class CommonHelper {
+
+	public static Properties getProperties(String filePath) {
+		Properties props = new Properties();
+		try (Reader inStream = new InputStreamReader(new FileInputStream(filePath))) {
+			props.load(inStream);
+		} catch (IOException e) {
+			Logger.getLogger(CommonHelper.class.getSimpleName()).finest(e.getMessage());
+		}
+	return props;
+}
 
 	/**
 	 * Gets the class property value by key.
@@ -105,6 +123,28 @@ public class CommonHelper {
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
+	}
+
+	/**
+	 * Gets the test data path.
+	 *
+	 * @return the test data path
+	 */
+	public static String getTestDataPathByMandantZone() {
+		String dirMandantZone = "";
+		String mandant = System.getProperty("mandant");
+		String zone = System.getProperty("zone");
+		System.out.println("mandant: " + mandant);
+		System.out.println("zone: " + zone);
+		if (mandant != null && !mandant.isEmpty()) {
+			dirMandantZone = File.separator + mandant;
+			if (zone != null && !zone.isEmpty()) {
+				dirMandantZone = File.separator + mandant + "-" + zone;
+			}
+		}
+		dirMandantZone = Paths.get("").toAbsolutePath().toString() + File.separator +
+				SeleniumStrings.TESTDATADIR + dirMandantZone;
+		return dirMandantZone;
 	}
 
 }
