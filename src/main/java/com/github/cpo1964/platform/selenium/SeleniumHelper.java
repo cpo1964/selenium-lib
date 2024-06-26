@@ -57,6 +57,8 @@ import com.github.cpo1964.utils.CommonHelper;
 import com.github.cpo1964.utils.ExcelHelper;
 import com.github.cpo1964.utils.MaxlevelStreamHandler;
 
+import io.github.bonigarcia.wdm.WdmAgent;
+
 /**
  * The Class SeleniumHelper.
  */
@@ -442,7 +444,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, R
 		}
 
 		setDriver();
-		getDriver().manage().window().maximize();
+		getDriver().manage().window().maximize();		
 	}
 
 	/**
@@ -454,21 +456,11 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, R
 		String proxy = System.getProperty("proxy");
 		String proxyUser = System.getProperty("proxyUser");
 		String proxyPass = System.getProperty("proxyPass");
-		String driverVersion = System.getProperty("driverVersion");
-		String browserVersion = System.getProperty("browserVersion");
 		if (proxy != null && proxyUser != null && proxyPass != null && !proxy.isEmpty() && !proxyUser.isEmpty()
 				&& !proxyPass.isEmpty()) {
 			logSelenium.info(() -> "using proxy: " + proxy + System.lineSeparator() + "using proxyUser: *****"
 					+ System.lineSeparator() + "using proxyPass: *****" + System.lineSeparator());
 			wdm = wdm.proxyUser(proxyUser).proxyPass(proxyPass).proxy(proxy);
-		}
-		if (driverVersion != null && !driverVersion.isEmpty()) {
-			logSelenium.info(() -> "using driverVersion: " + driverVersion + System.lineSeparator());
-			wdm = wdm.avoidReadReleaseFromRepository().useLocalVersionsPropertiesFirst().driverVersion(driverVersion);
-		}
-		if (browserVersion != null && !browserVersion.isEmpty()) {
-			logSelenium.info(() -> "using browserVersion: " + browserVersion + System.lineSeparator());
-			wdm = wdm.avoidReadReleaseFromRepository().useLocalVersionsPropertiesFirst().driverVersion(browserVersion);
 		}
 		wdm.setup();
 	}
@@ -479,7 +471,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, R
 	 * @return the chrome driver
 	 */
 	@SuppressWarnings("deprecation")
-	private static ChromeDriver getChromeDriver() {
+	public static ChromeDriver getChromeDriver() {
 		if (getDriver() == null) {
 			io.github.bonigarcia.wdm.WebDriverManager wdm = io.github.bonigarcia.wdm.WebDriverManager.chromedriver();
 			setupWebDriverManager(wdm);
@@ -491,6 +483,10 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, R
 		if ("true".equalsIgnoreCase(System.getProperty("headless"))) {
 			chromeOptions.setHeadless(true);
 		}
+		String agent = System.getProperty("UFTDeveloperAgent");
+		if (agent != null) {
+			chromeOptions.addExtensions(new File(agent));
+		}
 		// start chrome with empty tab
 		return new ChromeDriver(chromeOptions);
 	}
@@ -500,7 +496,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, R
 	 *
 	 * @return the firefox driver
 	 */
-	private static FirefoxDriver getFirefoxDriver() {
+	public static FirefoxDriver getFirefoxDriver() {
 		if (getDriver() == null) {
 			io.github.bonigarcia.wdm.WebDriverManager wdm = io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver();
 			setupWebDriverManager(wdm);

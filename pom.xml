@@ -26,7 +26,7 @@ governing permissions and
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.cpo1964</groupId>
 	<artifactId>selenium-lib</artifactId>
-	<version>1.0.48</version>
+	<version>1.0.50</version>
 	<packaging>jar</packaging>
 	<name>${project.name}</name>
 	<description>A fine tuned function library based on selenium webdriver api</description>
@@ -47,7 +47,7 @@ governing permissions and
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<license.dir>${basedir}</license.dir>
-		<webdrivermanager.version>5.3.2</webdrivermanager.version>
+		<webdrivermanager.version>[5.9.1,)</webdrivermanager.version>
 		<selenium-java.version>4.8.1</selenium-java.version>
 		<!-- 4.7.2 -->
 		<extentreports.version>5.0.9</extentreports.version>
@@ -94,7 +94,11 @@ governing permissions and
 					</execution>
 				</executions>
 				<configuration>
+					<serverId>ossrh</serverId>
+					<!--
 					<serverId>nexus</serverId>
+					<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+					-->
 					<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
 					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
@@ -314,6 +318,17 @@ limitations under the License.
 		</dependency>
 	</dependencies>
 	<distributionManagement>
+	  <snapshotRepository>
+	    <id>ossrh</id>
+	    <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+	  </snapshotRepository>
+	  <repository>
+	    <id>ossrh</id>
+	    <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+	  </repository>
+	</distributionManagement>
+	<!--
+	<distributionManagement>
 		<snapshotRepository>
 			<id>nexus</id>
 			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
@@ -324,4 +339,5 @@ limitations under the License.
 				https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
+-->
 </project>

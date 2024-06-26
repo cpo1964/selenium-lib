@@ -31,6 +31,12 @@ import com.github.cpo1964.platform.selenium.SeleniumStrings;
  */
 public class CommonHelper {
 
+	/**
+	 * Gets the properties.
+	 *
+	 * @param filePath the file path
+	 * @return the properties
+	 */
 	public static Properties getProperties(String filePath) {
 		Properties props = new Properties();
 		try (Reader inStream = new InputStreamReader(new FileInputStream(filePath))) {
