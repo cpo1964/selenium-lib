@@ -13,7 +13,7 @@ public class LocatorHelper {
 	/**
 	 * The logger.
 	 */
-	static Logger logLocatorHelper = Logger.getLogger(LocatorHelper.class.getSimpleName());
+	final static Logger log = Logger.getLogger(LocatorHelper.class.getSimpleName());
 
 	/**
 	 * Gets the edits the field locator.
@@ -169,7 +169,7 @@ public class LocatorHelper {
 		}
 		// expected: a xpath from the property file
 		String locator = CommonHelper.getClassPropertyValueByKey(c, key);
-		logLocatorHelper.finest("Found value '" + (!key.equals("password") ? locator : "*****") + "' by key '" + key
+		log.finest("Found value '" + (!key.equals("password") ? locator : "*****") + "' by key '" + key
 				+ "' from file '" + cn + ".properties'");
 		return locator;
 	}

@@ -30,6 +30,8 @@ import com.github.cpo1964.platform.selenium.SeleniumStrings;
  * The Class CommonHelper.
  */
 public class CommonHelper {
+	
+	final static Logger log = Logger.getLogger(CommonHelper.class.getSimpleName());
 
 	/**
 	 * Gets the properties.
@@ -42,7 +44,7 @@ public class CommonHelper {
 		try (Reader inStream = new InputStreamReader(new FileInputStream(filePath))) {
 			props.load(inStream);
 		} catch (IOException e) {
-			Logger.getLogger(CommonHelper.class.getSimpleName()).finest(e.getMessage());
+			log.finest(e.getMessage());
 		}
 	return props;
 }
@@ -140,8 +142,8 @@ public class CommonHelper {
 		String dirMandantZone = "";
 		String mandant = System.getProperty("mandant");
 		String zone = System.getProperty("zone");
-		System.out.println("mandant: " + mandant);
-		System.out.println("zone: " + zone);
+		log.fine("mandant: " + mandant);
+		log.fine("zone: " + zone);
 		if (mandant != null && !mandant.isEmpty()) {
 			dirMandantZone = File.separator + mandant;
 			if (zone != null && !zone.isEmpty()) {

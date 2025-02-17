@@ -35,9 +35,9 @@ public interface SeleniumStrings {
 	/** The Constant TESTDATADIR. */
 	public static final String TESTDATADIR = "src" + File.separator + "test" + File.separator + "data";
 
-	/** The ok. */
-	public static boolean OKKEY = false;
+	/** The Constant FIREFOX. */
+	String FIREFOX = "firefox";
 
-	/** The value. */
-	public static String VALUEKEY = "";
+	/** The Constant CHROME. */
+	String CHROME = "chrome";
 }

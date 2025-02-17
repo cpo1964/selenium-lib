@@ -64,19 +64,13 @@ import io.github.bonigarcia.wdm.WdmAgent;
  */
 public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, ReportInterface{
 
-	/** The Constant FIREFOX. */
-	private static final String FIREFOX = "firefox";
-
-	/** The Constant CHROME. */
-	private static final String CHROME = "chrome";
-
 	/** The test properties. */
 	private static Properties testProperties = null;
 	
 	/**
 	 * The logger.
 	 */
-	static Logger logSelenium = Logger.getLogger(SeleniumHelper.class.getSimpleName());
+	static Logger log = Logger.getLogger(SeleniumHelper.class.getSimpleName());
 
 	/**
 	 * The Constant WDM_CACHE_PATH.
@@ -212,17 +206,17 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, R
 	 * Sets the driver.
 	 */
 	public static void setDriver() {
-		if (CHROME.equalsIgnoreCase(getBrowser())) {
+		if (SeleniumStrings.CHROME.equalsIgnoreCase(getBrowser())) {
 			driver = getChromeDriver();
 			if (isDriverLoaded()) {
-				logSelenium.info(() -> "using local chromedriver: " + System.getProperty("webdriver.chrome.driver")
+				log.info(() -> "using local chromedriver: " + System.getProperty("webdriver.chrome.driver")
 						+ System.lineSeparator());
 				setDriverLoaded(true);
 			}
-		} else if (FIREFOX.equalsIgnoreCase(getBrowser())) {
+		} else if (SeleniumStrings.FIREFOX.equalsIgnoreCase(getBrowser())) {
 			driver = getFirefoxDriver();
 			if (isDriverLoaded()) {
-				logSelenium.info(() -> "using local geckodriver: " + System.getProperty("webdriver.gecko.driver")
+				log.info(() -> "using local geckodriver: " + System.getProperty("webdriver.gecko.driver")
 						+ System.lineSeparator());
 				setDriverLoaded(true);
 			}
@@ -291,7 +285,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, R
 	public static String getBrowser() {
 		String browser = System.getProperty("browser");
 		if (browser == null || browser.isEmpty()) {
-			browser = FIREFOX;
+			browser = SeleniumStrings.FIREFOX;
 		}
 		return browser;
 	}
@@ -425,16 +419,16 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, R
 				Runtime.getRuntime().exec("taskkill /IM chromedriver.exe");
 				Runtime.getRuntime().exec("taskkill /IM geckodriver.exe");
 			} catch (IOException e) {
-				logSelenium.finest("task chromedriver.exe or geckodriver.exe not found - nothing to kill.");
+				log.finest("task chromedriver.exe or geckodriver.exe not found - nothing to kill.");
 			}
 		}
 
-		MaxlevelStreamHandler.setupMaxLevelStreamHandler(logSelenium);
+		MaxlevelStreamHandler.setupMaxLevelStreamHandler(log);
 
 		// wdm.cachePath
 		System.setProperty(WDM_CACHE_PATH, Paths.get("").toAbsolutePath().toString() + File.separator + "src"
 				+ File.separator + "test" + File.separator + "resources");
-		logSelenium.info(() -> "downloading driver to: " + System.getProperty(WDM_CACHE_PATH));
+		log.info(() -> "downloading driver to: " + System.getProperty(WDM_CACHE_PATH));
 
 		if (System.getProperty("proxy") != null && System.getProperty("proxyUser") != null
 				&& System.getProperty("proxyPass") != null) {
@@ -458,7 +452,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, R
 		String proxyPass = System.getProperty("proxyPass");
 		if (proxy != null && proxyUser != null && proxyPass != null && !proxy.isEmpty() && !proxyUser.isEmpty()
 				&& !proxyPass.isEmpty()) {
-			logSelenium.info(() -> "using proxy: " + proxy + System.lineSeparator() + "using proxyUser: *****"
+			log.info(() -> "using proxy: " + proxy + System.lineSeparator() + "using proxyUser: *****"
 					+ System.lineSeparator() + "using proxyPass: *****" + System.lineSeparator());
 			wdm = wdm.proxyUser(proxyUser).proxyPass(proxyPass).proxy(proxy);
 		}
@@ -632,7 +626,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, R
 			i++;
 		}
 		if (i > 1) {
-			logSelenium.info("waited " + i + " seconds for '" + xpath + "'");
+			log.info("waited " + i + " seconds for '" + xpath + "'");
 		}
 		// the searched webelement must be unique
 		if (webEls.size() > 1) {
@@ -1043,7 +1037,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, R
 		if (secret) {
 			text = CommonHelper.getSecretString(value, true);
 		}
-		logSelenium.finest("<b>input</b> by xpath $(\"" + locatorDelegate + "\"), value=" + text);
+		log.finest("<b>input</b> by xpath $(\"" + locatorDelegate + "\"), value=" + text);
 	}
 
 	/**
