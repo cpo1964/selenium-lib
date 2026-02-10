@@ -47,7 +47,7 @@ governing permissions and
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<license.dir>${basedir}</license.dir>
-		<webdrivermanager.version>[5.9.1,)</webdrivermanager.version>
+		<webdrivermanager.version>[6.3.2,)</webdrivermanager.version><!-- 5.9.1 -->
 		<selenium-java.version>4.8.1</selenium-java.version>
 		<!-- 4.7.2 -->
 		<extentreports.version>5.0.9</extentreports.version>

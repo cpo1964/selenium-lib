@@ -44,6 +44,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.firefox.GeckoDriverService;
+import org.openqa.selenium.firefox.GeckoDriverService.Builder;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.MoveTargetOutOfBoundsException;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -56,8 +57,6 @@ import com.github.cpo1964.report.extent.ExtentHelper;
 import com.github.cpo1964.utils.CommonHelper;
 import com.github.cpo1964.utils.ExcelHelper;
 import com.github.cpo1964.utils.MaxlevelStreamHandler;
-
-import io.github.bonigarcia.wdm.WdmAgent;
 
 /**
  * The Class SeleniumHelper.
@@ -414,10 +413,12 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, R
 	@Override
 	public void launch() {
 		String osName = System.getProperty("os.name");
-		if (osName.contains("Linux")) {
+		if (!osName.contains("Linux")) {
 			try {
-				Runtime.getRuntime().exec("taskkill /IM chromedriver.exe");
-				Runtime.getRuntime().exec("taskkill /IM geckodriver.exe");
+			    ProcessBuilder pb = new ProcessBuilder("taskkill /IM chromedriver.exe");
+			    pb.start();
+			    pb = new ProcessBuilder("taskkill /IM geckodriver.exe");
+                pb.start();
 			} catch (IOException e) {
 				log.finest("task chromedriver.exe or geckodriver.exe not found - nothing to kill.");
 			}
@@ -464,7 +465,6 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, R
 	 *
 	 * @return the chrome driver
 	 */
-	@SuppressWarnings("deprecation")
 	public static ChromeDriver getChromeDriver() {
 		if (getDriver() == null) {
 			io.github.bonigarcia.wdm.WebDriverManager wdm = io.github.bonigarcia.wdm.WebDriverManager.chromedriver();
@@ -475,7 +475,7 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, R
 		chromeOptions.addArguments("--remote-allow-origins=*");
 		chromeOptions.addArguments("--disable-gpu");
 		if ("true".equalsIgnoreCase(System.getProperty("headless"))) {
-			chromeOptions.setHeadless(true);
+		    chromeOptions.addArguments("--headless=new");
 		}
 		String agent = System.getProperty("UFTDeveloperAgent");
 		if (agent != null) {
@@ -494,6 +494,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, R
 		if (getDriver() == null) {
 			io.github.bonigarcia.wdm.WebDriverManager wdm = io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver();
 			setupWebDriverManager(wdm);
+			// Setup GeckoDriver using WebDriverManager
+			io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver().setup();
 		}
 		System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, "FFLogs.txt");
 
@@ -530,12 +532,31 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, R
 	 * @return the firefox driver
 	 */
 	private static FirefoxDriver getFirefoxDriverWithOptions(FirefoxOptions options) {
-		String osName = System.getProperty("os.name");
-		String profileRoot = osName.contains("Linux") && new File("/snap/firefox").exists()
-				? createProfileRootInUserHome()
-				: null;
-		return profileRoot != null ? new FirefoxDriver(createGeckoDriverService(profileRoot), options)
-				: new FirefoxDriver(options);
+//		String osName = System.getProperty("os.name");
+//		String profileRoot = osName.contains("Linux") && new File("/snap/firefox").exists()
+//				? createProfileRootInUserHome()
+//				: null;
+		FirefoxDriver fd = null;
+//		
+//		FirefoxBinary firefoxBinary = new FirefoxBinary();
+//		firefoxBinary.addCommandLineOptions("--headless");
+//		firefoxBinary.addCommandLineOptions("--no-sandbox");
+//		log.info("geckodriver: " + System.getProperty("webdriver.gecko.driver"));
+//		System.setProperty("webdriver.gecko.driver", "/usr/bin/geckodriver");
+		FirefoxOptions firefoxOptions = new FirefoxOptions();
+//		firefoxOptions.setBinary(firefoxBinary);
+		fd = new FirefoxDriver(firefoxOptions);
+		
+		
+//		if (profileRoot != null) {
+//			GeckoDriverService gs = createGeckoDriverService(profileRoot);
+//			fd = new FirefoxDriver(gs, options);
+//		} else {
+//			fd = new FirefoxDriver(options);
+//		}
+		return fd;
+//				profileRoot != null ? new FirefoxDriver(createGeckoDriverService(profileRoot), options)
+//				: new FirefoxDriver(options);
 	}
 
 	/**
@@ -543,7 +564,8 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, R
 	 *
 	 * @return the string
 	 */
-	private static String createProfileRootInUserHome() {
+	@SuppressWarnings("unused")
+    private static String createProfileRootInUserHome() {
 		String userHome = System.getProperty("user.home");
 		File profileRoot = new File(userHome, "snap/firefox/common/.firefox-profile-root");
 		if (!profileRoot.exists()) {
@@ -560,15 +582,17 @@ public class SeleniumHelper extends ExtentHelper implements SeleniumInterface, R
 	 * @param tempProfileDir the temp profile dir
 	 * @return the gecko driver service
 	 */
-	private static GeckoDriverService createGeckoDriverService(String tempProfileDir) {
-		return new GeckoDriverService.Builder() {
+	@SuppressWarnings("unused")
+    private static GeckoDriverService createGeckoDriverService(String tempProfileDir) {
+		Builder gdsBuilder = new GeckoDriverService.Builder() {
 			@Override
 			protected List<String> createArgs() {
 				List<String> args = new ArrayList<>(super.createArgs());
 				args.add(String.format("--profile-root=%s", tempProfileDir));
 				return args;
 			}
-		}.build();
+		};
+		return gdsBuilder.build();
 	}
 
 	/**
